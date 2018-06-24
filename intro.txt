@@ -1,0 +1,22 @@
+Game: The Grid
+Link: <Link>
+
+So this is what I was able to come up during this weekend. Not much to show, but I've got the basics working.
+It's a basic multiplayer game where players can teleport anywhere in the grid, collect power-ups and attack others.
+Planning to introduce more stats and other collectable things for player to build up their stopping power.
+
+Click "Transcend" to teleport to another grid randomly (a bit broken mind you)
+
+I can implement any feature at this point so if you have something in your mind please share I'll be grateful.
+
+LEGEND:
+green box - You are here!
+red box - other player. Click to attack. Health in percent shown
+yellow box - click to teleport and pickup
+    H - healing potion
+    M - magic potion
+
+TODO:
+* world serialization (so that everything can persist after server reset or crash)
+* suicide button
+* attack and defence power-ups
