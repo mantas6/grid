@@ -240,7 +240,7 @@ io.on('connection', client => {
         assignPosition();
 
         updateCell(graveCell, 'grave', false);
-        clientGridRef.update.next({ cell: graveCell });
+        gridRef.update.next({ cell: graveCell });
     }
 
     function assignGrid() {
@@ -250,10 +250,12 @@ io.on('connection', client => {
         }
 
         for (const grid of shuffle(grids)) {
-            client.emit('gridChange', { grid: pick(grid, ['map', 'name']) });
-            clientGridRef = grid;
-            clientGridSub = grid.update.subscribe(update => client.emit('gridUpdate', update));
-            return true;
+            if (countGridOccupiableCells(grid) > 0) {
+                client.emit('gridChange', { grid: pick(grid, ['map', 'name']) });
+                clientGridRef = grid;
+                clientGridSub = grid.update.subscribe(update => client.emit('gridUpdate', update));
+                return true;
+            }
         }
 
         return false;
@@ -434,6 +436,20 @@ function countGridCellTypes(grid: Grid, ...types: string[]): number {
     for (const lineX of grid.map) {
         for (const cell of lineX) {
             if (includes(types, cell.type)) {
+                count++;
+            }
+        }
+    }
+
+    return count;
+}
+
+function countGridOccupiableCells(grid: Grid): number {
+    let count = 0;
+
+    for (const lineX of grid.map) {
+        for (const cell of lineX) {
+            if (cell.occupiable) {
                 count++;
             }
         }
