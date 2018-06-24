@@ -1,0 +1,84 @@
+// The Vue build version to load with the `import` command
+// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+import Vue from 'vue'
+import Vuex from 'vuex'
+import BootstrapVue from "bootstrap-vue"
+import App from './App'
+import { connect } from "socket.io-client";
+import { fromEvent } from "rxjs";
+import Storage from "lockr";
+
+import { router } from './router'
+import { store } from './store'
+import Singleton from './singleton'
+
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+import bButton from 'bootstrap-vue/es/components/button/button';
+import bProgress from 'bootstrap-vue/es/components/progress/progress';
+
+Vue.use(BootstrapVue)
+Vue.component(bButton)
+Vue.component(bProgress)
+
+/* eslint-disable no-new */
+new Vue({
+    el: '#app',
+    router, store,
+    template: '<App/>',
+    components: { App }
+})
+
+let url = window.location.host;
+console.log(url)
+url = url.split(':8080')[0];
+
+console.log(`${url}:3051`)
+
+const socket = connect(`${url}:3051`);
+
+Singleton.setSocket(socket);
+
+fromEvent(socket, 'connect').subscribe(() => {
+    store.commit('setConnectionStatus', true);
+    console.log('Connection')
+    const id = Storage.get('id');
+    const token = Storage.get('token');
+
+    socket.emit('login', { id, token }, ack => {
+        console.log('Received login', ack)
+        if (ack.token) {
+            Storage.set('id', ack.id);
+            Storage.set('token', ack.token);
+            store.commit('updatePlayerId', ack.id);
+        }
+    });
+});
+
+fromEvent(socket, 'disconnect').subscribe(() => {
+    store.commit('setConnectionStatus', false);
+    console.log('Disconnected')
+});
+
+
+fromEvent(socket, 'gridChange').subscribe(({ grid }) => {
+    console.log('gridChange', grid);
+    store.commit('mapChange', grid.map);
+    store.commit('setGridName', grid.name);
+});
+
+fromEvent(socket, 'gridUpdate').subscribe(({ cell }) => {
+    console.log('gridUpdate', { x: cell.x, y: cell.y });
+    store.commit('mapCellUpdate', { cell });
+});
+
+fromEvent(socket, 'statUpdate').subscribe(({ stat }) => {
+    console.log('statUpdate', stat);
+    store.commit('updateStat', { stat })
+});
+
+fromEvent(socket, 'duplicateSession').subscribe(_ => {
+    console.log('duplicate session');
+    store.commit('setDuplicateSession', true)
+});
