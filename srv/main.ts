@@ -251,6 +251,23 @@ io.on('connection', client => {
         assignPosition();
 
         // crash here graveCell was undefined
+        /*
+        /home/mantas/Websites/grid/srv/main.ts:483
+        cell.type = type;
+                ^
+        TypeError: Cannot set property 'type' of undefined
+            at updateCell (/home/mantas/Websites/grid/srv/main.ts:483:14)
+            at handlePlayerDeath (/home/mantas/Websites/grid/srv/main.ts:253:9)
+            at TapSubscriber.rxjs_1.fromEvent.pipe.operators_1.tap._ [as _tapNext] (/home/mantas/Websites/grid/srv/main.ts:237:22)
+            at TapSubscriber._next (/home/mantas/Websites/grid/node_modules/rxjs/src/internal/operators/tap.ts:111:21)
+            at TapSubscriber.Subscriber.next (/home/mantas/Websites/grid/node_modules/rxjs/src/internal/Subscriber.ts:102:12)
+            at TapSubscriber._next (/home/mantas/Websites/grid/node_modules/rxjs/src/internal/operators/tap.ts:116:22)
+            at TapSubscriber.Subscriber.next (/home/mantas/Websites/grid/node_modules/rxjs/src/internal/Subscriber.ts:102:12)
+            at FilterSubscriber._next (/home/mantas/Websites/grid/node_modules/rxjs/src/internal/operators/filter.ts:98:24)
+            at FilterSubscriber.Subscriber.next (/home/mantas/Websites/grid/node_modules/rxjs/src/internal/Subscriber.ts:102:12)
+            at ThrottleTimeSubscriber._next (/home/mantas/Websites/grid/node_modules/rxjs/src/internal/operators/throttleTime.ts:100:26)
+
+         */
         updateCell(graveCell, 'grave', false);
         gridRef.update.next({ cell: graveCell });
     }
