@@ -5,4 +5,5 @@ export const state = {
    isDuplicateSession: false,
    isConnected: false,
    stats: [],
+   onlineCount: 0,
 };

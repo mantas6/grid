@@ -150,6 +150,7 @@ io.on('connection', client => {
                 clientPlayerId = id;
 
                 playersOnlineIds.add(clientPlayerId);
+                io.emit('onlineCount', { count: playersOnlineIds.size });
 
                 return { id, token, ack };
             }),

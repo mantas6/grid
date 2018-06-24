@@ -72,3 +72,8 @@ fromEvent(socket, 'duplicateSession').subscribe(_ => {
     console.log('duplicate session');
     store.commit('setDuplicateSession', true)
 });
+
+fromEvent(socket, 'onlineCount').subscribe(({ count }) => {
+    console.log('Online count', count);
+    store.commit('updateOnlineCount', count)
+});

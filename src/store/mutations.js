@@ -36,4 +36,8 @@ export const mutations = {
 
         state.stats.push(update.stat);
     },
+
+    updateOnlineCount(state, count) {
+        state.onlineCount = count;
+    },
 };

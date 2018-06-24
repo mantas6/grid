@@ -13,6 +13,7 @@
                 </div>
             </div>
             <h5 v-else>Teleporting to alt. reality...</h5>
+            <div class="text-right">Online: {{ onlineCount }}</div>
         </div>
     </div>
 </template>
@@ -30,7 +31,7 @@ export default {
     components: { Grid, Stat },
 
     computed: {
-        ...mapState(['map', 'stats', 'gridName']),
+        ...mapState(['map', 'stats', 'gridName', 'onlineCount']),
 
         orderedStats() {
             return orderBy(this.stats, 'name');
