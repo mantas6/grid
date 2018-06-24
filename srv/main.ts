@@ -337,16 +337,22 @@ io.on('connection', client => {
 const everyTenSeconds = timer(0, 10e3);
 const everyMinute = timer(60e3, 60e3);
 
-const defaultGridCount = 5;
+const minimumGridCount = 5;
 
 everyTenSeconds.subscribe(function gridGeneration() {
-    if (grids.length < defaultGridCount) {
+    let availableCount = 0;
+
+    for (const grid of grids) {
+        availableCount += countGridOccupiableCells(grid);
+    }
+
+    if (grids.length < minimumGridCount || availableCount < 32) {
         grids.push(createGrid());
     }
 });
 
 everyMinute.subscribe(function gridDestruction() {
-    if (grids.length > defaultGridCount) {
+    if (grids.length > minimumGridCount) {
         for (const [gridIndex, grid] of grids.entries()) {
             const count = countGridCellTypes(grid, 'player');
 
