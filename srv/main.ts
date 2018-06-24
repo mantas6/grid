@@ -268,8 +268,10 @@ io.on('connection', client => {
             at ThrottleTimeSubscriber._next (/home/mantas/Websites/grid/node_modules/rxjs/src/internal/operators/throttleTime.ts:100:26)
 
          */
-        updateCell(graveCell, 'grave', false);
-        gridRef.update.next({ cell: graveCell });
+        if (graveCell) {
+            updateCell(graveCell, 'grave', false);
+            gridRef.update.next({ cell: graveCell });
+        }
     }
 
     function assignGrid() {
