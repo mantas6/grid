@@ -11,7 +11,7 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex';
+    import { mapState, mapMutations } from 'vuex';
 
     import Singleton from '@/singleton'
 
@@ -23,9 +23,12 @@
         },
 
         methods: {
+            ...mapMutations(['setDuplicateSession']),
+
             logout() {
                 Singleton.logout();
                 Singleton.login();
+                this.setDuplicateSession(false);
             }
         },
     }
