@@ -178,6 +178,7 @@ io.on('connection', client => {
 
         if (clientPlayerId) {
             playersOnlineIds.delete(clientPlayerId);
+            io.emit('onlineCount', { count: playersOnlineIds.size });
         }
 
         log.note('Client disconnected');
