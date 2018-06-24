@@ -6,6 +6,7 @@
                 <grid class="grid" :map="map"></grid>
                 <div>
                     <b-button @click="changeGrid">Transcend</b-button>
+                    <b-button @click="reset">Suicide</b-button>
                 </div>
                 <div class="row">
                     <stat v-for="stat in orderedStats" :stat="stat" :key="stat.name"></stat>
@@ -39,6 +40,10 @@ export default {
     methods: {
         changeGrid() {
             Singleton.socket.emit('changeGrid');
+        },
+
+        reset() {
+            Singleton.socket.emit('reset');
         }
     },
 };

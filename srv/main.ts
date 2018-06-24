@@ -227,6 +227,15 @@ io.on('connection', client => {
         )
         .subscribe();
 
+    fromEvent(client, 'reset')
+        .pipe(
+            throttleTime(1000),
+            filter(_ => !!clientPlayer),
+            tap(_ => log.info(`Resetting`)),
+            tap(_ => handlePlayerDeath())
+        )
+        .subscribe();
+
     function handlePlayerDeath() {
         // Reset stats
         for (const stat of clientPlayer.stats) {
