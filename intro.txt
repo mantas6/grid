@@ -24,3 +24,4 @@ TODO:
 * attack and defence power-ups
 * notification when you get git by somebody
 * some sort of leveling system (have to clarify)
+* error logging and analytics
