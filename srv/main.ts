@@ -440,7 +440,11 @@ function createGrid(): Grid {
 
     const usedNames = grids.map(grid => grid.name);
     const availableNames = difference(names, usedNames);
-    const name = sample(availableNames);
+    let name = sample(availableNames);
+
+    if (!name) {
+        name = sample(names);
+    }
 
     return { map, update, name };
 }
