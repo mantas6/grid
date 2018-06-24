@@ -363,7 +363,7 @@ everyTenSeconds.subscribe(function gridGeneration() {
 });
 
 everyMinute.subscribe(function gridDestruction() {
-    if (grids.length > minimumGridCount) {
+    if (grids.length >= minimumGridCount) {
         for (const [gridIndex, grid] of grids.entries()) {
             const count = countGridCellTypes(grid, 'player');
 
