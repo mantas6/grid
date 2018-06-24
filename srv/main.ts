@@ -9,6 +9,7 @@ import { fromEvent, timer, interval, Subject, Subscription } from 'rxjs';
 import { filter, throttleTime, map, tap, mergeMap, switchMap, throttle, startWith } from 'rxjs/operators';
 import { randomBytes } from 'crypto';
 import { promisify } from 'util';
+import { readFileSync } from 'fs';
 import { shuffle, pick, range, random, head, clamp, find, includes, entries, sample, remove, round, difference } from 'lodash';
 
 const randomBytesPromise = promisify(randomBytes);
@@ -26,7 +27,11 @@ if (PRODUCTION) {
 let server;
 
 if (SSL_KEY && SSL_CERT) {
-    server = createHttpsServer({ key: SSL_KEY, cert: SSL_CERT, ca: SSL_CA });
+    server = createHttpsServer({
+        key: readFileSync(SSL_KEY, "utf-8"),
+        cert: readFileSync(SSL_CERT, "utf-8"),
+        // ca: readFileSync(SSL_CA, "utf-8")
+    });
 } else {
     server = createHttpServer();
 }
