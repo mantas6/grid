@@ -1,7 +1,11 @@
 <template>
     <div id="app" class="p-3">
         <h3 class="text-center" v-if="!isConnected">Establishing connection...</h3>
-        <h3 class="text-center" v-else-if="isDuplicateSession">Duplicate sessions detected</h3>
+        <div class="text-center" v-else-if="isDuplicateSession">
+            <h3>Duplicate sessions detected</h3>
+            <span class="text-danger">If you have another tab open please check. If not, you can reset your account. Warning: there's no turning back</span>
+            <b-button variant="danger" @click="logout">Reset account</b-button>
+        </div>
         <router-view v-else></router-view>
     </div>
 </template>
@@ -9,11 +13,20 @@
 <script>
     import { mapState } from 'vuex';
 
+    import Singleton from '@/singleton'
+
     export default {
         name: 'app',
 
         computed: {
             ...mapState(['isConnected', 'isDuplicateSession']),
+        },
+
+        methods: {
+            logout() {
+                Singleton.logout();
+                Singleton.login();
+            }
         },
     }
 </script>

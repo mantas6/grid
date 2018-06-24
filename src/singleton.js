@@ -35,6 +35,11 @@ class Singleton {
         }
     }
 
+    logout() {
+        Storage.rm('id');
+        Storage.rm('token');
+    }
+
     get socket() {
         return this._data.socket;
     }
