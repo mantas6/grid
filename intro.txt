@@ -4,6 +4,7 @@ Link: <Link>
 So this is what I was able to come up during this weekend. Not much to show, but I've got the basics working.
 It's a basic multiplayer game where players can teleport anywhere in the grid, collect power-ups and attack others.
 Planning to introduce more stats and other collectable things for player to build up their stopping power.
+Possibly with some resource gathering mechanics with crafting and most basic "base" building (idle mechanics)
 
 Click "Transcend" to teleport to another grid randomly (a bit broken mind you)
 If you run out of magicka just commit a suicide!
