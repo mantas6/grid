@@ -6,7 +6,6 @@ import BootstrapVue from "bootstrap-vue"
 import App from './App'
 import { connect } from "socket.io-client";
 import { fromEvent } from "rxjs";
-import Storage from "lockr";
 
 import { router } from './router'
 import { store } from './store'
@@ -39,21 +38,12 @@ console.log(`${url}:3051`)
 const socket = connect(`${url}:3051`);
 
 Singleton.setSocket(socket);
+Singleton.setStore(store);
 
 fromEvent(socket, 'connect').subscribe(() => {
     store.commit('setConnectionStatus', true);
     console.log('Connection')
-    const id = Storage.get('id');
-    const token = Storage.get('token');
-
-    socket.emit('login', { id, token }, ack => {
-        console.log('Received login', ack)
-        if (ack.token) {
-            Storage.set('id', ack.id);
-            Storage.set('token', ack.token);
-            store.commit('updatePlayerId', ack.id);
-        }
-    });
+    Singleton.login();
 });
 
 fromEvent(socket, 'disconnect').subscribe(() => {
