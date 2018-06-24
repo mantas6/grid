@@ -1,14 +1,17 @@
 <template>
     <div class="d-flex justify-content-center">
         <div class="game">
-            <h5 class="text-center">{{ gridName }}</h5>
-            <grid class="grid" v-if="map" :map="map"></grid>
-            <div>
-                <b-button @click="changeGrid">Transcend</b-button>
+            <div v-if="map">
+                <h5 class="text-center">{{ gridName }}</h5>
+                <grid class="grid" :map="map"></grid>
+                <div>
+                    <b-button @click="changeGrid">Transcend</b-button>
+                </div>
+                <div class="row">
+                    <stat v-for="stat in orderedStats" :stat="stat" :key="stat.name"></stat>
+                </div>
             </div>
-            <div class="row">
-                <stat v-for="stat in orderedStats" :stat="stat" :key="stat.name"></stat>
-            </div>
+            <h5 v-else>Teleporting to alt. reality...</h5>
         </div>
     </div>
 </template>
