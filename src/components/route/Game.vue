@@ -12,7 +12,7 @@
                     <stat v-for="stat in orderedStats" :stat="stat" :key="stat.name"></stat>
                 </div>
                 <div class="text-left text-secondary">
-                    "horrible tutorial":<br/>
+                    "horrible" tutorial:<br/>
                     green box - You are here!<br/>
                     red box - other player. Click to attack. Health in percent shown<br/>
                     yellow box - click to teleport and pickup<br/>
