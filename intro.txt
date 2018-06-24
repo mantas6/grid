@@ -10,6 +10,8 @@ If you run out of magicka just commit a suicide!
 
 I can implement any feature at this point so if you have something in your mind please share I'll be grateful.
 
+If you're curious to try the "combat" you open another browser tab in incognito mode to get yourself a dummy opponent.
+
 LEGEND:
 green box - You are here!
 red box - other player. Click to attack. Health in percent shown
@@ -20,3 +22,5 @@ yellow box - click to teleport and pickup
 TODO:
 * world serialization (so that everything can persist after server reset or crash)
 * attack and defence power-ups
+* notification when you get git by somebody
+* some sort of leveling system (have to clarify)
