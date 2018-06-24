@@ -31,7 +31,6 @@ if (SSL_KEY && SSL_CERT) {
     server = createHttpServer();
 }
 
-
 const options = {
     path: '/',
     serveClient: false,
