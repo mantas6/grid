@@ -250,6 +250,7 @@ io.on('connection', client => {
         assignGrid();
         assignPosition();
 
+        // crash here graveCell was undefined
         updateCell(graveCell, 'grave', false);
         gridRef.update.next({ cell: graveCell });
     }
