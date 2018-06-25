@@ -573,6 +573,8 @@ function saveState() {
 }
 
 function loadState() {
+    log.info('Reading state');
+
     const json = readFileSync('storage/state.json').toString();
 
     const state = JSON.parse(json);
