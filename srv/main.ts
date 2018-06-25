@@ -9,7 +9,7 @@ import { fromEvent, timer, interval, Subject, Subscription } from 'rxjs';
 import { filter, throttleTime, map, tap, mergeMap, switchMap, throttle, startWith } from 'rxjs/operators';
 import { randomBytes } from 'crypto';
 import { promisify } from 'util';
-import { readFileSync } from 'fs';
+import { readFileSync, writeFile } from 'fs';
 import { shuffle, pick, range, random, head, clamp, find, includes, entries, sample, remove, round, difference } from 'lodash';
 
 const randomBytesPromise = promisify(randomBytes);
@@ -554,4 +554,33 @@ function initialPlayer() {
 
 function measureDistance(a: { x: number, y: number }, b: { x: number, y: number }) {
     return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+}
+
+function saveState() {
+    const state = {
+        players: [...players],
+    };
+
+    const json = JSON.stringify(state);
+
+    writeFile('storage/world.json', json, err => {
+        if (err) {
+            log.error('Failed to save state', err);
+        } else {
+            log.complete('Saved game state OK');
+        }
+    });
+}
+
+function loadState() {
+    const json = readFileSync('storage/world.json').toString();
+
+    const state = JSON.parse(json);
+
+    players.clear();
+
+    for (const [playerId, player] of state.players) {
+        players.set(playerId, player);
+    }
+
 }
