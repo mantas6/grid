@@ -18,6 +18,8 @@ const log = new Signale({ scope: 'main' });
 
 log.success('Starting');
 
+loadState();
+
 const { SSL_KEY, SSL_CERT, SSL_CA, PRODUCTION } = process.env;
 
 if (PRODUCTION) {
@@ -32,8 +34,12 @@ if (SSL_KEY && SSL_CERT) {
         cert: readFileSync(SSL_CERT, "utf-8"),
         // ca: readFileSync(SSL_CA, "utf-8")
     });
+
+    log.note('Using HTTPS');
 } else {
     server = createHttpServer();
+
+    log.note('Using HTTP');
 }
 
 const options = {
@@ -396,6 +402,8 @@ everyMinute.subscribe(function gridDestruction() {
     }
 });
 
+everyMinute.subscribe(() => saveState());
+
 function affectStatByPercent(player: Player, name: string, percent: number, fill: boolean = false) {
     const stat = find(player.stats, { name });
     const diff = stat.max * percent;
@@ -565,7 +573,7 @@ function saveState() {
 
     writeFile('storage/state.json', json, err => {
         if (err) {
-            log.error('Failed to save state', err);
+            log.error('Failed to save state');
         } else {
             log.complete('Saved game state OK');
         }
@@ -575,7 +583,17 @@ function saveState() {
 function loadState() {
     log.info('Reading state');
 
-    const json = readFileSync('storage/state.json').toString();
+    let json;
+
+    try {
+        json = readFileSync('storage/state.json').toString();
+    } catch (err) {
+        return log.warn('Error reading from file');
+    }
+
+    if (!json) {
+        log.warn('Empty JSON string');
+    }
 
     const state = JSON.parse(json);
 
@@ -584,4 +602,6 @@ function loadState() {
     for (const [playerId, player] of state.players) {
         players.set(playerId, player);
     }
+
+    log.complete('Loaded state');
 }
