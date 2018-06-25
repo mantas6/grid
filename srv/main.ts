@@ -18,7 +18,7 @@ const log = new Signale({ scope: 'main' });
 
 log.success('Starting');
 
-loadState();
+// loadState();
 
 const { SSL_KEY, SSL_CERT, SSL_CA, PRODUCTION } = process.env;
 
@@ -402,7 +402,7 @@ everyMinute.subscribe(function gridDestruction() {
     }
 });
 
-everyMinute.subscribe(() => saveState());
+// everyMinute.subscribe(() => saveState());
 
 function affectStatByPercent(player: Player, name: string, percent: number, fill: boolean = false) {
     const stat = find(player.stats, { name });
