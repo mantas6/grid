@@ -563,7 +563,7 @@ function saveState() {
 
     const json = JSON.stringify(state);
 
-    writeFile('storage/world.json', json, err => {
+    writeFile('storage/state.json', json, err => {
         if (err) {
             log.error('Failed to save state', err);
         } else {
@@ -573,7 +573,7 @@ function saveState() {
 }
 
 function loadState() {
-    const json = readFileSync('storage/world.json').toString();
+    const json = readFileSync('storage/state.json').toString();
 
     const state = JSON.parse(json);
 
@@ -582,5 +582,4 @@ function loadState() {
     for (const [playerId, player] of state.players) {
         players.set(playerId, player);
     }
-
 }
