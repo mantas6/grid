@@ -2,16 +2,11 @@ import Vue from "vue";
 import { entries } from 'lodash';
 
 export const mutations = {
-    mapChange(state, map) {
-        state.map = map;
-    },
-
-    setGridName(state, name) {
-        state.gridName = name;
-    },
-
-    mapCellUpdate(state, update) {
-        Vue.set(state.map[update.cell.x], update.cell.y, update.cell);
+    cellUpdate(state, cell) {
+        if (!state.map[cell.x]) {
+            Vue.set(state.map, cell.x, {});
+        }
+        Vue.set(state.map[cell.x], cell.y, cell);
     },
 
     updatePlayerId(state, id) {

@@ -1,6 +1,5 @@
 export const state = {
-   map: undefined,
-   gridName: undefined,
+   map: {},
    playerId: undefined,
    isDuplicateSession: false,
    isConnected: false,

@@ -51,16 +51,9 @@ fromEvent(socket, 'disconnect').subscribe(() => {
     console.log('Disconnected')
 });
 
-
-fromEvent(socket, 'gridChange').subscribe(({ grid }) => {
-    console.log('gridChange', grid);
-    store.commit('mapChange', grid.map);
-    store.commit('setGridName', grid.name);
-});
-
-fromEvent(socket, 'gridUpdate').subscribe(({ cell }) => {
-    console.log('gridUpdate', { x: cell.x, y: cell.y });
-    store.commit('mapCellUpdate', { cell });
+fromEvent(socket, 'cellUpdate').subscribe(cell => {
+    console.log('cellUpdate', { x: cell.x, y: cell.y });
+    store.commit('cellUpdate', cell);
 });
 
 fromEvent(socket, 'statUpdate').subscribe(({ stat }) => {

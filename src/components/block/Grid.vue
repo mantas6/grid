@@ -16,6 +16,7 @@
 import Cell from '@/components/block/Cell';
 import { mapState } from 'vuex';
 import { timer } from 'rxjs';
+import { entries } from 'lodash';
 
 import Singleton from '@/singleton'
 
@@ -42,8 +43,8 @@ export default {
         },
 
         playerCell() {
-            for (const [x, lineX] of this.map.entries()) {
-                for (const [y, cell] of lineX.entries()) {
+            for (const [x, lineX] of entries(this.map)) {
+                for (const [y, cell] of entries(lineX)) {
                     if (cell.playerId === this.playerId) {
                         return cell;
                     }

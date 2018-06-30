@@ -2,7 +2,6 @@
     <div class="d-flex justify-content-center">
         <div class="game">
             <div v-if="map">
-                <h5 class="text-center">{{ gridName }}</h5>
                 <grid class="grid" :map="map"></grid>
                 <div>
                     <b-button @click="changeGrid">Transcend</b-button>
@@ -10,14 +9,6 @@
                 </div>
                 <div class="row">
                     <stat v-for="stat in orderedStats" :stat="stat" :key="stat.name"></stat>
-                </div>
-                <div class="text-left text-secondary">
-                    "horrible" tutorial:<br/>
-                    green box - You are here!<br/>
-                    red box - other player. Click to attack. Health in percent shown<br/>
-                    yellow box - click to teleport and pickup<br/>
-                        H - healing potion<br/>
-                        M - magic potion<br/>
                 </div>
             </div>
             <h5 v-else>Teleporting to alt. reality...</h5>
@@ -39,7 +30,7 @@ export default {
     components: { Grid, Stat },
 
     computed: {
-        ...mapState(['map', 'stats', 'gridName', 'onlineCount']),
+        ...mapState(['map', 'stats', 'onlineCount']),
 
         orderedStats() {
             return orderBy(this.stats, 'name');
