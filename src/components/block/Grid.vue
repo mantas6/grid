@@ -34,6 +34,14 @@ export default {
     computed: {
         ...mapState(['playerId']),
 
+        grid() {
+            const grid = [];
+
+            for (const cell of this.map) {
+                
+            }
+        },
+
         playerX() {
             return this.playerCell && this.playerCell.x;
         },
