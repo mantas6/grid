@@ -1,5 +1,5 @@
 export const state = {
-   map: {},
+   map: [],
    playerId: undefined,
    isDuplicateSession: false,
    isConnected: false,

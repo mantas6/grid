@@ -2,11 +2,15 @@ import Vue from "vue";
 import { entries } from 'lodash';
 
 export const mutations = {
-    cellUpdate(state, cell) {
-        if (!state.map[cell.x]) {
-            Vue.set(state.map, cell.x, {});
+    cellUpdate(state, cellUpdate) {
+        for (const [i, cell] of state.map.entries()) {
+            if (cell.x == cellUpdate.x && cell.y == cellUpdate.y) {
+                state.map.splice(i, 1);
+                break;
+            }
         }
-        Vue.set(state.map[cell.x], cell.y, cell);
+
+        state.map.push(cellUpdate);
     },
 
     updatePlayerId(state, id) {
