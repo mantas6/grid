@@ -16,7 +16,7 @@
 import Cell from '@/components/block/Cell';
 import { mapState } from 'vuex';
 import { timer } from 'rxjs';
-import { entries } from 'lodash';
+import { entries, orderBy } from 'lodash';
 
 import Singleton from '@/singleton'
 
@@ -35,10 +35,19 @@ export default {
         ...mapState(['playerId']),
 
         grid() {
+            const ordered = orderBy(this.map, 'x', 'asc');
+
             const grid = [];
 
-            for (const cell of this.map) {
-                
+            for (const cellX of ordered) {
+                const cellsOfX = ordered.filter(cell => cell.x == cellX.x);
+                const cellsOfXOrdered = orderBy(cellsOfX, 'y', 'asc');
+
+                if (!grid[cellX.x]) {
+                    grid[cellX.x] = [];
+                }
+
+                grid[cellX.x].push(...cellsOfXOrdered);
             }
         },
 
