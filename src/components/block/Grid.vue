@@ -39,13 +39,23 @@ export default {
 
             const grid = [];
 
+            let viewX = -1;
+            let gridX = undefined;
+
             for (const cell of ordered) {
-                if (!grid[cell.x]) {
-                    grid[cell.x] = [];
+                if (cell.x !== gridX) {
+                    viewX++;
+                    gridX = cell.x;
                 }
 
-                grid[cell.x].push(cell);
+                if (!grid[viewX]) {
+                    grid[viewX] = [];
+                }
+
+                grid[viewX].push(cell);
             }
+
+            // console.log(grid)
 
             return grid;
         },
@@ -61,7 +71,7 @@ export default {
 
     methods: {
         isPlayerAt(x, y) {
-            return this.playerLocation && this.playerX == x && this.playerY == y;
+            return this.playerX == x && this.playerY == y;
         },
 
         changePosition(x, y) {

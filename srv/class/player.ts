@@ -1,4 +1,5 @@
 import { Subject, Subscription } from 'rxjs';
+import { find } from 'lodash';
 
 import { Cell } from './cell';
 import { Stat, StatUpdate } from './stat';
@@ -69,9 +70,10 @@ export class Player {
     }
 
     private updateCellsNearby() {
-        const cells = this.cell.neighbors();
+        const cellsNear = this.cell.neighbors();
 
-        for (const cell of cells) {
+        // Subscribing to unsubscribed cells
+        for (const cell of cellsNear) {
             if (!this.hasCellNearby(cell)) {
                 const subscription = cell.subject.subscribe(update => {
                     this.client.emit('cellUpdate', update);
@@ -82,13 +84,16 @@ export class Player {
                 this.cellsNearby.push({ x: cell.x, y: cell.y, subscription })
             }
         }
+
+        // Unsubscribing to subscribed cells
+        this.cellsNearby = this.cellsNearby.filter(cell => find(cellsNear, { x: cell.x, y: cell.y }));
+
+        log.debug(`Cells nearby count ${this.cellsNearby.length}`);
     }
 
     private hasCellNearby(searchCell: Cell): boolean {
-        for (const cell of this.cellsNearby) {
-            if (cell.x == searchCell.x && cell.y == searchCell.y) {
-                return true;
-            }
+        if (find(this.cellsNearby, { x: searchCell.x, y: searchCell.y })) {
+            return true;
         }
 
         return false;

@@ -5,6 +5,7 @@ export const mutations = {
         for (const [i, cell] of state.map.entries()) {
             if (cell.x == cellUpdate.x && cell.y == cellUpdate.y) {
                 state.map.splice(i, 1);
+                console.log('Updating existing cell', [cell.x, cell.y])
                 break;
             }
         }
@@ -23,8 +24,6 @@ export const mutations = {
                 const y = playerY + relY;
 
                 const cell = find(state.map, { x, y }) || { x, y };
-
-                console.log('pushing', relX, relY, {x:cell.x,y:cell,y})
 
                 cleanMap.push(cell);
             }
