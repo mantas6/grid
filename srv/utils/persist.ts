@@ -10,7 +10,7 @@ const log = new Log('persist');
 export function saveState() {
     const playersPlain = [];
 
-    for (const player of players) {
+    for (const player of [...players]) {
         playersPlain.push(classToPlain(player));
     }
 
