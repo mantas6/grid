@@ -3,6 +3,7 @@ import { readFileSync, writeFile } from 'fs';
 import { plainToClass, classToPlain } from 'class-transformer';
 
 import { Log } from '../utils/log';
+import { Player } from '../class/player';
 
 const log = new Log('persist');
 
@@ -45,8 +46,10 @@ export function loadState() {
 
     players.clear();
 
-    for (const [playerId, player] of state.players) {
-        players.set(playerId, player);
+    const playersClasses = plainToClass(Player, state.players);
+
+    for (const player of playersClasses) {
+        players.set(player.id, player);
     }
 
     log.complete('Loaded state');

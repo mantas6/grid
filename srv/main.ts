@@ -22,7 +22,7 @@ const log = new Log('main');
 
 log.success('Starting');
 
-// loadState();
+loadState();
 
 const { SSL_KEY, SSL_CERT, SSL_CA, PRODUCTION } = process.env;
 

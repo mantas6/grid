@@ -1,4 +1,5 @@
 import { clamp } from 'lodash';
+import { Type, Exclude, Expose } from 'class-transformer';
 
 import { Player } from './player';
 
@@ -7,6 +8,7 @@ export class Stat {
     current: number;
     max: number;
 
+    @Exclude()
     player: Player;
 
     constructor(name: string) {
