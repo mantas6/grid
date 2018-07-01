@@ -86,7 +86,16 @@ export class Player {
         }
 
         // Unsubscribing to subscribed cells
-        this.cellsNearby = this.cellsNearby.filter(cell => find(cellsNear, { x: cell.x, y: cell.y }));
+        this.cellsNearby = this.cellsNearby.filter(cell => {
+            const stillNear = find(cellsNear, { x: cell.x, y: cell.y });
+
+            if (stillNear)
+                return true;
+            
+            cell.subscription.unsubscribe();
+
+            return false;
+        });
 
         log.debug(`Cells nearby count ${this.cellsNearby.length}`);
     }
