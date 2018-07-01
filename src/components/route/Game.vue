@@ -7,9 +7,9 @@
                     <b-button @click="changeGrid">Transcend</b-button>
                     <b-button @click="reset">Suicide</b-button>
                 </div>
-                <div class="row">
+                <b-row>
                     <stat v-for="stat in orderedStats" :stat="stat" :key="stat.name"></stat>
-                </div>
+                </b-row>
             </div>
             <h5 v-else>Teleporting to alt. reality...</h5>
             <div class="text-right">Online: {{ onlineCount }}</div>

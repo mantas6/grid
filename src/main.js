@@ -14,12 +14,7 @@ import Singleton from './singleton'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-import bButton from 'bootstrap-vue/es/components/button/button';
-import bProgress from 'bootstrap-vue/es/components/progress/progress';
-
-Vue.use(BootstrapVue)
-Vue.component(bButton)
-Vue.component(bProgress)
+Vue.use(BootstrapVue);
 
 /* eslint-disable no-new */
 new Vue({

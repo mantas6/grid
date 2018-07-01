@@ -1,5 +1,5 @@
 <template>
-    <div id="app" class="p-3">
+    <b-container id="app" class="pt-1 p-sm-3">
         <h3 class="text-center" v-if="!isConnected">Establishing connection...</h3>
         <div class="text-center" v-else-if="isDuplicateSession">
             <h3>Duplicate sessions detected</h3>
@@ -7,7 +7,7 @@
             <b-button variant="danger" @click="logout">Reset account</b-button>
         </div>
         <router-view v-else></router-view>
-    </div>
+    </b-container>
 </template>
 
 <script>
