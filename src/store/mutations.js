@@ -22,17 +22,13 @@ export const mutations = {
                 const x = playerX + relX;
                 const y = playerY + relY;
 
-                if (!cleanMap[x]) {
-                    cleanMap[x] = [];
+                if (!cleanMap[relX]) {
+                    cleanMap[relY] = [];
                 }
 
-                const existingCell = find(state.map, { x, y });
+                const cell = find(state.map, { x, y }) || { x, y };
 
-                if (existingCell) {
-                    cleanMap[x].push(existingCell);
-                } else {
-                    cleanMap[x].push({ x, y });
-                }
+                cleanMap[x].push(cell);
             }
         }
 

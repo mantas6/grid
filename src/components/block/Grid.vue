@@ -1,11 +1,11 @@
 <template>
     <div class="d-flex justify-content-around">
-        <div v-for="(lineX, x) in grid" :key="x">
-            <div v-for="(cell, y) in lineX" :key="y" class="mb-1 mr-1">
+        <div v-for="(lineX, relX) in grid" :key="relX">
+            <div v-for="(cell, relY) in lineX" :key="relY" class="mb-1 mr-1">
                 <cell :cell="cell"
-                    @selectCell="cell.playerId ? attack(x, y) : changePosition(x, y)"
-                    :disabled="!actionAvailable || isPlayerAt(x, y) || (!cell.playerId && !cell.occupiable)"
-                    :own="isPlayerAt(x, y)">
+                    @selectCell="cell.playerId ? attack(cell.x, cell.y) : changePosition(cell.x, cell.y)"
+                    :disabled="!actionAvailable || isPlayerAt(cell.x, cell.y) || (!cell.playerId && !cell.occupiable)"
+                    :own="isPlayerAt(cell.x, cell.y)">
                 </cell>
             </div>
         </div>
@@ -40,6 +40,9 @@ export default {
             const grid = [];
 
             for (const cell of ordered) {
+                if (!cell)
+                    continue;
+                    
                 if (!grid[cell.x]) {
                     grid[cell.x] = [];
                 }
@@ -51,27 +54,17 @@ export default {
         },
 
         playerX() {
-            return this.playerCell && this.playerCell.x;
+            return this.playerLocation && this.playerLocation.x;
         },
 
         playerY() {
-            return this.playerCell && this.playerCell.y;
-        },
-
-        playerCell() {
-            for (const [x, lineX] of entries(this.map)) {
-                for (const [y, cell] of entries(lineX)) {
-                    if (cell.playerId === this.playerId) {
-                        return cell;
-                    }
-                }
-            }
+            return this.playerLocation && this.playerLocation.y;
         },
     },
 
     methods: {
         isPlayerAt(x, y) {
-            return this.playerCell && this.playerX == x && this.playerY == y;
+            return this.playerLocation && this.playerX == x && this.playerY == y;
         },
 
         changePosition(x, y) {
