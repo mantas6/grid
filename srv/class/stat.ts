@@ -9,6 +9,10 @@ export class Stat {
 
     player: Player;
 
+    constructor(name: string) {
+        this.name = name;
+    }
+
     affectByPercent(percent: number, fill: boolean = false) {
         const diff = this.max * percent;
 
@@ -24,9 +28,13 @@ export class Stat {
         
         this.current = clamp(this.current + diff, 0, this.max);
 
-        this.player.statsSubject.next({ name: this.name, current: this.current, max: this.max });
+        this.player.statsSubject.next(this.getUpdate());
     
         return true;
+    }
+
+    getUpdate() {
+        return { name: this.name, current: this.current, max: this.max };
     }
 }
 

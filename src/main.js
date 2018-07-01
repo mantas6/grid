@@ -59,9 +59,9 @@ fromEvent(socket, 'updatePlayerLocation').subscribe(cell => {
     commit('garbageCollectCells');
 });
 
-fromEvent(socket, 'statUpdate').subscribe(({ stat }) => {
+fromEvent(socket, 'updateStat').subscribe((stat) => {
     console.log('statUpdate', stat);
-    commit('updateStat', { stat })
+    commit('updateStat', stat)
 });
 
 fromEvent(socket, 'duplicateSession').subscribe(_ => {

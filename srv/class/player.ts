@@ -15,9 +15,10 @@ export class Player {
 
     cell: Cell;
 
-    stats: Stat[];
+    stats: Stat[] = [];
 
     statsSubject = new Subject<StatUpdate>();
+    statsSubscription: Subscription;
     
     locationSubject = new Subject<PlayerLocationUpdate>();
     locationSubscription: Subscription;
@@ -27,7 +28,11 @@ export class Player {
     client: Socket;
 
     constructor() {
-
+        const stat = new Stat('magic');
+        stat.player = this;
+        stat.max = 100;
+        stat.current = 100;
+        this.stats.push(stat);
     }
 
     logOn(client: Socket) {
@@ -36,6 +41,14 @@ export class Player {
         this.locationSubscription = this.locationSubject.subscribe(update => {
             client.emit('updatePlayerLocation', update);
         });
+
+        this.statsSubscription = this.statsSubject.subscribe(update => {
+            client.emit('updateStat', update);
+        });
+
+        for (const stat of this.stats) {
+            this.statsSubject.next(stat.getUpdate());
+        }
     }
 
     logOff() {
@@ -45,6 +58,7 @@ export class Player {
         }
 
         this.locationSubscription.unsubscribe();
+        this.statsSubscription.unsubscribe();
 
         this.cellsNearby = [];
     }
@@ -67,6 +81,10 @@ export class Player {
         this.updateCellsNearby();
 
         this.locationSubject.next({ x: cell.x, y: cell.y });
+    }
+
+    getStat(name: string): Stat {
+        return find(this.stats, { name });
     }
 
     private updateCellsNearby() {

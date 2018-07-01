@@ -50,13 +50,13 @@ export const mutations = {
 
     updateStat(state, update) {
         for (const [index, stat] of entries(state.stats)) {
-            if (stat.name == update.stat.name) {
+            if (stat.name == update.name) {
                 state.stats.splice(index, 1);
                 break;
             }
         }
 
-        state.stats.push(update.stat);
+        state.stats.push(update);
     },
 
     updateOnlineCount(state, count) {
