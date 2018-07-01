@@ -1,6 +1,6 @@
 <template>
     <div class="d-flex justify-content-around">
-        <div v-for="(lineX, x) in map" :key="x">
+        <div v-for="(lineX, x) in grid" :key="x">
             <div v-for="(cell, y) in lineX" :key="y" class="mb-1 mr-1">
                 <cell :cell="cell"
                     @selectCell="cell.playerId ? attack(x, y) : changePosition(x, y)"
@@ -35,20 +35,22 @@ export default {
         ...mapState(['playerId']),
 
         grid() {
-            const ordered = orderBy(this.map, 'x', 'asc');
+            const ordered = orderBy(this.map, ['x', 'y']);
 
             const grid = [];
 
-            for (const cellX of ordered) {
-                const cellsOfX = ordered.filter(cell => cell.x == cellX.x);
-                const cellsOfXOrdered = orderBy(cellsOfX, 'y', 'asc');
-
-                if (!grid[cellX.x]) {
-                    grid[cellX.x] = [];
+            for (const cell of ordered) {
+                if (!grid[cell.x]) {
+                    grid[cell.x] = [];
                 }
 
-                grid[cellX.x].push(...cellsOfXOrdered);
+                grid[cell.x].push(cell);
             }
+
+
+            console.log(grid)
+
+            return grid;
         },
 
         playerX() {
