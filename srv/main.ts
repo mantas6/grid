@@ -116,7 +116,8 @@ io.on('connection', client => {
 
                 return { id, token, ack };
             }),
-            tap(_ => clientPlayer.assignCell(grid.findCellOccupiable()))
+            //tap(_ => clientPlayer.assignCell(grid.findCellOccupiable()))
+            tap(_ => clientPlayer.assignCell(grid.map[0][0]))
         )
         .subscribe(({ id, token, ack }) => {
             ack({ id, token });

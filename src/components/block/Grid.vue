@@ -40,9 +40,6 @@ export default {
             const grid = [];
 
             for (const cell of ordered) {
-                if (!cell)
-                    continue;
-                    
                 if (!grid[cell.x]) {
                     grid[cell.x] = [];
                 }

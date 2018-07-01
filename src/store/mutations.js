@@ -17,18 +17,16 @@ export const mutations = {
 
         const cleanMap = [];
 
-        for (const relX of range(-3, 3)) {
-            for (const relY of range(-3, 3)) {
+        for (const relX of range(-3, 4)) {
+            for (const relY of range(-3, 4)) {
                 const x = playerX + relX;
                 const y = playerY + relY;
 
-                if (!cleanMap[relX]) {
-                    cleanMap[relY] = [];
-                }
-
                 const cell = find(state.map, { x, y }) || { x, y };
 
-                cleanMap[x].push(cell);
+                console.log('pushing', relX, relY, {x:cell.x,y:cell,y})
+
+                cleanMap.push(cell);
             }
         }
 
