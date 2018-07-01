@@ -41,8 +41,8 @@ export class Cell {
     neighbors(): Cell[] {
         const neighbors: Cell[] = [];
 
-        for (const x of range(this.x - 3, this.x + 4)) {
-            for (const y of range(this.y - 3, this.y + 4)) {
+        for (const x of range(this.x - 4, this.x + 5)) {
+            for (const y of range(this.y - 4, this.y + 5)) {
                 const cell = grid.getCell(x, y);
 
                 if (cell) {

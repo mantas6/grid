@@ -11,6 +11,7 @@ export default {
     computed: {
         buttonText() {
             const variants = {
+                void: ' ',
                 player: this.own ? 'Me' : String(this.cell.strength),
                 healthPotion: 'H',
                 magicPotion: 'M',
