@@ -26,10 +26,6 @@ loadState();
 
 const { SSL_KEY, SSL_CERT, SSL_CA, PRODUCTION } = process.env;
 
-if (PRODUCTION) {
-    (log as any).disable();
-}
-
 let server;
 
 if (SSL_KEY && SSL_CERT) {
