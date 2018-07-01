@@ -1,5 +1,5 @@
 import { grid, players } from '../state';
-import { readFileSync, writeFile } from 'fs';
+import { readFileSync, writeFile, exists } from 'fs';
 import { plainToClass, classToPlain } from 'class-transformer';
 
 import { Log } from '../utils/log';
@@ -49,6 +49,7 @@ export function loadState() {
     const playersClasses = plainToClass(Player, state.players);
 
     for (const player of playersClasses) {
+        log.debug(`Un-serializing player of ${player.id}`);
         players.set(player.id, player);
     }
 
