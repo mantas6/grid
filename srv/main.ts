@@ -3,21 +3,18 @@ import 'reflect-metadata';
 import { createServer as createHttpServer } from 'http';
 import { createServer as createHttpsServer } from 'https';
 import * as createSocket from 'socket.io';
-import { Signale } from 'signale';
 
-import { fromEvent, timer, interval, Subject, Subscription } from 'rxjs';
+import { fromEvent, timer,  } from 'rxjs';
 import { filter, throttleTime, map, tap, mergeMap, switchMap, throttle, startWith } from 'rxjs/operators';
 import { randomBytes } from 'crypto';
 import { promisify } from 'util';
-import { readFileSync, writeFile } from 'fs';
-import { shuffle, pick, range, random, head, clamp, find, includes, entries, sample, remove, round, difference } from 'lodash';
+import { readFileSync } from 'fs';
 
 import { Player } from './class/player';
-import { Cell } from './class/cell';
-import { Grid } from './class/grid';
 
 import { grid, players, playersOnlineIds } from './state';
-import { Log } from './log';
+import { Log } from './utils/log';
+import { saveState, loadState } from './utils/persist';
 
 const randomBytesPromise = promisify(randomBytes);
 
@@ -180,53 +177,12 @@ io.on('connection', client => {
 });
 
 const everyMinute = timer(60e3, 60e3);
+const everyFiveSeconds = timer(5e3, 5e3);
 
-// everyMinute.subscribe(() => saveState());
+everyFiveSeconds.subscribe(() => saveState());
 
 
 
 function measureDistance(a: { x: number, y: number }, b: { x: number, y: number }) {
     return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-}
-
-function saveState() {
-    const state = {
-        players: [...players],
-    };
-
-    const json = JSON.stringify(state);
-
-    writeFile('storage/state.json', json, err => {
-        if (err) {
-            log.error('Failed to save state');
-        } else {
-            log.complete('Saved game state OK');
-        }
-    });
-}
-
-function loadState() {
-    log.info('Reading state');
-
-    let json;
-
-    try {
-        json = readFileSync('storage/state.json').toString();
-    } catch (err) {
-        return log.warn('Error reading from file');
-    }
-
-    if (!json) {
-        log.warn('Empty JSON string');
-    }
-
-    const state = JSON.parse(json);
-
-    players.clear();
-
-    for (const [playerId, player] of state.players) {
-        players.set(playerId, player);
-    }
-
-    log.complete('Loaded state');
 }

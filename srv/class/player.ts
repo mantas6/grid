@@ -1,20 +1,27 @@
 import { Subject, Subscription } from 'rxjs';
 import { find } from 'lodash';
+import { Socket } from 'socket.io';
+import { Type, Exclude, Expose } from 'class-transformer';
 
 import { Cell } from './cell';
 import { Stat, StatUpdate } from './stat';
 import { grid, players } from '../state';
-import { Log } from '../log';
-import { Socket } from 'socket.io';
+import { Log } from '../utils/log';
 
 const log = new Log('player');
 
+@Exclude()
 export class Player {
+    @Expose()
     id: number;
+
+    @Expose()
     token: string;
 
     cell: Cell;
 
+    @Type(() => Stat)
+    @Expose()
     stats: Stat[] = [];
 
     statsSubject = new Subject<StatUpdate>();
