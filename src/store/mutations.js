@@ -1,8 +1,7 @@
-import Vue from "vue";
-import { entries } from 'lodash';
+import { entries, find, range } from 'lodash';
 
 export const mutations = {
-    cellUpdate(state, cellUpdate) {
+    updateCell(state, cellUpdate) {
         for (const [i, cell] of state.map.entries()) {
             if (cell.x == cellUpdate.x && cell.y == cellUpdate.y) {
                 state.map.splice(i, 1);
@@ -11,6 +10,37 @@ export const mutations = {
         }
 
         state.map.push(cellUpdate);
+    },
+
+    garbageCollectCells(state) {
+        const { x: playerX, y: playerY } = state.playerLocation;
+
+        const cleanMap = [];
+
+        for (const relX of range(-3, 3)) {
+            for (const relY of range(-3, 3)) {
+                const x = playerX + relX;
+                const y = playerY + relY;
+
+                if (!cleanMap[x]) {
+                    cleanMap[x] = [];
+                }
+
+                const existingCell = find(state.map, { x, y });
+
+                if (existingCell) {
+                    cleanMap[x].push(existingCell);
+                } else {
+                    cleanMap[x].push({ x, y });
+                }
+            }
+        }
+
+        state.map = cleanMap;
+    },
+
+    updatePlayerLocation(state, update) {
+        state.playerLocation = update;
     },
 
     updatePlayerId(state, id) {

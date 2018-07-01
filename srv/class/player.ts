@@ -17,6 +17,9 @@ export class Player {
     stats: Stat[];
 
     statsSubject = new Subject<StatUpdate>();
+    
+    locationSubject = new Subject<PlayerLocationUpdate>();
+    locationSubscription: Subscription;
 
     cellsNearby: CellSubscription[] = [];
 
@@ -28,6 +31,10 @@ export class Player {
 
     logOn(client: Socket) {
         this.client = client;
+
+        this.locationSubscription = this.locationSubject.subscribe(update => {
+            client.emit('updatePlayerLocation', update);
+        });
     }
 
     logOff() {
@@ -35,6 +42,8 @@ export class Player {
         for (const cell of this.cellsNearby) {
             cell.subscription.unsubscribe();
         }
+
+        this.locationSubscription.unsubscribe();
 
         this.cellsNearby = [];
     }
@@ -55,6 +64,8 @@ export class Player {
         this.cell.assignPlayer(this);
 
         this.updateCellsNearby();
+
+        this.locationSubject.next({ x: cell.x, y: cell.y });
     }
 
     private updateCellsNearby() {
@@ -100,4 +111,9 @@ interface CellSubscription {
     x: number;
     y: number;
     subscription: Subscription;
+}
+
+interface PlayerLocationUpdate {
+    x: number;
+    y: number;
 }

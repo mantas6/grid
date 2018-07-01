@@ -40,33 +40,41 @@ const socket = connect(`${url}:3051`);
 Singleton.setSocket(socket);
 Singleton.setStore(store);
 
+const { commit } = store;
+
 fromEvent(socket, 'connect').subscribe(() => {
-    store.commit('setConnectionStatus', true);
+    commit('setConnectionStatus', true);
     console.log('Connection')
     Singleton.login();
 });
 
 fromEvent(socket, 'disconnect').subscribe(() => {
-    store.commit('setConnectionStatus', false);
+    commit('setConnectionStatus', false);
     console.log('Disconnected')
 });
 
 fromEvent(socket, 'cellUpdate').subscribe(cell => {
     console.log('cellUpdate', { x: cell.x, y: cell.y });
-    store.commit('cellUpdate', cell);
+    commit('updateCell', cell);
+});
+
+fromEvent(socket, 'updatePlayerLocation').subscribe(cell => {
+    console.log('updatePlayerLocation', { x: cell.x, y: cell.y });
+    commit('updatePlayerLocation', cell);
+    commit('garbageCollectCells');
 });
 
 fromEvent(socket, 'statUpdate').subscribe(({ stat }) => {
     console.log('statUpdate', stat);
-    store.commit('updateStat', { stat })
+    commit('updateStat', { stat })
 });
 
 fromEvent(socket, 'duplicateSession').subscribe(_ => {
     console.log('duplicate session');
-    store.commit('setDuplicateSession', true)
+    commit('setDuplicateSession', true)
 });
 
 fromEvent(socket, 'onlineCount').subscribe(({ count }) => {
     console.log('Online count', count);
-    store.commit('updateOnlineCount', count)
+    commit('updateOnlineCount', count)
 });

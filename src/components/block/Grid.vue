@@ -32,7 +32,7 @@ export default {
     },
 
     computed: {
-        ...mapState(['playerId']),
+        ...mapState(['playerId', 'playerLocation']),
 
         grid() {
             const ordered = orderBy(this.map, ['x', 'y']);
@@ -46,9 +46,6 @@ export default {
 
                 grid[cell.x].push(cell);
             }
-
-
-            console.log(grid)
 
             return grid;
         },
