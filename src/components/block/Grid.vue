@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex justify-content-around">
+    <div class="d-flex justify-content-around" v-hammer:swipe="moveDirection">
         <div v-for="(lineX, relX) in grid" :key="relX">
             <div v-for="(cell, relY) in lineX" :key="relY" class="mb-1 mr-1">
                 <cell :cell="cell"
@@ -83,9 +83,22 @@ export default {
             Singleton.socket.emit('changePosition', { x, y });
         },
 
+        moveDirection({ direction }) {
+            const coords = {
+                16: { x: this.playerX, y: this.playerY - 1 },
+                8: { x: this.playerX, y: this.playerY + 1 },
+                4: { x: this.playerX - 1, y: this.playerY },
+                2: { x: this.playerX + 1, y: this.playerY },
+            };
+
+            const { x, y } = coords[direction];
+
+            this.changePosition(x, y);
+        },
+
         measureDistance(a, b) {
             return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-        }
+        },
     },
 }
 </script>

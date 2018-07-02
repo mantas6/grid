@@ -6,16 +6,20 @@ import BootstrapVue from "bootstrap-vue"
 import App from './App'
 import { connect } from "socket.io-client";
 import { fromEvent } from "rxjs";
-const numberformat = require('swarm-numberformat');
+import { VueHammer } from 'vue2-hammer'
 
 import { router } from './router'
 import { store } from './store'
 import Singleton from './singleton'
 
+const numberformat = require('swarm-numberformat');
+
 //import 'bootstrap/scss/bootstrap.scss'
 //import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(BootstrapVue);
+
+Vue.use(VueHammer);
 Vue.filter('formatShort', numberformat.formatShort)
 
 /* eslint-disable no-new */
