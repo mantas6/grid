@@ -3,10 +3,6 @@
         <div class="game">
             <div v-if="map">
                 <grid class="grid" :map="map"></grid>
-                <div>
-                    <b-button @click="changeGrid">Transcend</b-button>
-                    <b-button @click="reset">Suicide</b-button>
-                </div>
                 <b-row>
                     <stat v-for="stat in orderedStats" :stat="stat" :key="stat.name"></stat>
                 </b-row>
@@ -34,16 +30,6 @@ export default {
 
         orderedStats() {
             return orderBy(this.stats, 'name');
-        }
-    },
-
-    methods: {
-        changeGrid() {
-            Singleton.socket.emit('changeGrid');
-        },
-
-        reset() {
-            Singleton.socket.emit('reset');
         }
     },
 };

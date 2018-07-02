@@ -97,15 +97,6 @@ io.on('connection', client => {
                     clientPlayer = players.get(req.id);
                 }
 
-                //clientPlayer.statUpdate.subscribe(update => client.emit('statUpdate', update));
-                // Death handler
-                
-                //clientPlayer.statUpdate.subscribe(({ stat }) => stat.name == 'health' && stat.current <= 0 && handlePlayerDeath());
-                
-                /*for (const { name } of clientPlayer.stats) {
-                    affectStat(clientPlayer, name, 0);
-                }*/
-
                 clientPlayer.logOn(client);
                 playersOnlineIds.add(clientPlayer.id);
                 io.emit('onlineCount', { count: playersOnlineIds.size });
