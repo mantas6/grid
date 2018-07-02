@@ -1,6 +1,8 @@
 import { clamp } from 'lodash';
 import { Type, Exclude, Expose, Transform } from 'class-transformer';
 
+import { players } from '../state';
+
 import { Player } from './player';
 
 export class Stat {
@@ -9,7 +11,20 @@ export class Stat {
     max: number;
 
     @Exclude()
-    player: Player;
+    private _player: Player;
+    private _playerRef: number;
+
+    refPlayer(player: Player) {
+        this._playerRef = player.id;
+    }
+
+    player() {
+        if (!this._player) {
+            this._player = players.get(this._playerRef);
+        }
+
+        return this._player;
+    }
 
     constructor(name: string) {
         this.name = name;
@@ -30,7 +45,7 @@ export class Stat {
         
         this.current = clamp(this.current + diff, 0, this.max);
 
-        this.player.statsSubject.next(this.getUpdate());
+        this.player().statsSubject.next(this.getUpdate());
     
         return true;
     }

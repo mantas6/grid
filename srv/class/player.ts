@@ -34,11 +34,14 @@ export class Player {
 
     client: Socket;
 
-    constructor() {
+    constructor(id: number) {
+        this.id = id;
+
         const stat = new Stat('magic');
-        stat.player = this;
         stat.max = 100;
         stat.current = 100;
+        stat.refPlayer(this);
+
         this.stats.push(stat);
     }
 
