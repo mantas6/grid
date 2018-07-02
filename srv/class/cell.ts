@@ -27,7 +27,7 @@ export class Cell {
     }
 
     isAbsorbable(): boolean {
-        return !this.player;
+        return !this.player && !!this.content;
     }
 
     assignPlayer(player: Player) {
