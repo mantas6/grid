@@ -12,8 +12,8 @@ import { router } from './router'
 import { store } from './store'
 import Singleton from './singleton'
 
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+//import 'bootstrap/scss/bootstrap.scss'
+//import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(BootstrapVue);
 Vue.filter('formatShort', numberformat.formatShort)

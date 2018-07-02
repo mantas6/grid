@@ -43,12 +43,13 @@ export class Player {
 
         player.id = id;
 
-        const stat = new Stat(player, 'magic');
-        stat.max = 100;
-        stat.current = 100;
-        // stat.refPlayer(this);
+        for (const statName of ['cyan', 'magenta', 'yellow']) {
+            const stat = new Stat(player, statName);
+            stat.max = 255;
+            stat.current = 0;
 
-        player.stats.push(stat);
+            player.stats.push(stat);
+        }
 
         return player;
     }
