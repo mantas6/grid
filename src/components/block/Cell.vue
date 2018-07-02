@@ -61,9 +61,15 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+    @import '~bootstrap/scss/bootstrap-reboot.scss';
     .btn {
         width: 50px;
         height: 50px;
+
+        @include media-breakpoint-down(xs) {
+            width: 30px;
+            height: 30px;
+        }
     }
 </style>
