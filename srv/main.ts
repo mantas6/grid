@@ -22,9 +22,12 @@ const log = new Log('main');
 
 log.success('Starting');
 
-loadState();
 
-const { SSL_KEY, SSL_CERT, SSL_CA, PRODUCTION } = process.env;
+const { SSL_KEY, SSL_CERT, SSL_CA, NO_PERSIST } = process.env;
+
+if (!NO_PERSIST) {
+    loadState();
+}
 
 let server;
 
@@ -175,7 +178,9 @@ io.on('connection', client => {
 const everyMinute = timer(60e3, 60e3);
 const everyFiveSeconds = timer(5e3, 5e3);
 
-everyMinute.subscribe(() => saveState());
+if (!NO_PERSIST) {
+    everyMinute.subscribe(() => saveState());
+}
 
 
 
