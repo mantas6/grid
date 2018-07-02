@@ -21,8 +21,8 @@ export class Grid {
     }
 
     static generate(): Grid {
-        const sizeX = 1024;
-        const sizeY = 1024;
+        const sizeX = 32;
+        const sizeY = 32;
     
         const grid = new Grid(sizeX, sizeY);
     
