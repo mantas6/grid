@@ -8,7 +8,6 @@ export class Stat {
     current: number;
     max: number;
 
-    //@Type(() => Player)
     @Exclude()
     player: Player;
 
