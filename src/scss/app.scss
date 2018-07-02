@@ -1,2 +1,8 @@
+$theme-colors: (
+  "cyan": #00FFFF,
+  "magenta": #FF00FF,
+  "yellow": #FFFF00
+);
+
 @import "~bootstrap/scss/bootstrap.scss";
 @import '~bootstrap-vue/dist/bootstrap-vue.css'

@@ -46,7 +46,7 @@ export class Player {
         for (const statName of ['cyan', 'magenta', 'yellow']) {
             const stat = new Stat(player, statName);
             stat.max = 255;
-            stat.current = 0;
+            stat.current = 20;
 
             player.stats.push(stat);
         }

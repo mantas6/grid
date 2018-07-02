@@ -14,8 +14,9 @@ export default {
     computed: {
         variant() {
             const variants = {
-                health: 'danger',
-                magic: 'primary',
+                cyan: 'cyan',
+                magenta: 'magenta',
+                yellow: 'yellow',
             };
 
             return variants[this.stat.name];
