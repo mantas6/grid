@@ -4,7 +4,7 @@
             <div v-for="(cell, relY) in lineX" :key="relY" class="mb-1 mr-1">
                 <cell :cell="cell"
                     @selectCell="cell.playerId ? attack(cell.x, cell.y) : changePosition(cell.x, cell.y)"
-                    :disabled="!actionAvailable || isPlayerAt(cell.x, cell.y) || (!cell.playerId && !cell.occupiable)"
+                    :disabled="isPlayerAt(cell.x, cell.y) || !cell.occupiable || !isCellReachable(cell.x, cell.y)"
                     :own="isPlayerAt(cell.x, cell.y)">
                 </cell>
             </div>
@@ -22,10 +22,6 @@ import Singleton from '@/singleton'
 
 export default {
     components: { Cell },
-
-    data() {
-        return { actionAvailable: true };
-    },
 
     props: {
         map: { required: true },
@@ -74,24 +70,21 @@ export default {
             return this.playerX == x && this.playerY == y;
         },
 
+        isCellReachable(x, y) {
+            if (this.measureDistance(this.playerLocation, { x, y }) == 1) {
+                return true;
+            }
+
+            return false;
+        },
+
         changePosition(x, y) {
             console.log('changePosition', { x, y });
             Singleton.socket.emit('changePosition', { x, y });
-
-            //this.pauseActions();
         },
 
-        attack(x, y) {
-            console.log('attack', { x, y });
-            Singleton.socket.emit('attack', { x, y });
-
-            this.pauseActions();
-        },
-
-        pauseActions() {
-            this.actionAvailable = false;
-
-            timer(1000).subscribe(_ => this.actionAvailable = true);
+        measureDistance(a, b) {
+            return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
         }
     },
 }

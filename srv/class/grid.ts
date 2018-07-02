@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { Cell, Colors } from './cell';
+import { Cell, Content } from './cell';
 import { Type, Exclude, Expose, Transform } from 'class-transformer';
 
 import { range, entries, sample, shuffle, random } from 'lodash';
@@ -28,9 +28,15 @@ export class Grid {
     
         for (const x of range(0, sizeX)) {
             for (const y of range(0, sizeY)) {
-                const colors = generateCellColors();
-    
-                const cell = new Cell(x, y, colors);
+                const cell = new Cell(x, y);
+
+                const randomCase = random(0, 100);
+
+                if (randomCase > 90) {
+                    cell.content = generateCellContent();
+                } else if(randomCase > 10) {
+                    cell.content = { c: 0, m: 0, y: 0, k: random(50, 100) };
+                }
     
                 grid.setCell(x, y, cell);
             }
@@ -62,20 +68,13 @@ export class Grid {
     }
 }
 
-function generateCellColors(): Colors {
-    if (random(0, 100) > 75) {
-        return {
-            c: random(0, 25),
-            m: random(0, 25),
-            y: random(0, 25),
-        };
-    } else {
-        return {
-            c: 0,
-            m: 0,
-            y: 0,
-        };
-    }
+function generateCellContent(): Content {
+    return {
+        c: random(0, 25),
+        m: random(0, 25),
+        y: random(0, 25),
+        k: random(0, 25),
+    };
 }
 
 function generateCellType(): string {

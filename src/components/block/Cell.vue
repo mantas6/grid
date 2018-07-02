@@ -28,11 +28,11 @@ export default {
         },
 
         style() {
-            if (!this.cell.colors || this.own) {
+            if (!this.cell.content || this.own) {
                 return {};
             }
-            const { c, m, y } = this.cell.colors;
-            const { r, g, b } = this.cmyk_to_rgb2(c, m, y, 0);
+            const { c, m, y, k } = this.cell.content;
+            const { r, g, b } = this.cmykToRgb(c, m, y, k);
 
             return {
                 backgroundColor: `rgb(${r}, ${g}, ${b})`,
@@ -45,7 +45,7 @@ export default {
             this.$emit('selectCell');
         },
 
-        cmyk_to_rgb2(c, m, y, k) {
+        cmykToRgb(c, m, y, k) {
             c = (255 * c) / 100;
             m = (255 * m) / 100;
             y = (255 * y) / 100;

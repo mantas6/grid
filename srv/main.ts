@@ -138,6 +138,7 @@ io.on('connection', client => {
             map(req => ({ ...req, cell: grid.getCell(req.x, req.y) })),
             filter(({ cell }) => !!cell),
             map(bundle => ({ ...bundle, distance: measureDistance(clientPlayer.cell, bundle.cell) })),
+            filter(({ distance }) => distance == 1),
             //filter(({ distance }) => clientPlayer.getStat('magic').affectByDiff(-distance)),
             tap(bundle => log.debug(`Position change request ${bundle.x} ${bundle.y}`)),
             tap(({ cell }) => clientPlayer.assignCell(cell))
