@@ -1,9 +1,10 @@
-import { Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, from } from 'rxjs';
+import { bufferTime, bufferCount, filter } from 'rxjs/operators';
 import { find } from 'lodash';
 import { Socket } from 'socket.io';
 import { Type, Exclude, Expose } from 'class-transformer';
 
-import { Cell } from './cell';
+import { Cell, CellUpdate } from './cell';
 import { Stat, StatUpdate } from './stat';
 import { grid, players } from '../state';
 import { Log } from '../utils/log';
@@ -25,12 +26,11 @@ export class Player {
     stats: Stat[] = [];
 
     statsSubject = new Subject<StatUpdate>();
-    statsSubscription: Subscription;
     
     locationSubject = new Subject<PlayerLocationUpdate>();
-    locationSubscription: Subscription;
 
     cellsNearby: CellSubscription[] = [];
+    cellsUpdate = new Subject<CellUpdate>();
 
     client: Socket;
 
@@ -54,14 +54,26 @@ export class Player {
     }
 
     logOn(client: Socket) {
+        this.statsSubject = new Subject<StatUpdate>();
+        this.locationSubject = new Subject<PlayerLocationUpdate>();
+        this.cellsUpdate = new Subject<CellUpdate>();
+
         this.client = client;
 
-        this.locationSubscription = this.locationSubject.subscribe(update => {
+        this.locationSubject.subscribe(update => {
             client.emit('updatePlayerLocation', update);
         });
 
-        this.statsSubscription = this.statsSubject.subscribe(update => {
+        this.statsSubject.subscribe(update => {
             client.emit('updateStat', update);
+        });
+
+        this.cellsUpdate.pipe(
+            bufferTime(50),
+            filter(updates => !!updates.length)
+        )
+        .subscribe(updates => {
+            client.emit('cellsUpdate', updates);
         });
 
         for (const stat of this.stats) {
@@ -75,8 +87,10 @@ export class Player {
             cell.subscription.unsubscribe();
         }
 
-        this.locationSubscription.unsubscribe();
-        this.statsSubscription.unsubscribe();
+        this.locationSubject.unsubscribe();
+        this.statsSubject.unsubscribe();
+        this.cellsUpdate.unsubscribe();
+        this.cellsUpdate.unsubscribe();
 
         this.cellsNearby = [];
     }
@@ -112,10 +126,10 @@ export class Player {
         for (const cell of cellsNear) {
             if (!this.hasCellNearby(cell)) {
                 const subscription = cell.subject.subscribe(update => {
-                    this.client.emit('cellUpdate', update);
+                    this.cellsUpdate.next(update);
                 });
 
-                this.client.emit('cellUpdate', cell.getUpdate());
+                this.cellsUpdate.next(cell.getUpdate());
     
                 this.cellsNearby.push({ x: cell.x, y: cell.y, subscription })
             }

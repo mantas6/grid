@@ -48,9 +48,12 @@ fromEvent(socket, 'disconnect').subscribe(() => {
     console.log('Disconnected')
 });
 
-fromEvent(socket, 'cellUpdate').subscribe(cell => {
-    console.log('cellUpdate', { x: cell.x, y: cell.y });
-    commit('updateCell', cell);
+fromEvent(socket, 'cellsUpdate').subscribe(cells => {
+    console.log('cellUpdate', cells);
+
+    for (const cell of cells) {
+        commit('updateCell', cell);
+    }
 });
 
 fromEvent(socket, 'updatePlayerLocation').subscribe(cell => {
