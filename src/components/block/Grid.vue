@@ -78,7 +78,7 @@ export default {
             console.log('changePosition', { x, y });
             Singleton.socket.emit('changePosition', { x, y });
 
-            this.pauseActions();
+            //this.pauseActions();
         },
 
         attack(x, y) {

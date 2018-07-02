@@ -127,7 +127,7 @@ io.on('connection', client => {
 
     fromEvent(client, 'changePosition')
         .pipe(
-            throttleTime(1000),
+            //throttleTime(1000),
             filter(_ => !!clientPlayer),
             filter(req => !!req),
             filter(({ x, y }) => !isNaN(x) && !isNaN(y)),
