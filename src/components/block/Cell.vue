@@ -11,7 +11,7 @@ export default {
     computed: {
         buttonText() {
             if (this.cell.void) {
-                return 'x';
+                return '?';
             }
 
             if (this.own) {

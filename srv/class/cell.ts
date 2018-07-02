@@ -61,7 +61,7 @@ export class Cell {
     neighbors(): Cell[] {
         const neighbors: Cell[] = [];
 
-        const neighborCoords = [ { x: 1, y: 0 }, { x: -1, y: 0 }, { x: 0, y: 1 }, { x: 0, y: -1 } ];
+        const neighborCoords = [ { x: 1, y: 0 }, { x: -1, y: 0 }, { x: 0, y: 1 }, { x: 0, y: -1 }, { x: 0, y: 0 } ];
 
         for (const { x, y } of neighborCoords) {
             const cell = grid.getCell(this.x + x, this.y + y);
