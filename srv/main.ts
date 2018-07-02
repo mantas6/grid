@@ -85,7 +85,7 @@ io.on('connection', client => {
                     id = Player.generatePlayerId();
                     log.note(`Created new player  ${id} with token ${token}`);
 
-                    clientPlayer = new Player(id);
+                    clientPlayer = Player.create(id);
                     clientPlayer.token = token;
                     // clientPlayer.id = id;
 

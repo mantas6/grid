@@ -4,30 +4,19 @@ import { Type, Exclude, Expose, Transform } from 'class-transformer';
 import { players } from '../state';
 
 import { Player } from './player';
+import { PlayerRef } from '../utils/ref';
 
 export class Stat {
     name: string;
     current: number;
     max: number;
 
-    @Exclude()
-    private _player: Player;
-    private _playerRef: number;
+    @Type(() => PlayerRef)
+    player: PlayerRef;
 
-    refPlayer(player: Player) {
-        this._playerRef = player.id;
-    }
-
-    player() {
-        if (!this._player) {
-            this._player = players.get(this._playerRef);
-        }
-
-        return this._player;
-    }
-
-    constructor(name: string) {
+    constructor(player: Player, name: string) {
         this.name = name;
+        this.player = new PlayerRef().setRef(player);
     }
 
     affectByPercent(percent: number, fill: boolean = false) {
@@ -45,7 +34,7 @@ export class Stat {
         
         this.current = clamp(this.current + diff, 0, this.max);
 
-        this.player().statsSubject.next(this.getUpdate());
+        this.player.get().statsSubject.next(this.getUpdate());
     
         return true;
     }

@@ -16,6 +16,30 @@ export function saveState() {
 
     const state = { players: playersPlain };
 
+    putState(state);
+}
+
+export function loadState() {
+    const state = getState();
+
+    if (!state)
+        return;
+
+    players.clear();
+
+    const playersClasses = plainToClass(Player, state.players);
+
+    for (const player of playersClasses) {
+        log.debug(`Un-serializing player of ${player.id}`);
+        players.set(player.id, player);
+    }
+
+    log.complete('Loaded state');
+}
+
+
+
+function putState(state) {
     const json = JSON.stringify(state);
 
     writeFile('storage/state.json', json, err => {
@@ -27,7 +51,7 @@ export function saveState() {
     });
 }
 
-export function loadState() {
+function getState() {
     log.info('Reading state');
 
     let json;
@@ -44,14 +68,5 @@ export function loadState() {
 
     const state = JSON.parse(json);
 
-    players.clear();
-
-    const playersClasses = plainToClass(Player, state.players);
-
-    for (const player of playersClasses) {
-        log.debug(`Un-serializing player of ${player.id}`);
-        players.set(player.id, player);
-    }
-
-    log.complete('Loaded state');
+    return state;
 }

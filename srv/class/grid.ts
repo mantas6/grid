@@ -1,7 +1,6 @@
 import { Subject } from 'rxjs';
 import { Cell } from './cell';
 
-
 import { range, entries, sample, shuffle } from 'lodash';
 
 export class Grid {

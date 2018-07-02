@@ -1,5 +1,6 @@
 import { Subject } from 'rxjs';
 import { range } from 'lodash';
+import { Type, Exclude, Expose, Transform } from 'class-transformer';
 
 import { Player } from './player';
 import { grid } from '../state';
@@ -12,6 +13,7 @@ export class Cell {
 
     player: Player;
 
+    @Exclude()
     subject = new Subject<CellUpdate>();
 
     constructor(x: number, y: number, type: string = undefined) {
