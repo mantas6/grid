@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-button :variant="buttonVariant" :disabled="disabled" @click="selectCell">{{ buttonText }}</b-button>
+        <b-button :variant="buttonVariant" :disabled="disabled" @click="selectCell" :style="style">{{ buttonText }}</b-button>
     </div>
 </template>
 
@@ -10,33 +10,53 @@ export default {
 
     computed: {
         buttonText() {
-            const variants = {
-                void: ' ',
-                player: this.own ? 'Me' : String(this.cell.strength),
-                healthPotion: 'H',
-                magicPotion: 'M',
-                grave: 'G',
-            };
-
-            return variants[this.cell.type] || '?';
+            if (this.own) {
+                return '+';
+            }
         },
 
         buttonVariant() {
-            const variants = {
-                player: this.own ? 'success' : 'danger',
-                healthPotion: 'warning',
-                magicPotion: 'warning',
-                grave: 'bg-dark',
-            };
+            if (this.cell.void) {
+                return 'secondary';
+            }
 
-            return variants[this.cell.type] || 'outline-secondary';
+            if (this.own) {
+                return 'outline-success';
+            }
+
+            return 'outline-secondary';
+        },
+
+        style() {
+            if (!this.cell.colors || this.own) {
+                return {};
+            }
+            const { c, m, y } = this.cell.colors;
+            const { r, g, b } = this.cmyk_to_rgb2(c, m, y, 0);
+
+            return {
+                backgroundColor: `rgb(${r}, ${g}, ${b})`,
+            };
         },
     },
 
     methods: {
         selectCell() {
             this.$emit('selectCell');
-        }
+        },
+
+        cmyk_to_rgb2(c, m, y, k) {
+            c = (255 * c) / 100;
+            m = (255 * m) / 100;
+            y = (255 * y) / 100;
+            k = (255 * k) / 100;
+            
+            const r = Math.round(((255 - c)* (255 - k)) / 255);
+            const g = Math.round((255 - m) * (255 - k) / 255);
+            const b = Math.round((255 - y) * (255 - k) / 255);
+
+            return { r, g, b };
+        },
     },
 }
 </script>

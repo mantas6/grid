@@ -9,7 +9,7 @@ export class Cell {
     x: number;
     y: number;
 
-    type: string = undefined;
+    colors: Colors;
 
     @Exclude()
     player: Player;
@@ -17,10 +17,10 @@ export class Cell {
     @Exclude()
     subject = new Subject<CellUpdate>();
 
-    constructor(x: number, y: number, type: string = undefined) {
+    constructor(x: number, y: number, colors: Colors) {
         this.x = x;
         this.y = y;
-        this.type = type;
+        this.colors = colors;
     }
 
     isOccupiable(): boolean {
@@ -58,7 +58,7 @@ export class Cell {
     }
 
     getUpdate(): CellUpdate {
-        return { x: this.x, y: this.y, type: this.type, occupiable: this.isOccupiable() };
+        return { x: this.x, y: this.y, colors: this.colors, occupiable: this.isOccupiable() };
     }
 
     toString() {
@@ -73,6 +73,12 @@ export class Cell {
 export interface CellUpdate {
     x: number;
     y: number;
-    type: string;
+    colors: Colors;
     occupiable: boolean;
+}
+
+export interface Colors {
+    c: Number;
+    m: Number;
+    y: Number;
 }

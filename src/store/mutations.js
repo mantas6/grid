@@ -23,7 +23,7 @@ export const mutations = {
                 const x = playerX + relX;
                 const y = playerY + relY;
 
-                const cell = find(state.map, { x, y }) || { x, y, type: 'void' };
+                const cell = find(state.map, { x, y }) || { x, y, void: true };
 
                 cleanMap.push(cell);
             }
