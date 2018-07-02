@@ -4,7 +4,7 @@
             <div v-for="(cell, relY) in lineX" :key="relY" class="mb-1 mr-1">
                 <cell :cell="cell"
                     @selectCell="cell.playerId ? attack(cell.x, cell.y) : changePosition(cell.x, cell.y)"
-                    :disabled="isPlayerAt(cell.x, cell.y) || !cell.occupiable || !isCellReachable(cell.x, cell.y)"
+                    :disabled="isPlayerAt(cell.x, cell.y) || (!isCellReachable(cell.x, cell.y) && !cell.isAbsorbable)"
                     :own="isPlayerAt(cell.x, cell.y)">
                 </cell>
             </div>

@@ -23,11 +23,11 @@ export class Cell {
     }
 
     isOccupiable(): boolean {
-        if (this.player || this.content) {
-            return false;
-        }
+        return !this.player && !this.content;
+    }
 
-        return true;
+    isAbsorbable(): boolean {
+        return !this.player;
     }
 
     assignPlayer(player: Player) {
@@ -96,7 +96,13 @@ export class Cell {
     }
 
     getUpdate(): CellUpdate {
-        return { x: this.x, y: this.y, content: this.content, occupiable: this.isOccupiable() };
+        return {
+            x: this.x,
+            y: this.y,
+            content: this.content,
+            isOccupiable: this.isOccupiable(),
+            isAbsorbable: this.isAbsorbable(),
+        };
     }
 
     toString() {
@@ -112,7 +118,8 @@ export interface CellUpdate {
     x: number;
     y: number;
     content: Content;
-    occupiable: boolean;
+    isOccupiable: boolean;
+    isAbsorbable: boolean;
 }
 
 export interface Content {
