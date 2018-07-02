@@ -11,6 +11,7 @@ export class Cell {
 
     type: string = undefined;
 
+    @Exclude()
     player: Player;
 
     @Exclude()

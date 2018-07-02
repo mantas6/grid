@@ -4,6 +4,7 @@ import { plainToClass, classToPlain } from 'class-transformer';
 
 import { Log } from '../utils/log';
 import { Player } from '../class/player';
+import { Cell } from '../class/cell';
 
 const log = new Log('persist');
 
@@ -14,7 +15,9 @@ export function saveState() {
         playersPlain.push(classToPlain(player));
     }
 
-    const state = { players: playersPlain };
+    const mapPlain = classToPlain(grid.map);
+
+    const state = { players: playersPlain, map: mapPlain };
 
     putState(state);
 }
@@ -33,6 +36,8 @@ export function loadState() {
         log.debug(`Un-serializing player of ${player.id}`);
         players.set(player.id, player);
     }
+
+    grid.map = plainToClass(Cell, state.map) as any;
 
     log.complete('Loaded state');
 }

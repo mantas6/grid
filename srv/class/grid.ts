@@ -1,9 +1,11 @@
 import { Subject } from 'rxjs';
 import { Cell } from './cell';
+import { Type, Exclude, Expose, Transform } from 'class-transformer';
 
 import { range, entries, sample, shuffle } from 'lodash';
 
 export class Grid {
+    @Type(() => Cell)
     map: Cell[][] = [];
 
     constructor(sizeX: number, sizeY: number) {
