@@ -11,6 +11,7 @@ import { promisify } from 'util';
 import { readFileSync } from 'fs';
 
 import { Player } from './class/player';
+import { Cell } from './class/cell';
 
 import { grid, players, playersOnlineIds } from './state';
 import { Log } from './utils/log';
@@ -128,7 +129,7 @@ io.on('connection', client => {
             filter(({ x, y }) => x >= 0 && y >= 0),
             map(req => ({ ...req, cell: grid.getCell(req.x, req.y) })),
             filter(({ cell }) => !!cell),
-            filter(({ cell }) => cell.isOccupiable()),
+            filter(({ cell }) => (<Cell>cell).isOccupiable() || (<Cell>cell).isAbsorbable()),
             map(bundle => ({ ...bundle, distance: measureDistance(clientPlayer.cell, bundle.cell) })),
             filter(({ distance }) => distance == 1),
             //filter(({ distance }) => clientPlayer.getStat('magic').affectByDiff(-distance)),

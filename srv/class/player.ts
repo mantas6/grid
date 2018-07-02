@@ -105,8 +105,12 @@ export class Player {
 
         this.cell = cell;
 
-        if (!this.cell.isOccupiable()) {
+        if (!this.cell.isOccupiable() && !this.cell.isAbsorbable()) {
             throw new Error(`Failed to assign player to cell. It's already occupied. ${cell.toString()} playerId=${this.id}`);
+        }
+
+        if (this.cell.content) {
+            this.cell.content = undefined;
         }
 
         this.cell.assignPlayer(this);
