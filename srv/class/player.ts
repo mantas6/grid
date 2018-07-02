@@ -121,7 +121,7 @@ export class Player {
     }
 
     private updateCellsNearby() {
-        const cellsNear = this.cell.neighbors();
+        const cellsNear = this.cell.neighborsVisible();
 
         // Subscribing to unsubscribed cells
         for (const cell of cellsNear) {

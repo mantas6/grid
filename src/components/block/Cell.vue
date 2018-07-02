@@ -10,6 +10,10 @@ export default {
 
     computed: {
         buttonText() {
+            if (this.cell.void) {
+                return 'x';
+            }
+
             if (this.own) {
                 return '+';
             }

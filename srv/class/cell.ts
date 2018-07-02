@@ -40,7 +40,41 @@ export class Cell {
         this.update();
     }
 
+    /*
     neighbors(): Cell[] {
+        const neighbors: Cell[] = [];
+
+        for (const x of range(this.x - 1, this.x + 2)) {
+            for (const y of range(this.y - 1, this.y + 2)) {
+                const cell = grid.getCell(x, y);
+
+                if (cell) {
+                    neighbors.push(cell);
+                }
+            }
+        }
+        
+        return neighbors;
+    }
+    */
+
+    neighbors(): Cell[] {
+        const neighbors: Cell[] = [];
+
+        const neighborCoords = [ { x: 1, y: 0 }, { x: -1, y: 0 }, { x: 0, y: 1 }, { x: 0, y: -1 } ];
+
+        for (const { x, y } of neighborCoords) {
+            const cell = grid.getCell(this.x + x, this.y + y);
+
+            if (cell) {
+                neighbors.push(cell);
+            }
+        }
+        
+        return neighbors;
+    }
+
+    neighborsVisible(): Cell[] {
         const neighbors: Cell[] = [];
 
         for (const x of range(this.x - 4, this.x + 5)) {
@@ -48,7 +82,12 @@ export class Cell {
                 const cell = grid.getCell(x, y);
 
                 if (cell) {
-                    neighbors.push(cell);
+                    for (const neighbor of cell.neighbors()) {
+                        if (neighbor.isOccupiable()) {
+                            neighbors.push(cell);
+                            break;
+                        }
+                    }
                 }
             }
         }
