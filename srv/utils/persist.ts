@@ -60,18 +60,14 @@ function getState() {
     log.info('Reading state');
 
     let json;
+    let state;
 
     try {
         json = readFileSync('storage/state.json').toString();
+        state = JSON.parse(json);
     } catch (err) {
-        return log.warn('Error reading from file');
+        return log.error('Reading state failed', err);
     }
-
-    if (!json) {
-        log.warn('Empty JSON string');
-    }
-
-    const state = JSON.parse(json);
 
     return state;
 }

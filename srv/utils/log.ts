@@ -4,35 +4,35 @@ export class Log {
         this.namespace = namespace;
     }
 
-    error(message: string) {
-        this.push('error', message);
+    error(...messages: string[]) {
+        this.push('error', messages);
     }
 
-    warn(message: string) {
-        this.push('warn', message);
+    warn(...messages: string[]) {
+        this.push('warn', messages);
     }
 
-    info(message: string) {
-        this.push('info', message);
+    info(...messages: string[]) {
+        this.push('info', messages);
     }
 
-    success(message: string) {
-        this.push('success', message);
+    success(...messages: string[]) {
+        this.push('success', messages);
     }
 
-    complete(message: string) {
-        this.push('complete', message);
+    complete(...messages: string[]) {
+        this.push('complete', messages);
     }
 
-    note(message: string) {
-        this.push('note', message);
+    note(...messages: string[]) {
+        this.push('note', messages);
     }
 
-    debug(message: string) {
-        this.push('debug', message);
+    debug(...messages: string[]) {
+        this.push('debug', messages);
     }
 
-    push(level: string, message: string) {
-        console.log(`[${this.namespace}] => ${level} => ${message}`);
+    push(level: string, messages: string[]) {
+        console.log(`[${this.namespace}] => ${level} => ${messages.concat(' ')}`);
     }
 }
