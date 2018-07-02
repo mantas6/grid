@@ -175,7 +175,7 @@ io.on('connection', client => {
 const everyMinute = timer(60e3, 60e3);
 const everyFiveSeconds = timer(5e3, 5e3);
 
-everyFiveSeconds.subscribe(() => saveState());
+everyMinute.subscribe(() => saveState());
 
 
 
