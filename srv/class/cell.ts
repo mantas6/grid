@@ -15,7 +15,7 @@ export class Cell {
     player: Player;
 
     @Exclude()
-    subject = new Subject<CellUpdate>();
+    subject = new Subject<CellEvent>();
 
     constructor(x: number, y: number) {
         this.x = x;
@@ -40,12 +40,11 @@ export class Cell {
         this.update();
     }
 
-    /*
     neighbors(): Cell[] {
         const neighbors: Cell[] = [];
 
-        for (const x of range(this.x - 1, this.x + 2)) {
-            for (const y of range(this.y - 1, this.y + 2)) {
+        for (const x of range(this.x - 4, this.x + 5)) {
+            for (const y of range(this.y - 4, this.y + 5)) {
                 const cell = grid.getCell(x, y);
 
                 if (cell) {
@@ -56,8 +55,21 @@ export class Cell {
         
         return neighbors;
     }
-    */
 
+    isVisible(): boolean {
+        const neighborCoords = [ { x: 1, y: 0 }, { x: -1, y: 0 }, { x: 0, y: 1 }, { x: 0, y: -1 }, { x: 0, y: 0 } ];
+
+        for (const { x, y } of neighborCoords) {
+            const cell = grid.getCell(this.x + x, this.y + y);
+
+            if (cell.isOccupiable()) {
+                return true;
+            }
+
+            return false;
+        }
+    }
+    /*
     neighbors(): Cell[] {
         const neighbors: Cell[] = [];
 
@@ -94,7 +106,7 @@ export class Cell {
         
         return neighbors;
     }
-
+    */
     getUpdate(): CellUpdate {
         return {
             x: this.x,
@@ -105,21 +117,35 @@ export class Cell {
         };
     }
 
+    getUpdateInvisible(): CellUpdate {
+        return {
+            x: this.x,
+            y: this.y,
+            isInvisible: true,
+        };
+    }
+
     toString() {
         return `X=${this.x} Y=${this.y}`;
     }
 
     private update() {
-        this.subject.next(this.getUpdate());
+        this.subject.next({ update: this.getUpdate(), ref: this });
     }
+}
+
+export interface CellEvent {
+    update: CellUpdate;
+    ref: Cell;
 }
 
 export interface CellUpdate {
     x: number;
     y: number;
-    content: Content;
-    isOccupiable: boolean;
-    isAbsorbable: boolean;
+    content?: Content;
+    isOccupiable?: boolean;
+    isAbsorbable?: boolean;
+    isInvisible?: boolean;
 }
 
 export interface Content {

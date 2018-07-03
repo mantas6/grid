@@ -125,16 +125,24 @@ export class Player {
     }
 
     private updateCellsNearby() {
-        const cellsNear = [ ...this.cell.neighborsVisible(), this.cell ];
+        const cellsNear = this.cell.neighbors();
 
         // Subscribing to unsubscribed cells
         for (const cell of cellsNear) {
             if (!this.hasCellNearby(cell)) {
-                const subscription = cell.subject.subscribe(update => {
-                    this.cellsUpdate.next(update);
+                const subscription = cell.subject.subscribe(event => {
+                    if (event.ref.isVisible()) {
+                        this.cellsUpdate.next(event.update);
+                    } else {
+                        this.cellsUpdate.next(event.ref.getUpdateInvisible());
+                    }
                 });
 
-                this.cellsUpdate.next(cell.getUpdate());
+                if (cell.isVisible()) {
+                    this.cellsUpdate.next(cell.getUpdate());
+                } else {
+                    this.cellsUpdate.next(cell.getUpdateInvisible());
+                }
     
                 this.cellsNearby.push({ x: cell.x, y: cell.y, subscription })
             }
