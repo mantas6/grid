@@ -124,6 +124,14 @@ export class Player {
         return find(this.stats, { name });
     }
 
+    private updateCell(cell: Cell) {
+        if (cell.isVisible()) {
+            this.cellsUpdate.next(cell.getUpdate());
+        } else {
+            this.cellsUpdate.next(cell.getUpdateInvisible());
+        }
+    }
+
     private updateCellsNearby() {
         const cellsNear = this.cell.neighbors();
 
@@ -131,20 +139,14 @@ export class Player {
         for (const cell of cellsNear) {
             if (!this.hasCellNearby(cell)) {
                 const subscription = cell.subject.subscribe(event => {
-                    if (event.ref.isVisible() || this.cell.isSame(event.ref)) {
-                        this.cellsUpdate.next(event.update);
-                    } else {
-                        this.cellsUpdate.next(event.ref.getUpdateInvisible());
-                    }
+                    this.updateCell(event.ref);
                 });
 
-                if (cell.isVisible() || this.cell.isSame(cell)) {
-                    this.cellsUpdate.next(cell.getUpdate());
-                } else {
-                    this.cellsUpdate.next(cell.getUpdateInvisible());
-                }
-    
+                this.updateCell(cell);
+
                 this.cellsNearby.push({ x: cell.x, y: cell.y, subscription })
+            } else if(cell.isClose(this.cell)) {
+                this.updateCell(cell);
             }
         }
 

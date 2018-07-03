@@ -16,6 +16,7 @@ import { Cell } from './class/cell';
 import { grid, players, playersOnlineIds } from './state';
 import { Log } from './utils/log';
 import { saveState, loadState } from './utils/persist';
+import { measureDistance } from './utils/method';
 
 const randomBytesPromise = promisify(randomBytes);
 
@@ -175,10 +176,4 @@ const everyFiveSeconds = timer(5e3, 5e3);
 
 if (!NO_PERSIST) {
     everyFiveSeconds.subscribe(() => saveState());
-}
-
-
-
-function measureDistance(a: { x: number, y: number }, b: { x: number, y: number }) {
-    return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 }

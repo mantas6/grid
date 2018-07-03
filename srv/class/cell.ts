@@ -5,11 +5,15 @@ import { Type, Exclude, Expose, Transform } from 'class-transformer';
 import { Player } from './player';
 import { grid } from '../state';
 
+import { measureDistance } from '../utils/method';
+
 export class Cell {
     x: number;
     y: number;
 
     content: Content;
+
+    seen: boolean = false;
 
     @Exclude()
     player: Player;
@@ -32,6 +36,7 @@ export class Cell {
 
     assignPlayer(player: Player) {
         this.player = player;
+        this.seen = true;
         this.update();
     }
 
@@ -55,19 +60,42 @@ export class Cell {
         
         return neighbors;
     }
+    
+    closeNeighbors(): Cell[] {
+        // const neighborCoords = [ { x: 1, y: 0 }, { x: -1, y: 0 }, { x: 0, y: 1 }, { x: 0, y: -1 }, { x: 0, y: 0 } ];
+
+        const neighbors: Cell[] = [];
+
+        for (const x of range(this.x - 2, this.x + 3)) {
+            for (const y of range(this.y - 2, this.y + 3)) {
+                const cell = grid.getCell(x, y);
+
+                if (cell) {
+                    neighbors.push(cell);
+                }
+            }
+        }
+
+        return neighbors;
+    }
+
+    isClose(cell: Cell): boolean {
+        const distance = measureDistance({ x: this.x, y: this.y }, { x: cell.x, y: cell.y });
+
+        return distance <= 2;
+    }
 
     isVisible(): boolean {
-        const neighborCoords = [ { x: 1, y: 0 }, { x: -1, y: 0 }, { x: 0, y: 1 }, { x: 0, y: -1 }, { x: 0, y: 0 } ];
+        const neighbors = this.closeNeighbors();
 
-        for (const { x, y } of neighborCoords) {
-            const cell = grid.getCell(this.x + x, this.y + y);
-
-            if (cell && cell.isOccupiable()) {
+        for (const cell of neighbors) {
+            // Maybe there's a better way than cell.player check
+            if (cell.seen) {
                 return true;
             }
-
-            return false;
         }
+
+        return false;
     }
 
     isSame(cell: Cell): boolean {
