@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { range, toPairs } from 'lodash';
+import { range, toPairs, entries } from 'lodash';
 import { Type, Exclude, Expose, Transform } from 'class-transformer';
 
 import { Player } from './player';
@@ -18,7 +18,7 @@ export class Cell {
     player: Player;
 
     @Exclude()
-    subject = new Subject<CellEvent>();
+    subject = new Subject<CellUpdate>();
 
     constructor(x: number, y: number) {
         this.x = x;
@@ -43,11 +43,30 @@ export class Cell {
         this.update();
     }
 
+    clearContent() {
+        this.content = undefined;
+        this.size = undefined;
+    }
+
     toStats() {
+        const stats: { name: string, value: number }[] = [];
         if (this.content) {
-            // Get largest
-            // const pairs = toPairs(this.content);
+            let largestName: string;
+            let largestAmount: number = 0;
+            let totalAmount: number = 0;
+            
+            for (const [ name, amount ] of entries(this.content)) {
+                if (amount > largestAmount) {
+                    largestAmount = amount;
+                    totalAmount += amount;
+                    largestName = name;
+                }
+            }
+
+            stats.push({ name: largestName, value: largestAmount / totalAmount * this.size });
         }
+
+        return stats;
     }
 
     neighbors(): Cell[] {
@@ -82,13 +101,8 @@ export class Cell {
     }
 
     private update() {
-        this.subject.next({ update: this.getUpdate(), ref: this });
+        this.subject.next(this.getUpdate());
     }
-}
-
-export interface CellEvent {
-    update: CellUpdate;
-    ref: Cell;
 }
 
 export interface CellUpdate {

@@ -47,10 +47,10 @@ export class Player {
 
         player.id = id;
 
-        for (const statName of ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black']) {
+        for (const statName of ['b', 'g', 'r', 'c', 'm', 'y', 'k']) {
             const stat = new Stat(player, statName);
             stat.max = 100;
-            stat.current = 50;
+            stat.current = 0;
 
             player.stats.push(stat);
         }
@@ -113,15 +113,27 @@ export class Player {
             throw new Error(`Failed to assign player to cell. It's already occupied. ${cell.toString()} playerId=${this.id}`);
         }
 
-        if (this.cell.get().content) {
-            this.cell.get().content = undefined;
-        }
+        this.absorbCell();
 
         this.cell.get().assignPlayer(this);
 
         this.updateCellsNearby();
 
         this.locationSubject.next({ x: cell.x, y: cell.y });
+    }
+
+    absorbCell() {
+        const cell = this.cell.get();
+
+        if (cell.content) {
+            const stats = cell.toStats();
+
+            for (const stat of stats) {
+                this.getStat(stat.name).affectByDiff(stat.value, true);
+            }
+
+            cell.clearContent();
+        }
     }
 
     getStat(name: string): Stat {
@@ -134,8 +146,8 @@ export class Player {
         // Subscribing to unsubscribed cells
         for (const cell of cellsNear) {
             if (!this.hasCellNearby(cell)) {
-                const subscription = cell.subject.subscribe(event => {
-                    this.cellsUpdate.next(event.update);
+                const subscription = cell.subject.subscribe(update => {
+                    this.cellsUpdate.next(update);
                 });
 
                 this.cellsUpdate.next(cell.getUpdate());
