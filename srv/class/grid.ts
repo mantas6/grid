@@ -6,16 +6,16 @@ import { range, entries, sample, shuffle, random } from 'lodash';
 
 export class Grid {
     @Type(() => Cell)
-    map: Cell[][] = [];
+    map: Map = {};
 
     constructor(sizeX: number, sizeY: number) {
         for (const x of range(0, sizeX)) {
             if (!this.map[x]) {
-                this.map.push([]);
+                this.map[x] = {};
             }
     
             for (const y of range(0, sizeY)) {
-                this.map[x].push(undefined);
+                this.map[x][y] = undefined;
             }
         }
     }
@@ -91,4 +91,10 @@ function generateCellType(): string {
     }
 
     return sample(chances);
+}
+
+interface Map {
+    [x: number]: {
+        [y: number]: Cell;
+    },
 }
