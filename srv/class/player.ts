@@ -131,14 +131,14 @@ export class Player {
         for (const cell of cellsNear) {
             if (!this.hasCellNearby(cell)) {
                 const subscription = cell.subject.subscribe(event => {
-                    if (event.ref.isVisible()) {
+                    if (event.ref.isVisible() || this.cell.isSame(event.ref)) {
                         this.cellsUpdate.next(event.update);
                     } else {
                         this.cellsUpdate.next(event.ref.getUpdateInvisible());
                     }
                 });
 
-                if (cell.isVisible()) {
+                if (cell.isVisible() || this.cell.isSame(cell)) {
                     this.cellsUpdate.next(cell.getUpdate());
                 } else {
                     this.cellsUpdate.next(cell.getUpdateInvisible());

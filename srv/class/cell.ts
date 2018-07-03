@@ -62,13 +62,22 @@ export class Cell {
         for (const { x, y } of neighborCoords) {
             const cell = grid.getCell(this.x + x, this.y + y);
 
-            if (cell.isOccupiable()) {
+            if (cell && cell.isOccupiable()) {
                 return true;
             }
 
             return false;
         }
     }
+
+    isSame(cell: Cell): boolean {
+        if (cell.x == this.x && cell.y == this.y) {
+            return true;
+        }
+
+        return false;
+    }
+
     /*
     neighbors(): Cell[] {
         const neighbors: Cell[] = [];

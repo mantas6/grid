@@ -11,6 +11,10 @@ export default {
     computed: {
         buttonText() {
             if (this.cell.void) {
+                return '-';
+            }
+
+            if (this.cell.isInvisible) {
                 return '?';
             }
 
@@ -20,7 +24,7 @@ export default {
         },
 
         buttonVariant() {
-            if (this.cell.void) {
+            if (this.cell.void || this.cell.isInvisible) {
                 return 'secondary';
             }
 

@@ -174,7 +174,7 @@ const everyMinute = timer(60e3, 60e3);
 const everyFiveSeconds = timer(5e3, 5e3);
 
 if (!NO_PERSIST) {
-    everyMinute.subscribe(() => saveState());
+    everyFiveSeconds.subscribe(() => saveState());
 }
 
 
