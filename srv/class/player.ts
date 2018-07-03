@@ -47,10 +47,10 @@ export class Player {
 
         player.id = id;
 
-        for (const statName of ['cyan', 'magenta', 'yellow']) {
+        for (const statName of ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black']) {
             const stat = new Stat(player, statName);
-            stat.max = 255;
-            stat.current = 20;
+            stat.max = 100;
+            stat.current = 50;
 
             player.stats.push(stat);
         }

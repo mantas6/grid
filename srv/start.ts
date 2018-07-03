@@ -4,7 +4,7 @@ let handle: ChildProcess;
 
 start();
 
-handle.on('exit', start);
+handle.on('exit', () => start());
 
 handle.stdout.on('data', buffer => message(buffer.toString()));
 handle.stderr.on('data', buffer => message(buffer.toString()));
