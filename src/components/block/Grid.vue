@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex justify-content-around" v-hammer:swipe="moveDirection">
+    <div class="d-flex justify-content-center" v-hammer:swipe="moveDirection">
         <div v-for="(lineX, relX) in grid" :key="relX">
             <div v-for="(cell, relY) in lineX" :key="relY" class="mb-1 mr-1">
                 <cell :cell="cell"
