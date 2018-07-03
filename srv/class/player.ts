@@ -128,14 +128,6 @@ export class Player {
         return find(this.stats, { name });
     }
 
-    private updateCell(cell: Cell) {
-        if (cell.isVisible()) {
-            this.cellsUpdate.next(cell.getUpdate());
-        } else {
-            this.cellsUpdate.next(cell.getUpdateInvisible());
-        }
-    }
-
     private updateCellsNearby() {
         const cellsNear = this.cell.get().neighbors();
 
@@ -143,14 +135,12 @@ export class Player {
         for (const cell of cellsNear) {
             if (!this.hasCellNearby(cell)) {
                 const subscription = cell.subject.subscribe(event => {
-                    this.updateCell(event.ref);
+                    this.cellsUpdate.next(event.update);
                 });
 
-                this.updateCell(cell);
+                this.cellsUpdate.next(cell.getUpdate());
 
                 this.cellsNearby.push({ x: cell.x, y: cell.y, subscription })
-            } else if(cell.isClose(this.cell.get())) {
-                this.updateCell(cell);
             }
         }
 
