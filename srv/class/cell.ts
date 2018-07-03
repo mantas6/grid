@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { range } from 'lodash';
+import { range, toPairs } from 'lodash';
 import { Type, Exclude, Expose, Transform } from 'class-transformer';
 
 import { Player } from './player';
@@ -12,6 +12,7 @@ export class Cell {
     y: number;
 
     content: Content;
+    size: number;
 
     @Exclude()
     player: Player;
@@ -42,6 +43,13 @@ export class Cell {
         this.update();
     }
 
+    toStats() {
+        if (this.content) {
+            // Get largest
+            // const pairs = toPairs(this.content);
+        }
+    }
+
     neighbors(): Cell[] {
         const neighbors: Cell[] = [];
 
@@ -63,6 +71,7 @@ export class Cell {
             x: this.x,
             y: this.y,
             content: this.content,
+            size: this.size,
             isOccupiable: this.isOccupiable(),
             isAbsorbable: this.isAbsorbable(),
         };
@@ -86,13 +95,11 @@ export interface CellUpdate {
     x: number;
     y: number;
     content?: Content;
+    size?: number;
     isOccupiable?: boolean;
     isAbsorbable?: boolean;
 }
 
 export interface Content {
-    c: Number;
-    m: Number;
-    y: Number;
-    k: number;
+    [name: string]: number;
 }

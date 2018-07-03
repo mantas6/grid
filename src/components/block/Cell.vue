@@ -40,7 +40,7 @@ export default {
                 return {};
             }
             const { c, m, y, k } = this.cell.content;
-            const { r, g, b } = this.cmykToRgb(c, m, y, k);
+            const { r, g, b } = this.cmykToRgb(c / this.cell.size, m / this.cell.size, y / this.cell.size, k / this.cell.size);
 
             return {
                 backgroundColor: `rgb(${r}, ${g}, ${b})`,
@@ -54,10 +54,10 @@ export default {
         },
 
         cmykToRgb(c, m, y, k) {
-            c = (255 * c) / 100;
-            m = (255 * m) / 100;
-            y = (255 * y) / 100;
-            k = (255 * k) / 100;
+            c = (255 * c || 0) / 100;
+            m = (255 * m || 0) / 100;
+            y = (255 * y || 0) / 100;
+            k = (255 * k || 0) / 100;
             
             const r = Math.round(((255 - c)* (255 - k)) / 255);
             const g = Math.round((255 - m) * (255 - k) / 255);

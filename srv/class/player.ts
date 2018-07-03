@@ -1,6 +1,6 @@
 import { Subject, Subscription, from } from 'rxjs';
 import { bufferTime, bufferCount, filter } from 'rxjs/operators';
-import { find } from 'lodash';
+import { find, entries } from 'lodash';
 import { Socket } from 'socket.io';
 import { Type, Exclude, Expose } from 'class-transformer';
 

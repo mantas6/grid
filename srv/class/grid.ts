@@ -35,8 +35,10 @@ export class Grid {
                 if (randomCase > 90) {
                     cell.content = generateCellContent();
                 } else if(randomCase > 10) {
-                    cell.content = { c: 0, m: 0, y: 0, k: random(50, 100) };
+                    cell.content = generateCellSlab();
                 }
+
+                cell.size = random(1, 2);
     
                 grid.setCell(x, y, cell);
             }
@@ -68,29 +70,19 @@ export class Grid {
     }
 }
 
-function generateCellContent(): Content {
+function generateCellSlab(): Content {
     return {
-        c: random(0, 25),
-        m: random(0, 25),
-        y: random(0, 25),
-        k: random(0, 25),
+        k: random(75, 100),
     };
 }
 
-function generateCellType(): string {
-    const types = {
-        empty: 100,
-        healthPotion: 25,
-        magicPotion: 25,
+function generateCellContent(): Content {
+    return {
+        c: random(25, 50),
+        m: random(25, 50),
+        y: random(25, 50),
+        k: random(25, 50),
     };
-
-    const chances = [];
-
-    for (const [type, count] of entries(types)) {
-        chances.push(...new Array(count).fill(type));
-    }
-
-    return sample(chances);
 }
 
 interface Map {
