@@ -9,6 +9,8 @@ import { Stat, StatUpdate } from './stat';
 import { grid, players } from '../state';
 import { Log } from '../utils/log';
 
+import { CellRef } from '../utils/ref';
+
 const log = new Log('player');
 
 @Exclude()
@@ -19,7 +21,9 @@ export class Player {
     @Expose()
     token: string;
 
-    cell: Cell;
+    @Expose()
+    @Type(() => CellRef)
+    cell: CellRef = new CellRef();
 
     @Type(() => Stat)
     @Expose()
@@ -99,21 +103,21 @@ export class Player {
     assignCell(cell: Cell) {
         log.debug(`Assigning player to cell ${cell.toString()}`);
 
-        if (this.cell) {
-            this.cell.unassignPlayer();
+        if (this.cell.get()) {
+            this.cell.get().unassignPlayer();
         }
 
-        this.cell = cell;
+        this.cell.setRef(cell);
 
-        if (!this.cell.isOccupiable() && !this.cell.isAbsorbable()) {
+        if (!this.cell.get().isOccupiable() && !this.cell.get().isAbsorbable()) {
             throw new Error(`Failed to assign player to cell. It's already occupied. ${cell.toString()} playerId=${this.id}`);
         }
 
-        if (this.cell.content) {
-            this.cell.content = undefined;
+        if (this.cell.get().content) {
+            this.cell.get().content = undefined;
         }
 
-        this.cell.assignPlayer(this);
+        this.cell.get().assignPlayer(this);
 
         this.updateCellsNearby();
 
@@ -133,7 +137,7 @@ export class Player {
     }
 
     private updateCellsNearby() {
-        const cellsNear = this.cell.neighbors();
+        const cellsNear = this.cell.get().neighbors();
 
         // Subscribing to unsubscribed cells
         for (const cell of cellsNear) {
@@ -145,7 +149,7 @@ export class Player {
                 this.updateCell(cell);
 
                 this.cellsNearby.push({ x: cell.x, y: cell.y, subscription })
-            } else if(cell.isClose(this.cell)) {
+            } else if(cell.isClose(this.cell.get())) {
                 this.updateCell(cell);
             }
         }

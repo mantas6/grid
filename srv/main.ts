@@ -106,7 +106,7 @@ io.on('connection', client => {
 
                 return { id, token, ack };
             }),
-            tap(_ => clientPlayer.assignCell(grid.findCellOccupiable()))
+            tap(_ => clientPlayer.assignCell(clientPlayer.cell.get() || grid.findCellOccupiable()))
         )
         .subscribe(({ id, token, ack }) => {
             ack({ id, token });
@@ -132,7 +132,7 @@ io.on('connection', client => {
             map(req => ({ ...req, cell: grid.getCell(req.x, req.y) })),
             filter(({ cell }) => !!cell),
             filter(({ cell }) => (<Cell>cell).isOccupiable() || (<Cell>cell).isAbsorbable()),
-            map(bundle => ({ ...bundle, distance: measureDistance(clientPlayer.cell, bundle.cell) })),
+            map(bundle => ({ ...bundle, distance: measureDistance(clientPlayer.cell.get(), bundle.cell) })),
             filter(({ distance }) => distance == 1),
             //filter(({ distance }) => clientPlayer.getStat('magic').affectByDiff(-distance)),
             tap(bundle => log.debug(`Position change request ${bundle.x} ${bundle.y}`)),

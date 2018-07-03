@@ -1,7 +1,8 @@
 import { Type, Exclude, Expose } from 'class-transformer';
 
-import { players } from '../state';
+import { players, grid } from '../state';
 import { Player } from '../class/player';
+import { Cell } from '../class/cell';
 
 export class Ref<T> {
     @Exclude()
@@ -49,5 +50,19 @@ export class PlayerRef extends Ref<Player> {
 
     unlink(player: Player) {
         return player.id;
+    }
+}
+
+export class CellRef extends Ref<Cell> {
+    link(plainCell: { x: number, y: number }) {
+        if (plainCell) {
+            return grid.getCell(plainCell.x, plainCell.y);
+        }
+    }
+
+    unlink(cell: Cell) {
+        if (cell) {
+            return { x: cell.x, y: cell.y };
+        }
     }
 }
