@@ -91,9 +91,11 @@ export default {
                 2: { x: this.playerX + 1, y: this.playerY },
             };
 
-            const { x, y } = coords[direction];
-
-            this.changePosition(x, y);
+            if (coords[direction]) {
+                const { x, y } = coords[direction];
+    
+                this.changePosition(x, y);
+            }
         },
 
         measureDistance(a, b) {
