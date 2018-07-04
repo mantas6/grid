@@ -13,7 +13,7 @@ import { readFileSync } from 'fs';
 import { Player } from './class/player';
 import { Cell } from './class/cell';
 
-import { grid, players, playersOnlineIds } from './state';
+import { grid, players } from './state';
 import { Log } from './utils/log';
 import { saveState, loadState } from './utils/persist';
 import { measureDistance } from './utils/method';
@@ -73,13 +73,13 @@ io.on('connection', client => {
             filter(({ req, ack }) => req && ack),
             filter(_ => !clientPlayer),
             // Also check for token ==
-            filter(({ req }) => !playersOnlineIds.has(req.id) || (client.emit('duplicateSession') && false)),
+            filter(({ req }) => !players.has(req.id) || (client.emit('duplicateSession') && false)),
             tap(({ req }) => log.debug(`Received login ${req.id} with token ${req.token}`)),
             switchMap(async ({ req, ack }) => {
                 let id = req.id;
                 let token = req.token;
 
-                const foundPlayer = players.get(req.id);
+                const foundPlayer = await Player.find(id);
 
                 if (!foundPlayer || foundPlayer.token != token) {
                     log.debug(`Creating a new player`);
@@ -88,21 +88,16 @@ io.on('connection', client => {
     
                     token = buffer.toString("hex");
 
-                    id = Player.generatePlayerId();
                     log.note(`Created new player  ${id} with token ${token}`);
 
-                    clientPlayer = Player.create(id);
-                    clientPlayer.token = token;
-                    // clientPlayer.id = id;
-
-                    players.set(id, clientPlayer);
+                    clientPlayer = await Player.create(token);
+                    id = clientPlayer.id;
                 } else {
-                    clientPlayer = players.get(req.id);
+                    clientPlayer = foundPlayer;
                 }
 
                 clientPlayer.logOn(client);
-                playersOnlineIds.add(clientPlayer.id);
-                io.emit('onlineCount', { count: playersOnlineIds.size });
+                io.emit('onlineCount', { count: players.size });
 
                 return { id, token, ack };
             }),
@@ -115,8 +110,8 @@ io.on('connection', client => {
     fromEvent(client, 'disconnect').subscribe(() => {
         if (clientPlayer) {
             clientPlayer.logOff();
-            playersOnlineIds.delete(clientPlayer.id);
-            io.emit('onlineCount', { count: playersOnlineIds.size });
+            players.delete(clientPlayer.id);
+            io.emit('onlineCount', { count: players.size });
         }
 
         log.note('Client disconnected');

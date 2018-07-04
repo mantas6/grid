@@ -3,6 +3,7 @@ import { Type, Exclude, Expose } from 'class-transformer';
 import { players, grid } from '../state';
 import { Player } from '../class/player';
 import { Cell } from '../class/cell';
+import { ObjectId } from 'bson';
 
 export class Ref<T> {
     @Exclude()
@@ -44,7 +45,7 @@ export class Ref<T> {
 }
 
 export class PlayerRef extends Ref<Player> {
-    link(playerId: number) {
+    link(playerId: ObjectId) {
         return players.get(playerId);
     }
 
