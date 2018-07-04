@@ -33,6 +33,7 @@ if (!NO_PERSIST) {
 
 let server;
 
+
 if (SSL_KEY && SSL_CERT) {
     server = createHttpsServer({
         key: readFileSync(SSL_KEY, "utf-8"),
