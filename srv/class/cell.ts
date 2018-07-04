@@ -51,26 +51,16 @@ export class Cell {
     toStats() {
         const stats: { name: string, value: number }[] = [];
         if (this.content) {
-            let secondLargestName: string;
             let largestName: string;
-            let secondLargestAmount: number = 0;
             let largestAmount: number = 0;
             let totalAmount: number = 0;
             
             for (const [ name, amount ] of entries(this.content)) {
                 if (amount > largestAmount) {
-                    secondLargestAmount = largestAmount;
-                    secondLargestName = largestName;
-
                     largestAmount = amount;
                     totalAmount += amount;
                     largestName = name;
-
                 }
-            }
-
-            if (largestAmount < secondLargestAmount * 0.75) {
-                
             }
 
             stats.push({ name: largestName, value: largestAmount / totalAmount * this.size });

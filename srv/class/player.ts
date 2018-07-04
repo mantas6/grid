@@ -1,24 +1,22 @@
 import { Subject, Subscription, from } from 'rxjs';
 import { bufferTime, bufferCount, filter } from 'rxjs/operators';
-import { find, entries, head } from 'lodash';
+import { find, entries } from 'lodash';
 import { Socket } from 'socket.io';
-import { Type, Exclude, Expose, classToPlain, plainToClass } from 'class-transformer';
+import { Type, Exclude, Expose } from 'class-transformer';
 
 import { Cell, CellUpdate } from './cell';
 import { Stat, StatUpdate } from './stat';
-import { grid, players, db } from '../state';
+import { grid, players } from '../state';
 import { Log } from '../utils/log';
 
 import { CellRef } from '../utils/ref';
-import { ObjectId, ObjectID } from 'mongodb';
 
-const dbPlayers = db.collection('players');
 const log = new Log('player');
 
 @Exclude()
 export class Player {
     @Expose()
-    id: ObjectId;
+    id: number;
 
     @Expose()
     token: string;
@@ -44,10 +42,10 @@ export class Player {
         
     }
     
-    static async create(token: string) {
+    static create(id: number) {
         const player = new Player();
 
-        player.token = token;
+        player.id = id;
 
         for (const statName of ['b', 'g', 'r', 'c', 'm', 'y', 'k']) {
             const stat = new Stat(player, statName);
@@ -57,30 +55,10 @@ export class Player {
             player.stats.push(stat);
         }
 
-        //players.set(id, player);
-        const result = await dbPlayers.insertOne({ token, created_at: new Date });
-
-        player.id = result.insertedId;
-
-        await dbPlayers.updateOne({ _id: player.id }, { $set: { data: classToPlain(player) } });
-
-        players.set(player.id, player);
-
         return player;
     }
 
-    static async find(id: ObjectId): Promise<Player> {
-        const document = await dbPlayers.findOne({ _id: id });
-
-        if (document) {
-            const player = plainToClass(Player, document.data);
-
-            return head(player);
-        }
-    }
-
-    async logOn(client: Socket) {
-
+    logOn(client: Socket) {
         this.statsSubject = new Subject<StatUpdate>();
         this.locationSubject = new Subject<PlayerLocationUpdate>();
         this.cellsUpdate = new Subject<CellUpdate>();
@@ -199,6 +177,18 @@ export class Player {
         }
 
         return false;
+    }
+
+    static generatePlayerId() {
+        let highestId = 0;
+    
+        for (const id of players.keys()) {
+            if (id > highestId) {
+                highestId = id;
+            }
+        }
+    
+        return ++highestId;
     }
 }
 
