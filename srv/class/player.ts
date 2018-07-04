@@ -10,7 +10,7 @@ import { grid, players, db } from '../state';
 import { Log } from '../utils/log';
 
 import { CellRef } from '../utils/ref';
-import { ObjectId } from 'mongodb';
+import { ObjectId, ObjectID } from 'mongodb';
 
 const dbPlayers = db.collection('players');
 const log = new Log('player');

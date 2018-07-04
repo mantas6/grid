@@ -88,10 +88,10 @@ io.on('connection', client => {
     
                     token = buffer.toString("hex");
 
-                    log.note(`Created new player  ${id} with token ${token}`);
-
                     clientPlayer = await Player.create(token);
                     id = clientPlayer.id;
+
+                    log.note(`Created new player  ${id} with token ${token}`);
                 } else {
                     clientPlayer = foundPlayer;
                 }
