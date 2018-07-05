@@ -73,7 +73,7 @@ io.on('connection', client => {
             filter(({ req, ack }) => req && ack),
             filter(_ => !clientPlayer),
             // Also check for token ==
-            filter(({ req }) => !playersOnlineIds.has(req.id) || (client.emit('duplicateSession') && false)),
+            filter(({ req }) => (!playersOnlineIds.has(req.id) || players.get(req.id).token != req.token) || (client.emit('duplicateSession') && false)),
             tap(({ req }) => log.debug(`Received login ${req.id} with token ${req.token}`)),
             switchMap(async ({ req, ack }) => {
                 let id = req.id;
