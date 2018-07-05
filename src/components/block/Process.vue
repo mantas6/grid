@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="d-flex justify-content-between">
+        <div class="d-flex flex-column flex-sm-row justify-content-between">
             <div class="small text-secondary">{{ used | formatShort }} / {{ size | formatShort }} ({{ size - used | formatShort }} free)</div>
             <div class="d-flex">
                 <div v-for="(amount, name) in content" :key="name" class="mr-1" v-show="amount">
