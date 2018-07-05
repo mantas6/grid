@@ -68,9 +68,11 @@ fromEvent(socket, 'updatePlayerLocation').subscribe(cell => {
     commit('garbageCollectCells');
 });
 
-fromEvent(socket, 'updateStat').subscribe((stat) => {
-    console.log('statUpdate', stat);
-    commit('updateStat', stat)
+fromEvent(socket, 'updateStats').subscribe(stats => {
+    for (const stat of stats) {
+        console.log('statUpdate', stat);
+        commit('updateStat', stat)
+    }
 });
 
 fromEvent(socket, 'updateProcess').subscribe(process => {

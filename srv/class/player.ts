@@ -34,7 +34,6 @@ export class Player {
     @Expose()
     process: Process;
 
-    // TODO: group emits
     statsSubject = new Subject<StatUpdate>();
     
     locationSubject = new Subject<PlayerLocationUpdate>();
@@ -79,8 +78,12 @@ export class Player {
             client.emit('updatePlayerLocation', update);
         });
 
-        this.statsSubject.subscribe(update => {
-            client.emit('updateStat', update);
+        this.statsSubject.pipe(
+            bufferTime(50),
+            filter(updates => !!updates.length)
+        )
+        .subscribe(updates => {
+            client.emit('updateStats', updates);
         });
 
         this.cellsUpdate.pipe(
@@ -94,6 +97,9 @@ export class Player {
         this.processUpdate.subscribe(update => {
             client.emit('updateProcess', update);
         });
+
+
+        this.processUpdate.next(this.process.getUpdate());
 
         for (const stat of this.stats) {
             this.statsSubject.next(stat.getUpdate());

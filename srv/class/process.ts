@@ -5,8 +5,8 @@ import { Cell } from './cell';
 import { PlayerRef } from '../utils/ref';
 
 export class Process {
-    size: number;
-    content: {[name: string]: number};
+    size: number = 100;
+    content: {[name: string]: number} = {};
 
     @Type(() => PlayerRef)
     player: PlayerRef;
