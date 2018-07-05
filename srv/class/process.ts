@@ -131,7 +131,7 @@ export class Process {
         }
 
         if (usableContent.m) {
-            this.affect('k', -usableContent.m);
+            this.affect('k', -10 * usableContent.m);
             // hpStat.affectMax(usableContent.m);
         }
     }
