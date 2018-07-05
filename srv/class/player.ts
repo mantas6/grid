@@ -116,8 +116,11 @@ export class Player {
         this.statsSubject.unsubscribe();
         this.cellsUpdate.unsubscribe();
         this.cellsUpdate.unsubscribe();
+        this.processUpdate.unsubscribe();
 
         this.cellsNearby = [];
+
+        this.cell.get().unassignPlayer();
     }
 
     assignCell(cell: Cell): boolean {
@@ -144,6 +147,7 @@ export class Player {
 
     absorbCell(cell: Cell): boolean {
         if (!cell.isAbsorbable() || !cell.content) {
+            log.debug(`Not absorbable`);
             return false;
         }
 
@@ -152,6 +156,7 @@ export class Player {
         const sumOfAmounts = sum(amounts);
 
         if (!this.process.canBeAdded(sumOfAmounts)) {
+            log.debug(`canNotBeAdded`);
             return false;
         }
 

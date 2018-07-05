@@ -136,7 +136,7 @@ io.on('connection', client => {
             filter(({ distance }) => distance == 1),
             //filter(({ distance }) => clientPlayer.getStat('magic').affectByDiff(-distance)),
             tap(bundle => log.debug(`Position change request ${bundle.x} ${bundle.y}`)),
-            tap(({ cell }) => clientPlayer.assignCell(cell))
+            tap(({ cell }) => ((<Cell>cell).isAbsorbable() && clientPlayer.absorbCell(cell)) || ((<Cell>cell).isOccupiable() && clientPlayer.assignCell(cell)))
         )
         .subscribe();
     

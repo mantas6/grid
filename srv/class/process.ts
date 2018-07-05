@@ -25,6 +25,8 @@ export class Process {
 
     add(name: string, amount: number) {
         this.content[name] += amount;
+
+        this.update();
     }
 
     usage() {
@@ -48,6 +50,9 @@ export class Process {
             for (const combo of combos) {
                 if (content[combo.first] && content[combo.second]) {
                     const amount = Math.max(content[combo.first], content[combo.second]);
+
+                    if (!processables[combo.output])
+                        processables[combo.output] = 0;
     
                     processables[combo.output] += amount;
     
@@ -57,6 +62,9 @@ export class Process {
             }
 
             for (const [ name, amount ] of entries(content)) {
+                if (!processables[name])
+                    processables[name] = 0;
+                
                 processables[name] += amount;
             }
         }
