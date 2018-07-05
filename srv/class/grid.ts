@@ -51,8 +51,6 @@ export class Grid {
         const y = chunkY * this.chunkSize;
         const cell = this.getCell(x, y);
 
-        log.debug(`isChunkGenerated ${x} ${y} status ${cell ? 'exists' : 'empty'}`)
-
         if (cell) {
             return true;
         }
@@ -61,21 +59,21 @@ export class Grid {
     }
 
     probeChunk(x: number, y: number) {
-        const chunkX = Math.floor(x / this.chunkSize);
-        const chunkY = Math.floor(y / this.chunkSize);
+        const startChunkX = Math.floor(x / this.chunkSize);
+        const startChunkY = Math.floor(y / this.chunkSize);
 
         const nearbyChunks = [
-            { x: chunkX, y: chunkY },
-            { x: chunkX, y: chunkY + 1 },
-            { x: chunkX, y: chunkY - 1 },
-            { x: chunkX + 1, y: chunkY },
-            { x: chunkX - 1, y: chunkY },
+            { chunkX: startChunkX, chunkY: startChunkY },
+            { chunkX: startChunkX, chunkY: startChunkY + 1 },
+            { chunkX: startChunkX, chunkY: startChunkY - 1 },
+            { chunkX: startChunkX + 1, chunkY: startChunkY },
+            { chunkX: startChunkX - 1, chunkY: startChunkY },
         ];
 
-        for (const { x, y } of nearbyChunks) {
-            if (!this.isChunkGenerated(x, y)) {
-                this.generateChunk(x, y);
-                log.complete(`Generated chunk of X=${x} Y=${y}`);
+        for (const { chunkX, chunkY } of nearbyChunks) {
+            if (!this.isChunkGenerated(chunkX, chunkY)) {
+                this.generateChunk(chunkX, chunkY);
+                log.complete(`Generated chunk of X=${chunkX} Y=${chunkY}`);
             }
         }
     }
