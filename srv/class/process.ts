@@ -4,6 +4,7 @@ import { Player } from './player';
 import { Cell } from './cell';
 import { PlayerRef } from '../utils/ref';
 import { Log } from '../utils/log';
+import { grid } from '../state';
 
 const log = new Log('process');
 
@@ -152,6 +153,13 @@ export class Process {
 
         if (fodStat.isEmpty() && staStat.isEmpty()) {
             hpStat.affectByDiff(-1, true);
+        }
+
+        // Death handler
+        if (hpStat.isEmpty()) {
+            this.player.get().initialize();
+            this.player.get().assignCell(grid.findCellOccupiable());
+            this.player.get().updateAll();
         }
     }
 

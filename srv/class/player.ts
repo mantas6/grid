@@ -52,20 +52,25 @@ export class Player {
     
     static create(id: number) {
         const player = new Player();
-
-        player.process = new Process(player);
-
         player.id = id;
 
+        player.initialize();
+
+        return player;
+    }
+
+    initialize() {
+        this.process = new Process(this);
+
+        this.stats = [];
+
         for (const statName of ['hp', 'fod', 'sta']) {
-            const stat = new Stat(player, statName);
+            const stat = new Stat(this, statName);
             stat.max = 100;
             stat.current = 100;
 
-            player.stats.push(stat);
+            this.stats.push(stat);
         }
-
-        return player;
     }
 
     logOn(client: Socket) {
@@ -106,11 +111,7 @@ export class Player {
             this.process.transmuteStats();
         });
 
-        this.processUpdate.next(this.process.getUpdate());
-
-        for (const stat of this.stats) {
-            this.statsSubject.next(stat.getUpdate());
-        }
+        this.updateAll();
     }
 
     logOff() {
@@ -179,6 +180,14 @@ export class Player {
 
     getStat(name: string): Stat {
         return find(this.stats, { name });
+    }
+
+    updateAll() {
+        this.processUpdate.next(this.process.getUpdate());
+
+        for (const stat of this.stats) {
+            this.statsSubject.next(stat.getUpdate());
+        }
     }
 
     private updateCellsNearby() {
