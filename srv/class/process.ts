@@ -98,7 +98,7 @@ export class Process {
                 const acidToUse = ceil(amountOfAcid / 10);
                 const amountToProcess = ceil(amount * acidToUse / amountToProcessTotal);
 
-                log.debug(`amountToProcess of ${name} is ${amountToProcess}`);
+                // log.debug(`amountToProcess of ${name} is ${amountToProcess}`);
                 
                 this.modify('c', -(acidToUse / 10));
                 this.modify(name, -amountToProcess);

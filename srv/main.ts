@@ -135,6 +135,7 @@ io.on('connection', client => {
             map(bundle => ({ ...bundle, distance: measureDistance(clientPlayer.cell.get(), bundle.cell) })),
             filter(({ distance }) => distance == 1),
             filter(({ cell }) => clientPlayer.getStat('sta').affectByDiff(-1 * (<Cell>cell).size || 1)),
+            tap(({ cell }) => grid.probeChunk(cell.x, cell.y)),
             tap(bundle => log.debug(`Position change request ${bundle.x} ${bundle.y}`)),
             tap(({ cell }) => ((<Cell>cell).isAbsorbable() && clientPlayer.absorbCell(cell)) || ((<Cell>cell).isOccupiable() && clientPlayer.assignCell(cell)))
         )

@@ -4,30 +4,27 @@ import { Type, Exclude, Expose, Transform } from 'class-transformer';
 
 import { range, entries, sample, shuffle, random } from 'lodash';
 
+import { Log } from '../utils/log';
+
+const log = new Log('grid');
+
 export class Grid {
     @Type(() => Cell)
     map: Map = {};
 
-    constructor(sizeX: number, sizeY: number) {
-        for (const x of range(0, sizeX)) {
-            if (!this.map[x]) {
-                this.map[x] = {};
-            }
-    
-            for (const y of range(0, sizeY)) {
-                this.map[x][y] = undefined;
-            }
-        }
+    chunkSize: number;
+
+    constructor(chunkSize: number) {
+        this.chunkSize = chunkSize;
+        this.generateChunk(0, 0);
     }
 
-    static generate(): Grid {
-        const sizeX = 32;
-        const sizeY = 32;
+    generateChunk(chunkX: number, chunkY: number) {
+        const sizeX = chunkX * this.chunkSize;
+        const sizeY = chunkY * this.chunkSize;
     
-        const grid = new Grid(sizeX, sizeY);
-    
-        for (const x of range(0, sizeX)) {
-            for (const y of range(0, sizeY)) {
+        for (const x of range(sizeX, sizeX + this.chunkSize)) {
+            for (const y of range(sizeY, sizeY + this.chunkSize)) {
                 const cell = new Cell(x, y);
 
                 const randomCase = random(0, 100);
@@ -42,11 +39,38 @@ export class Grid {
 
                 cell.size = random(1, 2);
     
-                grid.setCell(x, y, cell);
+                this.setCell(x, y, cell);
             }
         }
     
-        return grid;
+    }
+
+    isChunkGenerated(chunkX: number, chunkY: number) {
+        if (this.getCell(chunkX * this.chunkSize - 1, chunkY * this.chunkSize - 1)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    probeChunk(x: number, y: number) {
+        const chunkX = Math.floor(x / this.chunkSize);
+        const chunkY = Math.floor(y / this.chunkSize);
+
+        const nearbyChunks = [
+            { x: chunkX, y: chunkY },
+            { x: chunkX, y: chunkY + 1 },
+            { x: chunkX, y: chunkY - 1 },
+            { x: chunkX + 1, y: chunkY },
+            { x: chunkX - 1, y: chunkY },
+        ];
+
+        for (const { x, y } of nearbyChunks) {
+            if (!this.isChunkGenerated(x, y)) {
+                this.generateChunk(chunkX, chunkY);
+                log.complete(`Generated chunk of X=${x} Y=${y}`);
+            }
+        }
     }
 
     getCell(x: number, y: number): Cell {
@@ -56,6 +80,9 @@ export class Grid {
     }
 
     setCell(x: number, y: number, cell: Cell) {
+        if (!this.map[x])
+            this.map[x] = {};
+
         this.map[x][y] = cell;
 
         return this;
