@@ -4,6 +4,9 @@ export const state = {
    playerLocation: undefined,
    isDuplicateSession: false,
    isConnected: false,
-   stats: [],
    onlineCount: 0,
+
+   stats: [],
+   processContent: {},
+   processSize: 0,
 };

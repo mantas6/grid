@@ -62,4 +62,9 @@ export const mutations = {
     updateOnlineCount(state, count) {
         state.onlineCount = count;
     },
+
+    updateProcess(state, update) {
+        state.processContent = update.content
+        state.processSize = update.size;
+    },
 };

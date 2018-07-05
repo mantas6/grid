@@ -73,6 +73,11 @@ fromEvent(socket, 'updateStat').subscribe((stat) => {
     commit('updateStat', stat)
 });
 
+fromEvent(socket, 'updateProcess').subscribe(process => {
+    console.log('updateProcess', process);
+    commit('updateProcess', process)
+});
+
 fromEvent(socket, 'duplicateSession').subscribe(_ => {
     console.log('duplicate session');
     commit('setDuplicateSession', true)

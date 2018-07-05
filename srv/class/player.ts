@@ -1,6 +1,6 @@
 import { Subject, Subscription, from } from 'rxjs';
 import { bufferTime, bufferCount, filter } from 'rxjs/operators';
-import { find, entries } from 'lodash';
+import { find, entries, values, sum } from 'lodash';
 import { Socket } from 'socket.io';
 import { Type, Exclude, Expose } from 'class-transformer';
 
@@ -10,6 +10,7 @@ import { grid, players } from '../state';
 import { Log } from '../utils/log';
 
 import { CellRef } from '../utils/ref';
+import { Process, ProcessUpdate } from './process';
 
 const log = new Log('player');
 
@@ -29,6 +30,10 @@ export class Player {
     @Expose()
     stats: Stat[] = [];
 
+    @Type(() => Process)
+    @Expose()
+    process: Process;
+
     // TODO: group emits
     statsSubject = new Subject<StatUpdate>();
     
@@ -36,6 +41,7 @@ export class Player {
 
     cellsNearby: CellSubscription[] = [];
     cellsUpdate = new Subject<CellUpdate>();
+    processUpdate = new Subject<ProcessUpdate>();
 
     client: Socket;
 
@@ -45,6 +51,8 @@ export class Player {
     
     static create(id: number) {
         const player = new Player();
+
+        player.process = new Process(player);
 
         player.id = id;
 
@@ -63,6 +71,7 @@ export class Player {
         this.statsSubject = new Subject<StatUpdate>();
         this.locationSubject = new Subject<PlayerLocationUpdate>();
         this.cellsUpdate = new Subject<CellUpdate>();
+        this.processUpdate = new Subject<ProcessUpdate>();
 
         this.client = client;
 
@@ -80,6 +89,10 @@ export class Player {
         )
         .subscribe(updates => {
             client.emit('cellsUpdate', updates);
+        });
+
+        this.processUpdate.subscribe(update => {
+            client.emit('updateProcess', update);
         });
 
         for (const stat of this.stats) {
@@ -128,10 +141,16 @@ export class Player {
             return false;
         }
 
-        const stats = cell.toStats();
+        const processables = this.process.processablesOfCell(cell);
+        const amounts = values(processables);
+        const sumOfAmounts = sum(amounts);
 
-        for (const stat of stats) {
-            this.getStat(stat.name).affectByDiff(stat.value, true);
+        if (!this.process.canBeAdded(sumOfAmounts)) {
+            return false;
+        }
+
+        for (const [ name, amount ] of entries(processables)) {
+            this.process.add(name, amount);
         }
 
         cell.clearContent();

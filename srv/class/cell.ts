@@ -48,27 +48,6 @@ export class Cell {
         this.size = undefined;
     }
 
-    toStats() {
-        const stats: { name: string, value: number }[] = [];
-        if (this.content) {
-            let largestName: string;
-            let largestAmount: number = 0;
-            let totalAmount: number = 0;
-            
-            for (const [ name, amount ] of entries(this.content)) {
-                if (amount > largestAmount) {
-                    largestAmount = amount;
-                    totalAmount += amount;
-                    largestName = name;
-                }
-            }
-
-            stats.push({ name: largestName, value: largestAmount / totalAmount * this.size });
-        }
-
-        return stats;
-    }
-
     neighbors(): Cell[] {
         const neighbors: Cell[] = [];
 
