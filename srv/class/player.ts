@@ -101,7 +101,7 @@ export class Player {
         });
 
         this.processTimer = interval(1000).subscribe(_ => {
-            log.debug(`processContent()`);
+            // log.debug(`processContent()`);
             this.process.processContent();
             this.process.transmuteStats();
         });
