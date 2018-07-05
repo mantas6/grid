@@ -10,6 +10,7 @@ import { VueHammer } from 'vue2-hammer'
 
 import { router } from './router'
 import { store } from './store'
+import { variantByColor } from './method'
 import Singleton from './singleton'
 
 const numberformat = require('swarm-numberformat');
@@ -20,7 +21,8 @@ const numberformat = require('swarm-numberformat');
 Vue.use(BootstrapVue);
 
 Vue.use(VueHammer);
-Vue.filter('formatShort', numberformat.formatShort)
+Vue.filter('formatShort', numberformat.formatShort);
+Vue.filter('variantByColor', variantByColor);
 
 /* eslint-disable no-new */
 new Vue({

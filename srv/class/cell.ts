@@ -46,6 +46,7 @@ export class Cell {
     clearContent() {
         this.content = undefined;
         this.size = undefined;
+        this.update();
     }
 
     neighbors(): Cell[] {

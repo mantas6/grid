@@ -5,7 +5,7 @@ import { Cell } from './cell';
 import { PlayerRef } from '../utils/ref';
 
 export class Process {
-    size: number = 100;
+    size: number = 1000;
     content: {[name: string]: number} = {};
 
     @Type(() => PlayerRef)
@@ -24,6 +24,9 @@ export class Process {
     }
 
     add(name: string, amount: number) {
+        if (!this.content[name])
+            this.content[name] = 0;
+        
         this.content[name] += amount;
 
         this.update();
