@@ -60,7 +60,7 @@ export class Player {
         for (const statName of ['hp', 'fod', 'sta']) {
             const stat = new Stat(player, statName);
             stat.max = 100;
-            stat.current = 50;
+            stat.current = 100;
 
             player.stats.push(stat);
         }

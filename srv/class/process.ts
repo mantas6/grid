@@ -129,11 +129,16 @@ export class Process {
         // Stamina regen
         const staStat = player.getStat('sta');
         const fodStat = player.getStat('fod');
+        const hpStat = player.getStat('hp');
 
         if (!staStat.isFull()) {
             if (fodStat.affectByDiff(-1)) {
                 staStat.affectByDiff(1, true);
             }
+        }
+
+        if (fodStat.isEmpty() && staStat.isEmpty()) {
+            hpStat.affectByDiff(-1, true);
         }
     }
 

@@ -43,6 +43,10 @@ export class Stat {
         return this.current >= this.max;
     }
 
+    isEmpty(): boolean {
+        return this.current < 1;
+    }
+
     getUpdate() {
         return { name: this.name, current: this.current, max: this.max };
     }
