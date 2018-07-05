@@ -29,6 +29,7 @@ export class Player {
     @Expose()
     stats: Stat[] = [];
 
+    // TODO: group emits
     statsSubject = new Subject<StatUpdate>();
     
     locationSubject = new Subject<PlayerLocationUpdate>();
@@ -100,8 +101,12 @@ export class Player {
         this.cellsNearby = [];
     }
 
-    assignCell(cell: Cell) {
+    assignCell(cell: Cell): boolean {
         log.debug(`Assigning player to cell ${cell.toString()}`);
+
+        if (!cell.isOccupiable()) {
+            return false;
+        }
 
         if (this.cell.get()) {
             this.cell.get().unassignPlayer();
@@ -109,31 +114,29 @@ export class Player {
 
         this.cell.setRef(cell);
 
-        if (!this.cell.get().isOccupiable() && !this.cell.get().isAbsorbable()) {
-            throw new Error(`Failed to assign player to cell. It's already occupied. ${cell.toString()} playerId=${this.id}`);
-        }
-
-        this.absorbCell();
-
         this.cell.get().assignPlayer(this);
 
         this.updateCellsNearby();
 
         this.locationSubject.next({ x: cell.x, y: cell.y });
+
+        return true;
     }
 
-    absorbCell() {
-        const cell = this.cell.get();
-
-        if (cell.content) {
-            const stats = cell.toStats();
-
-            for (const stat of stats) {
-                this.getStat(stat.name).affectByDiff(stat.value, true);
-            }
-
-            cell.clearContent();
+    absorbCell(cell: Cell): boolean {
+        if (!cell.isAbsorbable() || !cell.content) {
+            return false;
         }
+
+        const stats = cell.toStats();
+
+        for (const stat of stats) {
+            this.getStat(stat.name).affectByDiff(stat.value, true);
+        }
+
+        cell.clearContent();
+
+        return true;
     }
 
     getStat(name: string): Stat {
