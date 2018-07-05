@@ -32,9 +32,11 @@ export class Grid {
 
                 const randomCase = random(0, 100);
 
-                if (randomCase > 90) {
+                if(randomCase > 99) {
+                    cell.content = generatePureCell();
+                } else if (randomCase > 90) {
                     cell.content = generateCellContent();
-                } else if(randomCase > 10) {
+                } else if(randomCase > 30) {
                     cell.content = generateCellSlab();
                 }
 
@@ -74,6 +76,21 @@ function generateCellSlab(): Content {
     return {
         k: random(75, 100),
     };
+}
+
+function generatePureCell(): Content {
+    const content = {
+        c: 0,
+        m: 0,
+        y: 0,
+        k: 0,
+    };
+
+    const color = sample(['c', 'm', 'y']);
+
+    content[color] = random(25, 50);
+
+    return content;
 }
 
 function generateCellContent(): Content {

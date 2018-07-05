@@ -1,6 +1,7 @@
 <template>
     <div class="d-flex justify-content-center">
         <div class="game">
+            <message></message>
             <div v-if="map">
                 <grid class="grid" :map="map"></grid>
                 <process :content="processContent" :size="processSize"></process>
@@ -18,6 +19,7 @@
 import Grid from '@/components/block/Grid';
 import Stat from '@/components/block/Stat';
 import Process from '@/components/block/Process';
+import Message from '@/components/block/Message';
 import { mapState } from 'vuex';
 
 import { orderBy } from 'lodash';
@@ -25,7 +27,7 @@ import { orderBy } from 'lodash';
 import Singleton from '@/singleton'
 
 export default {
-    components: { Grid, Stat, Process },
+    components: { Grid, Stat, Process, Message },
 
     computed: {
         ...mapState(['map', 'stats', 'onlineCount', 'processContent', 'processSize']),

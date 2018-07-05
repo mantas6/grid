@@ -9,4 +9,6 @@ export const state = {
    stats: [],
    processContent: {},
    processSize: 0,
+
+   message: undefined,
 };

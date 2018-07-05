@@ -91,3 +91,7 @@ fromEvent(socket, 'onlineCount').subscribe(({ count }) => {
     console.log('Online count', count);
     commit('updateOnlineCount', count)
 });
+
+fromEvent(socket, 'message').subscribe(message => {
+    commit('addMessage', message)
+});

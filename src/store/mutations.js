@@ -67,4 +67,12 @@ export const mutations = {
         state.processContent = update.content
         state.processSize = update.size;
     },
+
+    addMessage(state, message) {
+        state.message = message;
+    },
+
+    clearMessage(state) {
+        state.message = undefined;
+    },
 };
