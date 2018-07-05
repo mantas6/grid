@@ -39,6 +39,10 @@ export class Stat {
         return true;
     }
 
+    isFull(): boolean {
+        return this.current >= this.max;
+    }
+
     getUpdate() {
         return { name: this.name, current: this.current, max: this.max };
     }

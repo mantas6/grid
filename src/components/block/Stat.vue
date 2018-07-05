@@ -13,13 +13,10 @@ export default {
      computed: {
         variant() {
             const variants = {
-                c: 'cyan',
-                m: 'magenta',
-                y: 'yellow',
-                k: 'black',
-                r: 'red',
-                g: 'green',
-                b: 'blue',
+                fod: 'success',
+                hp: 'danger',
+                hyd: 'primary',
+                sta: 'info',
             };
 
             return variants[this.stat.name];

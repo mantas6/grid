@@ -1,12 +1,15 @@
 import { Type, Exclude, Expose } from 'class-transformer';
-import { values, sum, entries } from 'lodash';
+import { values, sum, entries, clamp, round, ceil } from 'lodash';
 import { Player } from './player';
 import { Cell } from './cell';
 import { PlayerRef } from '../utils/ref';
+import { Log } from '../utils/log';
+
+const log = new Log('process');
 
 export class Process {
-    size: number = 1000;
-    content: {[name: string]: number} = {};
+    size: number = 10000;
+    content: ProcessContent = {};
 
     @Type(() => PlayerRef)
     player: PlayerRef;
@@ -15,19 +18,23 @@ export class Process {
         this.player = new PlayerRef().setRef(player);
     }
 
-    canBeAdded(amount: number) {
-        if (this.usage() + amount <= this.size) {
+    canBeModified(name: string, diff: number) {
+        if (this.usage() + diff <= this.size && this.content[name] + diff >= 0) {
             return true;
         }
 
         return false;
     }
 
-    add(name: string, amount: number) {
+    modify(name: string, diff: number) {
         if (!this.content[name])
             this.content[name] = 0;
         
-        this.content[name] += amount;
+        if (!this.canBeModified(name, diff)) {
+            return false;
+        }
+        
+        this.content[name] += diff;
 
         this.update();
     }
@@ -52,7 +59,7 @@ export class Process {
 
             for (const combo of combos) {
                 if (content[combo.first] && content[combo.second]) {
-                    const amount = Math.max(content[combo.first], content[combo.second]);
+                    const amount = Math.min(content[combo.first], content[combo.second]);
 
                     if (!processables[combo.output])
                         processables[combo.output] = 0;
@@ -75,6 +82,61 @@ export class Process {
         return processables;
     }
 
+    processContent() {
+        // Acid is what make the processing of the content possible and it's entirely dependant on this
+        const amountTotal = this.usage();
+        const amountOfAcid = this.content.c;
+        const amountToProcessTotal = amountTotal - amountOfAcid;
+
+        const usableContent = { r: 0, g: 0, b: 0 };
+
+        for (const [ name, amount ] of entries(this.content)) {
+            if (name == 'c')
+                continue;
+
+            if (amount && amountOfAcid > 1) {
+                const acidToUse = ceil(amountOfAcid / 10);
+                const amountToProcess = ceil(amount * acidToUse / amountToProcessTotal);
+
+                log.debug(`amountToProcess of ${name} is ${amountToProcess}`);
+                
+                this.modify('c', -(acidToUse / 10));
+                this.modify(name, -amountToProcess);
+                usableContent[name] += amountToProcess;
+            }
+        }
+
+        const hpStat = this.player.get().getStat('hp');
+        const fodStat = this.player.get().getStat('fod');
+
+        // HP regen
+        if (!hpStat.isFull() && usableContent.r && fodStat.affectByDiff(-usableContent.r)) {
+            hpStat.affectByDiff(usableContent.r, true);
+            usableContent.r = 0;
+        }
+
+        // Fod
+        if (!fodStat.isFull() && usableContent.g && usableContent.b) {
+            fodStat.affectByDiff(Math.min(usableContent.g, usableContent.b), true);
+            usableContent.g = 0;
+            usableContent.b = 0;
+        }
+    }
+
+    transmuteStats() {
+        const player = this.player.get();
+
+        // Stamina regen
+        const staStat = player.getStat('sta');
+        const fodStat = player.getStat('fod');
+
+        if (!staStat.isFull()) {
+            if (fodStat.affectByDiff(-1)) {
+                staStat.affectByDiff(1, true);
+            }
+        }
+    }
+
     update() {
         this.player.get().processUpdate.next(this.getUpdate());
     }
@@ -85,6 +147,16 @@ export class Process {
 }
 
 export interface ProcessUpdate {
-    content: { [ name: string ]: number };
+    content: ProcessContent;
     size: number;
+}
+
+interface ProcessContent {
+    c?: number;
+    m?: number;
+    y?: number;
+    k?: number;
+    r?: number;
+    g?: number;
+    b?: number;
 }

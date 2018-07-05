@@ -1,4 +1,4 @@
-import { Subject, Subscription, from } from 'rxjs';
+import { Subject, Subscription, from, Observable, interval } from 'rxjs';
 import { bufferTime, bufferCount, filter } from 'rxjs/operators';
 import { find, entries, values, sum } from 'lodash';
 import { Socket } from 'socket.io';
@@ -34,13 +34,15 @@ export class Player {
     @Expose()
     process: Process;
 
-    statsSubject = new Subject<StatUpdate>();
+    statsSubject: Subject<StatUpdate>;
     
-    locationSubject = new Subject<PlayerLocationUpdate>();
+    locationSubject: Subject<PlayerLocationUpdate>;
 
     cellsNearby: CellSubscription[] = [];
-    cellsUpdate = new Subject<CellUpdate>();
-    processUpdate = new Subject<ProcessUpdate>();
+    cellsUpdate: Subject<CellUpdate>;
+    processUpdate: Subject<ProcessUpdate>;
+
+    processTimer: Subscription;
 
     client: Socket;
 
@@ -55,10 +57,10 @@ export class Player {
 
         player.id = id;
 
-        for (const statName of ['hp', 'fod', 'hyd', 'sta']) {
+        for (const statName of ['hp', 'fod', 'sta']) {
             const stat = new Stat(player, statName);
             stat.max = 100;
-            stat.current = 0;
+            stat.current = 50;
 
             player.stats.push(stat);
         }
@@ -98,6 +100,11 @@ export class Player {
             client.emit('updateProcess', update);
         });
 
+        this.processTimer = interval(1000).subscribe(_ => {
+            log.debug(`processContent()`);
+            this.process.processContent();
+            this.process.transmuteStats();
+        });
 
         this.processUpdate.next(this.process.getUpdate());
 
@@ -117,6 +124,7 @@ export class Player {
         this.cellsUpdate.unsubscribe();
         this.cellsUpdate.unsubscribe();
         this.processUpdate.unsubscribe();
+        this.processTimer.unsubscribe();
 
         this.cellsNearby = [];
 
@@ -155,13 +163,13 @@ export class Player {
         const amounts = values(processables);
         const sumOfAmounts = sum(amounts);
 
-        if (!this.process.canBeAdded(sumOfAmounts)) {
+        if (this.process.usage() + sumOfAmounts > this.process.size) {
             log.debug(`canNotBeAdded`);
             return false;
         }
 
         for (const [ name, amount ] of entries(processables)) {
-            this.process.add(name, amount);
+            this.process.modify(name, amount);
         }
 
         cell.clearContent();
