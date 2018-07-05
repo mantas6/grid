@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex justify-content-center" v-hammer:swipe="moveDirection">
+    <div class="d-flex justify-content-center" v-hammer:swipe="moveBySwipe">
         <div v-for="(lineX, relX) in grid" :key="relX">
             <div v-for="(cell, relY) in lineX" :key="relY" class="mb-1 mr-1">
                 <cell :cell="cell"
@@ -14,7 +14,7 @@
 
 <script>
 import Cell from '@/components/block/Cell';
-import { mapState } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import { timer } from 'rxjs';
 import { entries, orderBy } from 'lodash';
 
@@ -28,6 +28,7 @@ export default {
     },
 
     computed: {
+        ...mapGetters(['playerX', 'playerY']),
         ...mapState(['playerId', 'playerLocation']),
 
         grid() {
@@ -55,17 +56,11 @@ export default {
 
             return grid;
         },
-
-        playerX() {
-            return this.playerLocation && this.playerLocation.x;
-        },
-
-        playerY() {
-            return this.playerLocation && this.playerLocation.y;
-        },
     },
 
     methods: {
+        ...mapActions(['moveDirection']),
+
         isPlayerAt(x, y) {
             return this.playerX == x && this.playerY == y;
         },
@@ -83,18 +78,11 @@ export default {
             Singleton.socket.emit('changePosition', { x, y });
         },
 
-        moveDirection({ direction }) {
-            const coords = {
-                16: { x: this.playerX, y: this.playerY - 1 },
-                8: { x: this.playerX, y: this.playerY + 1 },
-                4: { x: this.playerX - 1, y: this.playerY },
-                2: { x: this.playerX + 1, y: this.playerY },
-            };
+        moveBySwipe({ direction }) {
+            const coords = { 16: 'up', 8: 'down', 4: 'left', 2: 'right' };
 
             if (coords[direction]) {
-                const { x, y } = coords[direction];
-    
-                this.changePosition(x, y);
+                this.moveDirection(coords[direction]);
             }
         },
 
