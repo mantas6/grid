@@ -169,7 +169,7 @@ export class Player {
         }
 
         for (const [ name, amount ] of entries(processables)) {
-            this.process.modify(name, amount);
+            this.process.affect(name, amount);
         }
 
         cell.clearContent();

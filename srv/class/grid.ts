@@ -40,13 +40,20 @@ export class Grid {
                 cell.size = random(1, 2);
     
                 this.setCell(x, y, cell);
+                cell.update();
             }
         }
     
     }
 
     isChunkGenerated(chunkX: number, chunkY: number) {
-        if (this.getCell(chunkX * this.chunkSize - 1, chunkY * this.chunkSize - 1)) {
+        const x = chunkX * this.chunkSize;
+        const y = chunkY * this.chunkSize;
+        const cell = this.getCell(x, y);
+
+        log.debug(`isChunkGenerated ${x} ${y} status ${cell ? 'exists' : 'empty'}`)
+
+        if (cell) {
             return true;
         }
 
@@ -67,7 +74,7 @@ export class Grid {
 
         for (const { x, y } of nearbyChunks) {
             if (!this.isChunkGenerated(x, y)) {
-                this.generateChunk(chunkX, chunkY);
+                this.generateChunk(x, y);
                 log.complete(`Generated chunk of X=${x} Y=${y}`);
             }
         }

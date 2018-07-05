@@ -26,7 +26,7 @@ export class Process {
         return false;
     }
 
-    modify(name: string, diff: number) {
+    affect(name: string, diff: number) {
         if (!this.content[name])
             this.content[name] = 0;
         
@@ -100,8 +100,8 @@ export class Process {
 
                 // log.debug(`amountToProcess of ${name} is ${amountToProcess}`);
                 
-                this.modify('c', -(acidToUse / 10));
-                this.modify(name, -amountToProcess);
+                this.affect('c', -(acidToUse / 10));
+                this.affect(name, -amountToProcess);
                 usableContent[name] += amountToProcess;
             }
         }
@@ -131,7 +131,8 @@ export class Process {
         }
 
         if (usableContent.m) {
-            hpStat.affectMax(usableContent.m);
+            this.affect('k', -usableContent.m);
+            // hpStat.affectMax(usableContent.m);
         }
     }
 

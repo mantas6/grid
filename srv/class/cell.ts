@@ -25,6 +25,14 @@ export class Cell {
         this.y = y;
     }
 
+    getOccupationCost() {
+        if (this.size) {
+            return this.size;
+        }
+
+        return 1;
+    }
+
     isOccupiable(): boolean {
         return !this.player && !this.content;
     }
@@ -80,7 +88,7 @@ export class Cell {
         return `X=${this.x} Y=${this.y}`;
     }
 
-    private update() {
+    update() {
         this.subject.next(this.getUpdate());
     }
 }
