@@ -88,7 +88,7 @@ export class Process {
         const amountOfAcid = this.content.c;
         const amountToProcessTotal = amountTotal - amountOfAcid;
 
-        const usableContent = { r: 0, g: 0, b: 0 };
+        const usableContent = { r: 0, g: 0, b: 0, c: 0, y: 0, m: 0, k: 0 };
 
         for (const [ name, amount ] of entries(this.content)) {
             if (name == 'c')
@@ -108,6 +108,7 @@ export class Process {
 
         const hpStat = this.player.get().getStat('hp');
         const fodStat = this.player.get().getStat('fod');
+        const staStat = this.player.get().getStat('sta');
 
         // HP regen
         if (!hpStat.isFull() && usableContent.r && fodStat.affectByDiff(-usableContent.r)) {
@@ -116,10 +117,21 @@ export class Process {
         }
 
         // Fod
-        if (!fodStat.isFull() && usableContent.g && usableContent.b) {
-            fodStat.affectByDiff(Math.min(usableContent.g, usableContent.b), true);
+        if (!fodStat.isFull() && usableContent.g) {
+            fodStat.affectByDiff(usableContent.g, true);
             usableContent.g = 0;
-            usableContent.b = 0;
+        }
+
+        if (usableContent.y) {
+            fodStat.affectMax(usableContent.y);
+        }
+
+        if (usableContent.b) {
+            staStat.affectMax(usableContent.b);
+        }
+
+        if (usableContent.m) {
+            hpStat.affectMax(usableContent.m);
         }
     }
 

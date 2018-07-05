@@ -34,7 +34,7 @@ export class Stat {
         
         this.current = clamp(this.current + diff, 0, this.max);
 
-        this.player.get().statsSubject.next(this.getUpdate());
+        this.update();
     
         return true;
     }
@@ -45,6 +45,23 @@ export class Stat {
 
     isEmpty(): boolean {
         return this.current < 1;
+    }
+
+    affectMax(diff: number) {
+        if (this.max + diff < 0)
+            return false
+        
+        this.max += diff;
+        
+        this.update();
+        
+        return true;
+    }
+
+    update() {
+        this.player.get()
+            .statsSubject
+            .next(this.getUpdate());
     }
 
     getUpdate() {
