@@ -55,7 +55,7 @@ export class Player {
 
         player.id = id;
 
-        for (const statName of ['b', 'g', 'r', 'c', 'm', 'y', 'k']) {
+        for (const statName of ['hp', 'fod', 'hyd', 'sta']) {
             const stat = new Stat(player, statName);
             stat.max = 100;
             stat.current = 0;

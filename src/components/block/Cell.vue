@@ -1,10 +1,15 @@
 <template>
     <div>
-        <b-button :variant="buttonVariant" :disabled="disabled" @click="selectCell" :style="style">{{ buttonText }}</b-button>
+        <b-button :variant="buttonVariant" :disabled="disabled" @click="selectCell" :style="style">
+            <small v-if="buttonText">{{ buttonText }}</small>
+            <small class="text-light" v-else-if="cell.content">{{ contentSize | formatShort }}</small>
+        </b-button>
     </div>
 </template>
 
 <script>
+import { values, sum } from 'lodash';
+
 export default {
     props: { cell: Object, own: Boolean, disabled: Boolean },
 
@@ -45,6 +50,12 @@ export default {
             return {
                 backgroundColor: `rgb(${r}, ${g}, ${b})`,
             };
+        },
+
+        contentSize() {
+            const amounts = values(this.cell.content);
+            
+            return sum(amounts) * this.cell.size;
         },
     },
 

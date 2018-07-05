@@ -57,7 +57,7 @@ export class Process {
                     if (!processables[combo.output])
                         processables[combo.output] = 0;
     
-                    processables[combo.output] += amount;
+                    processables[combo.output] += amount * cell.size;
     
                     content[combo.first] -= amount;
                     content[combo.second] -= amount;
@@ -68,7 +68,7 @@ export class Process {
                 if (!processables[name])
                     processables[name] = 0;
                 
-                processables[name] += amount;
+                processables[name] += amount * cell.size;
             }
         }
 
