@@ -13,7 +13,7 @@ export class ChunkGenerator {
 
         if (chance > 80) {
             cell.content = {
-                k: random(75, 100),
+                black: random(75, 100),
             };
             cell.size = 1;
         }
