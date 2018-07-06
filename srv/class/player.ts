@@ -182,21 +182,8 @@ export class Player {
             return false;
         }
 
-        const processables = this.process.processablesOfCell(cell);
-        const amounts = values(processables);
-        const sumOfAmounts = sum(amounts);
-
-        if (this.process.usage() + sumOfAmounts > this.process.size) {
-            log.debug(`canNotBeAdded`);
-            return false;
-        }
-
-        for (const [ name, amount ] of entries(processables)) {
-            this.process.affect(name, amount);
-        }
-
-        for (const [ name, amount ] of entries(cell.content)) {
-            cell.affectContent(name, Math.min(-amount / 2, -50)); // TMP
+        if (this.process.processContentOfCell(cell)) {
+            return true;
         }
 
         return true;

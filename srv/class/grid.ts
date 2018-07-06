@@ -1,10 +1,11 @@
 import { Subject } from 'rxjs';
-import { Cell, Content } from './cell';
+import { Cell, CellContent } from './cell';
 import { Type, Exclude, Expose, Transform } from 'class-transformer';
 
 import { range, entries, sample, shuffle, random } from 'lodash';
 
 import { Log } from '../utils/log';
+import { ChunkGenerator } from '../utils/generate';
 import { measureDistance } from '../utils/method';
 import { InventoryItem } from './inventory';
 
@@ -24,24 +25,14 @@ export class Grid {
     generateChunk(chunkX: number, chunkY: number) {
         const sizeX = chunkX * this.chunkSize;
         const sizeY = chunkY * this.chunkSize;
+
+        const generator = new ChunkGenerator();
     
         for (const x of range(sizeX, sizeX + this.chunkSize)) {
             for (const y of range(sizeY, sizeY + this.chunkSize)) {
                 const cell = new Cell(x, y);
 
-                const randomCase = random(0, 100);
-
-                if(randomCase > 99) {
-                    cell.content = generatePureCell();
-                } else if (randomCase > 90) {
-                    cell.content = generateCellContent();
-                } else if(randomCase > 30) {
-                    cell.content = generateCellSlab();
-                } else if(randomCase > 10) {
-                    cell.item = generateItem();
-                }
-
-                cell.size = random(1, 2) * Math.max(Math.abs(chunkX), 1) * Math.max(Math.abs(chunkY), 1);
+                generator.fill(cell);
     
                 this.setCell(x, y, cell);
                 cell.update();
@@ -100,40 +91,6 @@ export class Grid {
             }
         }
     }
-}
-
-function generateItem(): InventoryItem {
-    return { name: 'c', level: 1 };
-}
-
-function generateCellSlab(): Content {
-    return {
-        k: random(75, 100),
-    };
-}
-
-function generatePureCell(): Content {
-    const content = {
-        c: 0,
-        m: 0,
-        y: 0,
-        k: 0,
-    };
-
-    const color = sample(['c', 'm', 'y']);
-
-    content[color] = random(25, 50);
-
-    return content;
-}
-
-function generateCellContent(): Content {
-    return {
-        c: random(25, 50),
-        m: random(25, 50),
-        y: random(25, 50),
-        k: random(25, 50),
-    };
 }
 
 interface Map {

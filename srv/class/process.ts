@@ -1,7 +1,7 @@
 import { Type, Exclude, Expose } from 'class-transformer';
 import { values, sum, entries, clamp, round, ceil } from 'lodash';
 import { Player } from './player';
-import { Cell } from './cell';
+import { Cell, CellContent } from './cell';
 import { PlayerRef } from '../utils/ref';
 import { Log } from '../utils/log';
 import { grid } from '../state';
@@ -46,41 +46,23 @@ export class Process {
         return sum(amounts);
     }
 
-    processablesOfCell(cell: Cell) {
-        const processables: { [name: string]: number } = { c: 0, m: 0, y: 0, k: 0, r: 0, g: 0, b: 0 };
+    processContentOfCell(cell: Cell): boolean {
+        const content = cell.content;
 
-        if (this.content) {
-            const content = { ...cell.content };
+        if (this.usage() + content.size > this.size) {
+            log.debug(`canNotBeAdded`);
+            return false;
+        }
 
-            const combos = [
-                { first: 'm', second: 'y', output: 'r' },
-                { first: 'c', second: 'y', output: 'g' },
-                { first: 'c', second: 'm', output: 'b' },
-            ];
+        for (const [ name, amount ] of entries(cell.content)) {
+            const affectDiff = Math.max(amount / 2, 50);
 
-            for (const combo of combos) {
-                if (content[combo.first] && content[combo.second]) {
-                    const amount = Math.min(content[combo.first], content[combo.second]);
-
-                    if (!processables[combo.output])
-                        processables[combo.output] = 0;
-    
-                    processables[combo.output] += amount * cell.size;
-    
-                    content[combo.first] -= amount;
-                    content[combo.second] -= amount;
-                }
-            }
-
-            for (const [ name, amount ] of entries(content)) {
-                if (!processables[name])
-                    processables[name] = 0;
-                
-                processables[name] += amount * cell.size;
+            if (cell.affectContent(name, -affectDiff)) {
+                this.affect(name, +affectDiff);
             }
         }
 
-        return processables;
+        return true;
     }
 
     processContent() {
@@ -169,12 +151,6 @@ export interface ProcessUpdate {
     size: number;
 }
 
-interface ProcessContent {
-    c?: number;
-    m?: number;
-    y?: number;
-    k?: number;
-    r?: number;
-    g?: number;
-    b?: number;
+interface ProcessContent extends CellContent {
+
 }

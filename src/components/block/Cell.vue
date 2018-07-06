@@ -2,7 +2,7 @@
     <div>
         <b-button :variant="buttonVariant" :disabled="disabled" @click="selectCell" :style="style">
             <small v-if="buttonText">{{ buttonText }}</small>
-            <small class="text-light" v-else-if="cell.content">{{ contentSize | formatShort }}</small>
+            <small v-else-if="cell.content" class="text-light">{{ contentSize | formatShort }}</small>
         </b-button>
     </div>
 </template>

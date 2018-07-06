@@ -12,7 +12,7 @@ export class Cell {
     x: number;
     y: number;
 
-    content: Content;
+    content: CellContent;
     size: number;
 
     item: InventoryItem;
@@ -33,7 +33,7 @@ export class Cell {
             return 0;
         }
 
-        if (this.size) {
+        if (this.content && this.size) {
             return this.size;
         }
 
@@ -121,8 +121,8 @@ export class Cell {
             x: this.x,
             y: this.y,
             content: this.content,
-            item: this.item,
             size: this.size,
+            item: this.item,
             isOccupiable: this.isOccupiable() || undefined,
             isAbsorbable: this.isAbsorbable() || undefined,
             playerId: this.player ? this.player.id : undefined,
@@ -141,7 +141,7 @@ export class Cell {
 export interface CellUpdate {
     x: number;
     y: number;
-    content?: Content;
+    content?: CellContent;
     size?: number;
     isOccupiable?: boolean;
     isAbsorbable?: boolean;
@@ -149,6 +149,7 @@ export interface CellUpdate {
     item?: InventoryItem;
 }
 
-export interface Content {
+export interface CellContent {
     [name: string]: number;
+    
 }
