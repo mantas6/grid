@@ -1,6 +1,6 @@
 import { Subject, Subscription, from, Observable, interval } from 'rxjs';
-import { bufferTime, bufferCount, filter } from 'rxjs/operators';
-import { find, entries, values, sum } from 'lodash';
+import { bufferTime, bufferCount, filter, map } from 'rxjs/operators';
+import { find, entries, values, sum, last } from 'lodash';
 import { Socket } from 'socket.io';
 import { Type, Exclude, Expose } from 'class-transformer';
 
@@ -101,7 +101,12 @@ export class Player {
             client.emit('cellsUpdate', updates);
         });
 
-        this.processUpdate.subscribe(update => {
+        this.processUpdate.pipe(
+            bufferTime(50),
+            filter(updates => !!updates.length),
+            map(updates => last(updates))
+        )
+        .subscribe(update => {
             client.emit('updateProcess', update);
         });
 
