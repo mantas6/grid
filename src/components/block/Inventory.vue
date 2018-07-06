@@ -1,16 +1,20 @@
 <template>
-    <div class="holder">
-        <small class="text-secondary">{{ items.length }} / {{ size }}</small>
-        <div class="d-flex">
-            <div v-show="!items.length">
-                <small>You have no items</small>
-            </div>
-            <div v-for="({ name, level }, index) in items" :key="index" class="mr-1">
-                <b-button variant="outline-secondary" @click="useItem(index)">
-                    <span>{{ name }}</span>
-                    <span>{{ level | formatShort }}</span>
-                </b-button>
-                <b-button size="sm" variant="danger" @click="dropItem(index)">x</b-button>
+    <div>
+        <div class="d-flex justify-content-between mb-1">
+            <small class="text-secondary">{{ items.length }} / {{ size }}</small>
+            <b-button size="sm" :variant="dropMode ? 'danger' : 'success'" @click="toggleMode">{{ dropMode ? 'Drop' : 'Use' }}</b-button>
+        </div>
+        <div class="holder">
+            <div class="d-flex">
+                <div v-show="!items.length">
+                    <small>You have no items</small>
+                </div>
+                <div v-for="({ name, level }, index) in items" :key="index" class="mr-1">
+                    <b-button :variant="dropMode ? 'outline-danger' : 'outline-secondary'" @click="dropMode ? dropItem(index) : useItem(index)">
+                        <span>{{ name }}</span>
+                        <span>{{ level | formatShort }}</span>
+                    </b-button>
+                </div>
             </div>
         </div>
     </div>
@@ -22,6 +26,12 @@ import Singleton from '@/singleton'
 export default {
     props: [ 'items', 'size' ],
 
+    data() {
+        return {
+            dropMode: false,
+        };
+    },
+
     methods: {
         useItem(index) {
             Singleton.socket.emit('useItem', { index });
@@ -29,6 +39,10 @@ export default {
 
         dropItem(index) {
             Singleton.socket.emit('dropItem', { index });
+        },
+
+        toggleMode() {
+            this.dropMode = !this.dropMode;
         },
     },
 }
