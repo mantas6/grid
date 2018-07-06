@@ -86,7 +86,7 @@ export class Player {
         });
 
         this.statsSubject.pipe(
-            bufferTime(50),
+            bufferTime(100),
             filter(updates => !!updates.length)
         )
         .subscribe(updates => {
@@ -94,7 +94,7 @@ export class Player {
         });
 
         this.cellsUpdate.pipe(
-            bufferTime(50),
+            bufferTime(100),
             filter(updates => !!updates.length)
         )
         .subscribe(updates => {
@@ -102,7 +102,7 @@ export class Player {
         });
 
         this.processUpdate.pipe(
-            bufferTime(50),
+            bufferTime(100),
             filter(updates => !!updates.length),
             map(updates => last(updates))
         )
