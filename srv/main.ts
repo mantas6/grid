@@ -163,6 +163,16 @@ io.on('connection', client => {
             tap(({ index }) => clientPlayer.inventory.useItem(index))
         )
         .subscribe();
+
+    fromEvent(client, 'dropItem')
+        .pipe(
+            filter(_ => !!clientPlayer),
+            filter(req => !!req),
+            filter(({ index }) => !isNaN(index)),
+            filter(({ index }) => clientPlayer.inventory.hasItem(index)),
+            tap(({ index }) => clientPlayer.inventory.dropItem(index))
+        )
+        .subscribe();
 });
 
 const everyMinute = timer(60e3, 60e3);

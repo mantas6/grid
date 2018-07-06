@@ -2,7 +2,7 @@
     <div class="d-flex justify-content-center">
         <div class="game">
             <message></message>
-            <div v-if="map">
+            <div v-if="map.length">
                 <grid class="grid" :map="map"></grid>
                 <process :content="processContent" :size="processSize"></process>
                 <b-row>

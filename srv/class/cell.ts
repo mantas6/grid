@@ -32,7 +32,7 @@ export class Cell {
         if (this.item) {
             return 0;
         }
-        
+
         if (this.size) {
             return this.size;
         }
@@ -88,6 +88,15 @@ export class Cell {
             this.update();
 
             return item;
+        }
+    }
+
+    addItem(item: InventoryItem): boolean {
+        if (!this.item) {
+            this.item = item;
+            this.update();
+
+            return true;
         }
     }
 

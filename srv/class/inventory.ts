@@ -3,6 +3,7 @@ import { head } from 'lodash';
 import { Player } from './player';
 import { PlayerRef } from '../utils/ref';
 import { Log } from '../utils/log';
+import { Cell } from './cell';
 
 const log = new Log('inventory');
 
@@ -11,7 +12,7 @@ export class Inventory {
     player: PlayerRef;
 
     items: InventoryItem[] = [];
-    size: number = 10;
+    size: number = 25;
 
     constructor(player: Player) {
         this.player = new PlayerRef().setRef(player);
@@ -22,7 +23,7 @@ export class Inventory {
     }
 
     addItem(item: InventoryItem) {
-        this.items.push(item);
+        this.items.unshift(item);
         this.update();
     }
 
@@ -44,6 +45,18 @@ export class Inventory {
             }
 
             this.removeItem(index);
+        }
+    }
+
+    dropItem(index: number) {
+        const item = this.items[index];
+
+        if (item) {
+            const cell = this.player.get().cell.get();
+
+            if (cell.addItem(item)) {
+                this.removeItem(index);
+            }
         }
     }
 
