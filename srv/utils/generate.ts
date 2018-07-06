@@ -15,18 +15,22 @@ export class ChunkGenerator {
             cell.content = {
                 dirt: random(750, 1000),
             };
+            cell.density = random(1200, 2000);
         } else if (chance > 91) {
             cell.content = {
                 acid: random(75, 100),
             };
+            cell.density = random(200, 400);
         } else if (chance > 90) {
             cell.content = {
                 energy: random(75, 100),
             };
+            cell.density = random(200, 400);
         } else if (chance > 80) {
             cell.content = {
                 dirt: random(75, 100),
             };
+            cell.density = random(200, 400);
         }
     }
 }
