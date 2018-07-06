@@ -33,6 +33,18 @@ export class Inventory {
         return head(item);
     }
 
+    useItem(index: number) {
+        const item = this.items[index];
+
+        if (item) {
+            switch (item.name) {
+                case 'c':
+                    this.player.get().process.affect('c', item.level);
+                    break;
+            }
+        }
+    }
+
     update() {
         this.player.get().inventoryUpdate.next(this.getUpdate());
     }

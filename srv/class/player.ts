@@ -223,10 +223,11 @@ export class Player {
     }
 
     updateAll() {
-        this.processUpdate.next(this.process.getUpdate());
+        this.process.update();
+        this.inventory.update();
 
         for (const stat of this.stats) {
-            this.statsSubject.next(stat.getUpdate());
+            stat.update();
         }
     }
 
