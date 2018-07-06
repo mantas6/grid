@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-button :variant="buttonVariant" :disabled="disabled" @click="selectCell" :style="style">
+        <b-button :variant="buttonVariant" :disabled="disabled" @click="selectCell" :style="cell.content ? colorByContent(cell.content, cell.size) : ''">
             <small v-if="buttonText">{{ buttonText }}</small>
             <small v-else-if="cell.content" class="text-light">{{ contentSize | formatShort }}</small>
         </b-button>
@@ -9,6 +9,7 @@
 
 <script>
 import { values, sum } from 'lodash';
+import { colorByContent } from '@/method'
 
 import { mapState } from 'vuex';
 
@@ -52,18 +53,6 @@ export default {
             return 'outline-secondary';
         },
 
-        style() {
-            if (!this.cell.content || this.own) {
-                return {};
-            }
-            const { c, m, y, k } = this.cell.content;
-            const { r, g, b } = this.cmykToRgb(c / this.cell.size, m / this.cell.size, y / this.cell.size, k / this.cell.size);
-
-            return {
-                backgroundColor: `rgb(${r}, ${g}, ${b})`,
-            };
-        },
-
         contentSize() {
             const amounts = values(this.cell.content);
             
@@ -72,6 +61,8 @@ export default {
     },
 
     methods: {
+        colorByContent,
+
         selectCell() {
             this.$emit('selectCell');
         },
