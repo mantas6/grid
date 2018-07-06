@@ -55,7 +55,7 @@ export class Process {
         }
 
         for (const [ name, amount ] of entries(cell.content)) {
-            const affectDiff = Math.max(amount / 2, 50);
+            const affectDiff = this.player.get().getStat('absorbStrength').current;
 
             if (cell.affectContent(name, -affectDiff)) {
                 this.affect(name, +affectDiff);
@@ -66,55 +66,31 @@ export class Process {
     }
 
     processContent() {
-        // Acid is what make the processing of the content possible and it's entirely dependant on this
+        const player = this.player.get();
         const amountTotal = this.usage();
-        const amountOfAcid = this.content.c;
+        // Acid is what make the processing of the content possible and it's entirely dependant on this
+        const amountOfAcid = this.content.acid || 0;
         const amountToProcessTotal = amountTotal - amountOfAcid;
+        const processSpeed = player.getStat('processSpeed').current;
+        const acidEff = player.getStat('acidEff').current;
 
-        const usableContent = { r: 0, g: 0, b: 0, c: 0, y: 0, m: 0, k: 0 };
+        const healthStat = this.player.get().getStat('health');
+        const energyStat = this.player.get().getStat('energy');
 
         for (const [ name, amount ] of entries(this.content)) {
-            if (name == 'c')
-                continue;
-
             if (amount && amountOfAcid > 1) {
-                const acidToUse = ceil(amountOfAcid / 10);
-                const amountToProcess = ceil(amount * acidToUse / amountToProcessTotal);
-
-                // log.debug(`amountToProcess of ${name} is ${amountToProcess}`);
+                const amountToProcess = processSpeed * acidEff * Math.min(amountOfAcid, 1);
                 
-                this.affect('c', -(acidToUse / 10));
                 this.affect(name, -amountToProcess);
-                usableContent[name] += amountToProcess;
+
+                switch(name) {
+                    case 'energy':
+                        if (!energyStat.isFull() && amountToProcess) {
+                            energyStat.affectByDiff(amountToProcess, true);
+                        }
+                        break;
+                }
             }
-        }
-
-        const hpStat = this.player.get().getStat('hp');
-        const staStat = this.player.get().getStat('sta');
-
-        // HP regen
-        if (!hpStat.isFull() && usableContent.r && staStat.affectByDiff(-usableContent.r)) {
-            hpStat.affectByDiff(usableContent.r, true);
-            usableContent.r = 0;
-        }
-
-        // Fod
-        if (!staStat.isFull() && usableContent.g) {
-            staStat.affectByDiff(usableContent.g, true);
-            usableContent.g = 0;
-        }
-
-        if (usableContent.y) {
-            // fodStat.affectMax(usableContent.y);
-        }
-
-        if (usableContent.b) {
-            staStat.affectMax(usableContent.b);
-        }
-
-        if (usableContent.m) {
-            this.affect('k', -10 * usableContent.m);
-            // hpStat.affectMax(usableContent.m);
         }
     }
 
@@ -122,10 +98,10 @@ export class Process {
         const player = this.player.get();
 
         // Stamina regen
-        const staStat = player.getStat('sta');
-        const hpStat = player.getStat('hp');
+        const enStat = player.getStat('health');
+        const hpStat = player.getStat('energy');
 
-        if (staStat.isEmpty()) {
+        if (enStat.isEmpty()) {
             hpStat.affectByDiff(-1, true);
         }
 

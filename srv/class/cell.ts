@@ -13,7 +13,6 @@ export class Cell {
     y: number;
 
     content: CellContent;
-    size: number;
 
     item: InventoryItem;
 
@@ -33,8 +32,8 @@ export class Cell {
             return 0;
         }
 
-        if (this.content && this.size) {
-            return this.size;
+        if (this.content) {
+            return sum(values(this.content)) / 100; // Todo
         }
 
         return 1;
@@ -60,7 +59,6 @@ export class Cell {
 
     clearContent() {
         this.content = undefined;
-        this.size = undefined;
         this.update();
     }
 
@@ -121,7 +119,6 @@ export class Cell {
             x: this.x,
             y: this.y,
             content: this.content,
-            size: this.size,
             item: this.item,
             isOccupiable: this.isOccupiable() || undefined,
             isAbsorbable: this.isAbsorbable() || undefined,
@@ -142,7 +139,6 @@ export interface CellUpdate {
     x: number;
     y: number;
     content?: CellContent;
-    size?: number;
     isOccupiable?: boolean;
     isAbsorbable?: boolean;
     playerId?: number;

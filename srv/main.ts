@@ -133,7 +133,7 @@ io.on('connection', client => {
             filter(({ cell }) => (<Cell>cell).isOccupiable() || (<Cell>cell).isAbsorbable()),
             map(bundle => ({ ...bundle, distance: measureDistance(clientPlayer.cell.get(), bundle.cell) })),
             filter(({ distance }) => distance == 1),
-            filter(({ cell }) => clientPlayer.getStat('sta').affectByDiff(-1 * (<Cell>cell).getInteractionCost()) || clientPlayer.getStat('hp').affectByDiff(-1 * (<Cell>cell).getInteractionCost())),
+            filter(({ cell }) => clientPlayer.getStat('energy').affectByDiff(-1 * (<Cell>cell).getInteractionCost()) || clientPlayer.getStat('health').affectByDiff(-1 * (<Cell>cell).getInteractionCost())),
             tap(({ cell }) => grid.probeChunk(cell.x, cell.y)),
             tap(bundle => log.debug(`Position change request ${bundle.x} ${bundle.y}`)),
             tap(({ cell }) => {
