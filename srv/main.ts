@@ -134,7 +134,7 @@ io.on('connection', client => {
             map(bundle => ({ ...bundle, distance: measureDistance(clientPlayer.cell.get(), bundle.cell) })),
             filter(({ distance }) => distance == 1),
             filter(({ cell }) => clientPlayer.getStat('sta').affectByDiff(-1 * (<Cell>cell).getOccupationCost()) || clientPlayer.getStat('hp').affectByDiff(-1 * (<Cell>cell).getOccupationCost())),
-            //tap(({ cell }) => grid.probeChunk(cell.x, cell.y)),
+            tap(({ cell }) => grid.probeChunk(cell.x, cell.y)),
             tap(bundle => log.debug(`Position change request ${bundle.x} ${bundle.y}`)),
             tap(({ cell }) => {
                 const targetCell = cell as Cell;
@@ -144,6 +144,8 @@ io.on('connection', client => {
                 } else if(targetCell.isAbsorbable()) {
                     if (targetCell.player) {
                         clientPlayer.absorbCellWithPlayer(targetCell);
+                    } else if (targetCell.item) {
+                        clientPlayer.absorbCellWithItem(targetCell);
                     } else {
                         clientPlayer.absorbCellWithContent(targetCell);
                     }

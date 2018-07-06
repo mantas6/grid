@@ -68,6 +68,11 @@ export const mutations = {
         state.processSize = update.size;
     },
 
+    updateInventory(state, update) {
+        state.inventory = update.items
+        state.inventorySize = update.size;
+    },
+
     addMessage(state, message) {
         state.message = message;
     },

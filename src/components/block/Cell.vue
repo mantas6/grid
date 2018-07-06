@@ -23,16 +23,16 @@ export default {
                 return '-';
             }
 
-            if (this.cell.isInvisible) {
-                return '?';
-            }
-
             if (this.own) {
                 return '+';
             }
 
             if (this.cell.playerId && this.cell.playerId != this.playerId) {
                 return '/\\';
+            }
+
+            if (this.cell.item) {
+                return '$';
             }
         },
 

@@ -3,6 +3,7 @@ import { range, toPairs, entries, sum, values, chain } from 'lodash';
 import { Type, Exclude, Expose, Transform } from 'class-transformer';
 
 import { Player } from './player';
+import { InventoryItem } from './inventory';
 import { grid } from '../state';
 
 import { measureDistance } from '../utils/method';
@@ -13,6 +14,8 @@ export class Cell {
 
     content: Content;
     size: number;
+
+    item: InventoryItem;
 
     @Exclude()
     player: Player;
@@ -34,11 +37,11 @@ export class Cell {
     }
 
     isOccupiable(): boolean {
-        return !this.player && !this.content;
+        return !this.player && !this.content && !this.item;
     }
 
     isAbsorbable(): boolean {
-        return !!this.player || !!this.content;
+        return !!this.player || !!this.content || !!this.item;
     }
 
     assignPlayer(player: Player) {
@@ -73,6 +76,17 @@ export class Cell {
         return true;
     }
 
+    pickupItem(): InventoryItem {
+        const item = this.item;
+
+        if (this.item) {
+            this.item = undefined;
+            this.update();
+
+            return item;
+        }
+    }
+
     neighbors(): Cell[] {
         const neighbors: Cell[] = [];
 
@@ -94,6 +108,7 @@ export class Cell {
             x: this.x,
             y: this.y,
             content: this.content,
+            item: this.item,
             size: this.size,
             isOccupiable: this.isOccupiable() || undefined,
             isAbsorbable: this.isAbsorbable() || undefined,
@@ -118,6 +133,7 @@ export interface CellUpdate {
     isOccupiable?: boolean;
     isAbsorbable?: boolean;
     playerId?: number;
+    item?: InventoryItem;
 }
 
 export interface Content {

@@ -77,6 +77,11 @@ fromEvent(socket, 'updateStats').subscribe(stats => {
     }
 });
 
+fromEvent(socket, 'updateInventory').subscribe(inventory => {
+    console.log('updateInventory', inventory);
+    commit('updateInventory', inventory)
+});
+
 fromEvent(socket, 'updateProcess').subscribe(process => {
     console.log('updateProcess', process);
     commit('updateProcess', process)

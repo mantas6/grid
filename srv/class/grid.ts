@@ -5,6 +5,8 @@ import { Type, Exclude, Expose, Transform } from 'class-transformer';
 import { range, entries, sample, shuffle, random } from 'lodash';
 
 import { Log } from '../utils/log';
+import { measureDistance } from '../utils/method';
+import { InventoryItem } from './inventory';
 
 const log = new Log('grid');
 
@@ -35,9 +37,11 @@ export class Grid {
                     cell.content = generateCellContent();
                 } else if(randomCase > 30) {
                     cell.content = generateCellSlab();
+                } else if(randomCase > 10) {
+                    cell.item = generateItem();
                 }
 
-                cell.size = random(1, 2);
+                cell.size = random(1, 2) * Math.max(Math.abs(chunkX), 1) * Math.max(Math.abs(chunkY), 1);
     
                 this.setCell(x, y, cell);
                 cell.update();
@@ -96,6 +100,10 @@ export class Grid {
             }
         }
     }
+}
+
+function generateItem(): InventoryItem {
+    return { name: 'c', level: 1 };
 }
 
 function generateCellSlab(): Content {

@@ -11,6 +11,7 @@ import { Log } from '../utils/log';
 
 import { CellRef } from '../utils/ref';
 import { Process, ProcessUpdate } from './process';
+import { Inventory, InventoryUpdate } from './inventory';
 
 const log = new Log('player');
 
@@ -34,6 +35,10 @@ export class Player {
     @Expose()
     process: Process;
 
+    @Type(() => Inventory)
+    @Expose()
+    inventory: Inventory;
+
     statsSubject: Subject<StatUpdate>;
     
     locationSubject: Subject<PlayerLocationUpdate>;
@@ -41,6 +46,7 @@ export class Player {
     cellsNearby: CellSubscription[] = [];
     cellsUpdate: Subject<CellUpdate>;
     processUpdate: Subject<ProcessUpdate>;
+    inventoryUpdate: Subject<InventoryUpdate>;
 
     processTimer: Subscription;
 
@@ -61,6 +67,7 @@ export class Player {
 
     initialize() {
         this.process = new Process(this);
+        this.inventory = new Inventory(this);
 
         this.stats = [];
 
@@ -78,6 +85,7 @@ export class Player {
         this.locationSubject = new Subject<PlayerLocationUpdate>();
         this.cellsUpdate = new Subject<CellUpdate>();
         this.processUpdate = new Subject<ProcessUpdate>();
+        this.inventoryUpdate = new Subject<InventoryUpdate>();
 
         this.client = client;
 
@@ -108,6 +116,15 @@ export class Player {
         )
         .subscribe(update => {
             client.emit('updateProcess', update);
+        });
+
+        this.inventoryUpdate.pipe(
+            bufferTime(100),
+            filter(updates => !!updates.length),
+            map(updates => last(updates))
+        )
+        .subscribe(update => {
+            client.emit('updateInventory', update);
         });
 
         this.processTimer = interval(1000).subscribe(_ => {
@@ -189,6 +206,16 @@ export class Player {
         cell.player.getStat('hp').affectByDiff(-1, true);
 
         return true;
+    }
+
+    absorbCellWithItem(cell: Cell): boolean {
+        if (this.inventory.hasFreeSlot()) {
+            const item = cell.pickupItem();
+
+            this.inventory.addItem(item);
+
+            return true;
+        }
     }
 
     getStat(name: string): Stat {

@@ -6,6 +6,9 @@ export const state = {
    isConnected: false,
    onlineCount: 0,
 
+   inventory: [],
+   inventorySize: 0,
+
    stats: [],
    processContent: {},
    processSize: 0,
