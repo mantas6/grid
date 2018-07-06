@@ -2,7 +2,7 @@
     <div>
         <div class="d-flex justify-content-between mb-1">
             <small class="text-secondary">{{ items.length }} / {{ size }}</small>
-            <b-button size="sm" :variant="dropMode ? 'danger' : 'success'" @click="toggleMode">{{ dropMode ? 'Drop' : 'Use' }}</b-button>
+            <b-button v-show="items.length" size="sm" :variant="dropMode ? 'danger' : 'success'" @click="toggleMode">{{ dropMode ? 'Drop' : 'Use' }}</b-button>
         </div>
         <div class="holder">
             <div class="d-flex">

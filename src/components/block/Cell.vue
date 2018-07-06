@@ -93,7 +93,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    @import '~bootstrap/scss/bootstrap-reboot.scss';
+    @import 'src/scss/mixin';
+
     .btn {
         width: 50px;
         height: 50px;
