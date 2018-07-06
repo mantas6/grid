@@ -1,7 +1,7 @@
-import { entries } from 'lodash';
+import { entries, clamp } from 'lodash';
 import chroma from 'chroma-js';
 
-export function colorByContent(content) {
+export function colorByContent(content, density) {
     let blackAmount = content.black || 0;
     let colorName = 0;
     let colorAmount = 0;
@@ -18,7 +18,7 @@ export function colorByContent(content) {
     let color = nameToColor(colorName);
 
     color = color.darken(blackAmount / 100);
-    color = color.brighten();
+    color = color.brighten(clamp(density / (blackAmount + colorAmount), 0, 2));
 
     return { 'background-color': color.css() };
 }
