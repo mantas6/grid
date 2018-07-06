@@ -133,10 +133,22 @@ io.on('connection', client => {
             filter(({ cell }) => (<Cell>cell).isOccupiable() || (<Cell>cell).isAbsorbable()),
             map(bundle => ({ ...bundle, distance: measureDistance(clientPlayer.cell.get(), bundle.cell) })),
             filter(({ distance }) => distance == 1),
-            filter(({ cell }) => clientPlayer.getStat('sta').affectByDiff(-1 * (<Cell>cell).getOccupationCost())),
-            tap(({ cell }) => grid.probeChunk(cell.x, cell.y)),
+            filter(({ cell }) => clientPlayer.getStat('sta').affectByDiff(-1 * (<Cell>cell).getOccupationCost()) || clientPlayer.getStat('hp').affectByDiff(-1 * (<Cell>cell).getOccupationCost())),
+            //tap(({ cell }) => grid.probeChunk(cell.x, cell.y)),
             tap(bundle => log.debug(`Position change request ${bundle.x} ${bundle.y}`)),
-            tap(({ cell }) => ((<Cell>cell).isAbsorbable() && clientPlayer.absorbCell(cell)) || ((<Cell>cell).isOccupiable() && clientPlayer.assignCell(cell)))
+            tap(({ cell }) => {
+                const targetCell = cell as Cell;
+
+                if (targetCell.isOccupiable()) {
+                    clientPlayer.assignCell(cell);
+                } else if(targetCell.isAbsorbable()) {
+                    if (targetCell.player) {
+                        clientPlayer.absorbCellWithPlayer(targetCell);
+                    } else {
+                        clientPlayer.absorbCellWithContent(targetCell);
+                    }
+                }
+            })
         )
         .subscribe();
     

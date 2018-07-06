@@ -108,23 +108,22 @@ export class Process {
         }
 
         const hpStat = this.player.get().getStat('hp');
-        const fodStat = this.player.get().getStat('fod');
         const staStat = this.player.get().getStat('sta');
 
         // HP regen
-        if (!hpStat.isFull() && usableContent.r && fodStat.affectByDiff(-usableContent.r)) {
+        if (!hpStat.isFull() && usableContent.r && staStat.affectByDiff(-usableContent.r)) {
             hpStat.affectByDiff(usableContent.r, true);
             usableContent.r = 0;
         }
 
         // Fod
-        if (!fodStat.isFull() && usableContent.g) {
-            fodStat.affectByDiff(usableContent.g, true);
+        if (!staStat.isFull() && usableContent.g) {
+            staStat.affectByDiff(usableContent.g, true);
             usableContent.g = 0;
         }
 
         if (usableContent.y) {
-            fodStat.affectMax(usableContent.y);
+            // fodStat.affectMax(usableContent.y);
         }
 
         if (usableContent.b) {
@@ -142,16 +141,9 @@ export class Process {
 
         // Stamina regen
         const staStat = player.getStat('sta');
-        const fodStat = player.getStat('fod');
         const hpStat = player.getStat('hp');
 
-        if (!staStat.isFull()) {
-            if (fodStat.affectByDiff(-1)) {
-                staStat.affectByDiff(1, true);
-            }
-        }
-
-        if (fodStat.isEmpty() && staStat.isEmpty()) {
+        if (staStat.isEmpty()) {
             hpStat.affectByDiff(-1, true);
         }
 

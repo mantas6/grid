@@ -64,7 +64,7 @@ export class Player {
 
         this.stats = [];
 
-        for (const statName of ['hp', 'fod', 'sta']) {
+        for (const statName of ['hp', 'sta']) {
             const stat = new Stat(this, statName);
             stat.max = 100;
             stat.current = 100;
@@ -159,7 +159,7 @@ export class Player {
         return true;
     }
 
-    absorbCell(cell: Cell): boolean {
+    absorbCellWithContent(cell: Cell): boolean {
         if (!cell.isAbsorbable() || !cell.content) {
             log.debug(`Not absorbable`);
             return false;
@@ -179,6 +179,12 @@ export class Player {
         }
 
         cell.clearContent();
+
+        return true;
+    }
+
+    absorbCellWithPlayer(cell: Cell): boolean {
+        cell.player.getStat('hp').affectByDiff(-1, true);
 
         return true;
     }

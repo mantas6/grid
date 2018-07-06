@@ -10,10 +10,14 @@
 <script>
 import { values, sum } from 'lodash';
 
+import { mapState } from 'vuex';
+
 export default {
     props: { cell: Object, own: Boolean, disabled: Boolean },
 
     computed: {
+        ...mapState(['playerId']),
+
         buttonText() {
             if (this.cell.void) {
                 return '-';
@@ -26,15 +30,23 @@ export default {
             if (this.own) {
                 return '+';
             }
+
+            if (this.cell.playerId && this.cell.playerId != this.playerId) {
+                return '/\\';
+            }
         },
 
         buttonVariant() {
-            if (this.cell.void || this.cell.isInvisible) {
+            if (this.cell.void) {
                 return 'secondary';
             }
 
             if (this.own) {
-                return 'outline-success';
+                return 'success';
+            }
+
+            if (this.cell.playerId && this.cell.playerId != this.playerId) {
+                return 'danger';
             }
 
             return 'outline-secondary';

@@ -38,7 +38,7 @@ export class Cell {
     }
 
     isAbsorbable(): boolean {
-        return !this.player && !!this.content;
+        return !!this.player || !!this.content;
     }
 
     assignPlayer(player: Player) {
@@ -79,8 +79,9 @@ export class Cell {
             y: this.y,
             content: this.content,
             size: this.size,
-            isOccupiable: this.isOccupiable(),
-            isAbsorbable: this.isAbsorbable(),
+            isOccupiable: this.isOccupiable() || undefined,
+            isAbsorbable: this.isAbsorbable() || undefined,
+            playerId: this.player ? this.player.id : undefined,
         };
     }
 
@@ -100,6 +101,7 @@ export interface CellUpdate {
     size?: number;
     isOccupiable?: boolean;
     isAbsorbable?: boolean;
+    playerId?: number;
 }
 
 export interface Content {
