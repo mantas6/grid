@@ -29,10 +29,10 @@ export class Stat {
         if (this.current + diff < 0 && !fill)
             return false;
         
-        if (this.current + diff > this.max && !fill)
+        if (this.max && this.current + diff > this.max && !fill)
             return false;
         
-        this.current = clamp(this.current + diff, 0, this.max);
+        this.current = clamp(this.current + diff, 0, this.max || this.current + diff);
 
         this.update();
     
@@ -48,7 +48,7 @@ export class Stat {
     }
 
     affectMax(diff: number) {
-        if (this.max + diff < 0)
+        if (!this.max || this.max + diff < 0)
             return false
         
         this.max += diff;
@@ -65,7 +65,11 @@ export class Stat {
     }
 
     getUpdate() {
-        return { name: this.name, current: this.current, max: this.max };
+        return {
+            name: this.name,
+            current: this.current,
+            max: this.max,
+        };
     }
 }
 
