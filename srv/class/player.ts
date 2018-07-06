@@ -78,6 +78,13 @@ export class Player {
 
             this.stats.push(stat);
         }
+
+        for (const statName of ['staRegain', 'processSpeed', 'hpRegain', 'absorbStr']) {
+            const stat = new Stat(this, statName);
+            stat.current = 1;
+
+            this.stats.push(stat);
+        }
     }
 
     logOn(client: Socket) {

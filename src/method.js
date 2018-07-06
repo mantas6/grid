@@ -15,7 +15,7 @@ export function colorByContent(content, size) {
         break;
     }
 
-    const color = chroma(colorName);
+    const color = nameToColor(colorName);
 
     color.darken(blackAmount / size);
 
@@ -23,7 +23,15 @@ export function colorByContent(content, size) {
 }
 
 export function colorByName(name) {
-    const color = chroma(name);
+    const color = nameToColor(name);
 
     return { 'background-color': color.css() };
+}
+
+export function nameToColor(name) {
+    const map = {
+        dirt: 'black',
+    };
+
+    return chroma(map[name]);
 }
