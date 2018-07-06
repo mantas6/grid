@@ -62,18 +62,12 @@ export class Grid {
         const startChunkX = Math.floor(x / this.chunkSize);
         const startChunkY = Math.floor(y / this.chunkSize);
 
-        const nearbyChunks = [
-            { chunkX: startChunkX, chunkY: startChunkY },
-            { chunkX: startChunkX, chunkY: startChunkY + 1 },
-            { chunkX: startChunkX, chunkY: startChunkY - 1 },
-            { chunkX: startChunkX + 1, chunkY: startChunkY },
-            { chunkX: startChunkX - 1, chunkY: startChunkY },
-        ];
-
-        for (const { chunkX, chunkY } of nearbyChunks) {
-            if (!this.isChunkGenerated(chunkX, chunkY)) {
-                this.generateChunk(chunkX, chunkY);
-                log.complete(`Generated chunk of X=${chunkX} Y=${chunkY}`);
+        for (const chunkX of range(startChunkX - 1, startChunkX + 2)) {
+            for (const chunkY of range(startChunkY - 1, startChunkY + 2)) {
+                if (!this.isChunkGenerated(chunkX, chunkY)) {
+                    this.generateChunk(chunkX, chunkY);
+                    log.complete(`Generated chunk of X=${chunkX} Y=${chunkY}`);
+                }
             }
         }
     }
