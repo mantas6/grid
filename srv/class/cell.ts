@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { range, toPairs, entries } from 'lodash';
+import { range, toPairs, entries, sum, values, chain } from 'lodash';
 import { Type, Exclude, Expose, Transform } from 'class-transformer';
 
 import { Player } from './player';
@@ -55,6 +55,22 @@ export class Cell {
         this.content = undefined;
         this.size = undefined;
         this.update();
+    }
+
+    // Automatically will "fill"
+    affectContent(name: string, diff: number): boolean {
+        if (this.content) {
+            if (this.content[name]) {
+                this.content[name] += Math.min(diff, this.content[name]);
+
+                if (sum(values(this.content)) <= 0) {
+                    this.clearContent();
+                }
+
+                this.update();
+            }
+        }
+        return true;
     }
 
     neighbors(): Cell[] {

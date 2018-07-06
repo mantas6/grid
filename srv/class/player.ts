@@ -178,7 +178,9 @@ export class Player {
             this.process.affect(name, amount);
         }
 
-        cell.clearContent();
+        for (const [ name, amount ] of entries(cell.content)) {
+            cell.affectContent(name, Math.min(-amount / 2, -50)); // TMP
+        }
 
         return true;
     }
