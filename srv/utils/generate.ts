@@ -11,11 +11,22 @@ export class ChunkGenerator {
     fill(cell: Cell) {
         const chance = random(0, 100);
 
-        if (chance > 80) {
+        if (chance > 95) {
+            cell.content = {
+                dirt: random(750, 1000),
+            };
+        } else if (chance > 91) {
+            cell.content = {
+                acid: random(75, 100),
+            };
+        } else if (chance > 90) {
+            cell.content = {
+                energy: random(75, 100),
+            };
+        } else if (chance > 80) {
             cell.content = {
                 dirt: random(75, 100),
             };
-            cell.size = 1;
         }
     }
 }

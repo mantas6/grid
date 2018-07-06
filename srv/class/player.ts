@@ -71,7 +71,7 @@ export class Player {
 
         this.stats = [];
 
-        for (const statName of ['hp', 'sta']) {
+        for (const statName of ['health', 'energy']) {
             const stat = new Stat(this, statName);
             stat.max = 100;
             stat.current = 100;
@@ -79,7 +79,15 @@ export class Player {
             this.stats.push(stat);
         }
 
-        for (const statName of ['staRegain', 'processSpeed', 'hpRegain', 'absorbStr']) {
+        const modifierStats = [
+            'energyRegainSpeed',
+            'processSpeed',
+            'healthRegain',
+            'absorbStrength',
+            'acidEff',
+        ];
+
+        for (const statName of modifierStats) {
             const stat = new Stat(this, statName);
             stat.current = 1;
 

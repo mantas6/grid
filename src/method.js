@@ -1,7 +1,7 @@
 import { entries } from 'lodash';
 import chroma from 'chroma-js';
 
-export function colorByContent(content, size) {
+export function colorByContent(content) {
     let blackAmount = content.black || 0;
     let colorName = 0;
     let colorAmount = 0;
@@ -15,9 +15,10 @@ export function colorByContent(content, size) {
         break;
     }
 
-    const color = nameToColor(colorName);
+    let color = nameToColor(colorName);
 
-    color.darken(blackAmount / size);
+    color = color.darken(blackAmount / 100);
+    color = color.brighten();
 
     return { 'background-color': color.css() };
 }
@@ -31,6 +32,8 @@ export function colorByName(name) {
 export function nameToColor(name) {
     const map = {
         dirt: 'black',
+        energy: 'green',
+        acid: 'cyan',
     };
 
     return chroma(map[name]);

@@ -13,10 +13,8 @@ export default {
      computed: {
         variant() {
             const variants = {
-                fod: 'success',
-                hp: 'danger',
-                hyd: 'primary',
-                sta: 'info',
+                health: 'danger',
+                energy: 'info',
             };
 
             return variants[this.stat.name];

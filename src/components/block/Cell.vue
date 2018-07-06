@@ -56,7 +56,7 @@ export default {
         contentSize() {
             const amounts = values(this.cell.content);
             
-            return sum(amounts) * this.cell.size;
+            return sum(amounts);
         },
     },
 
