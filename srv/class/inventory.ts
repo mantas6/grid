@@ -42,6 +42,14 @@ export class Inventory {
                     this.player.get().process.affect('c', item.level);
                     break;
             }
+
+            this.removeItem(index);
+        }
+    }
+
+    hasItem(index: number): boolean {
+        if (this.items[index]) {
+            return true;
         }
     }
 

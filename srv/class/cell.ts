@@ -28,7 +28,11 @@ export class Cell {
         this.y = y;
     }
 
-    getOccupationCost() {
+    getInteractionCost() {
+        if (this.item) {
+            return 0;
+        }
+        
         if (this.size) {
             return this.size;
         }

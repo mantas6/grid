@@ -133,7 +133,7 @@ io.on('connection', client => {
             filter(({ cell }) => (<Cell>cell).isOccupiable() || (<Cell>cell).isAbsorbable()),
             map(bundle => ({ ...bundle, distance: measureDistance(clientPlayer.cell.get(), bundle.cell) })),
             filter(({ distance }) => distance == 1),
-            filter(({ cell }) => clientPlayer.getStat('sta').affectByDiff(-1 * (<Cell>cell).getOccupationCost()) || clientPlayer.getStat('hp').affectByDiff(-1 * (<Cell>cell).getOccupationCost())),
+            filter(({ cell }) => clientPlayer.getStat('sta').affectByDiff(-1 * (<Cell>cell).getInteractionCost()) || clientPlayer.getStat('hp').affectByDiff(-1 * (<Cell>cell).getInteractionCost())),
             tap(({ cell }) => grid.probeChunk(cell.x, cell.y)),
             tap(bundle => log.debug(`Position change request ${bundle.x} ${bundle.y}`)),
             tap(({ cell }) => {
@@ -154,35 +154,15 @@ io.on('connection', client => {
         )
         .subscribe();
     
-        /*
-    fromEvent(client, 'attack')
+    fromEvent(client, 'useItem')
         .pipe(
-            throttleTime(1000),
             filter(_ => !!clientPlayer),
-            filter((req: any) => req),
-            filter(({ x, y }) => typeof(x) == 'number' && typeof(y) == 'number'),
-            filter(({ x, y }) => x >= 0 && y >= 0),
-            map(({ x, y }) => findCellByCoords(x, y)),
-            filter(cell => !!cell),
-            filter(cell => !!cell.playerId),
-            map(cell => ({ cell, distance: measureDistance(findCellByPlayerId(clientPlayerId), cell) })),
-            filter(({ cell, distance }) => affectStat(clientPlayer, 'magic', -1 * distance)),
-            tap(({ cell }) => log.info(`attacking player ${cell.playerId}`)),
-            map(bundle => ({ ...bundle, player: players.get(bundle.cell.playerId) })),
-            filter(({ player }) => !!player),
-            filter(({ player, cell, distance }) => affectStat(player, 'health', -10 / distance, true))
+            filter(req => !!req),
+            filter(({ index }) => !isNaN(index)),
+            filter(({ index }) => clientPlayer.inventory.hasItem(index)),
+            tap(({ index }) => clientPlayer.inventory.useItem(index))
         )
         .subscribe();
-
-    fromEvent(client, 'reset')
-        .pipe(
-            throttleTime(1000),
-            filter(_ => !!clientPlayer),
-            tap(_ => log.info(`Resetting`)),
-            tap(_ => handlePlayerDeath())
-        )
-        .subscribe();
-        */
 });
 
 const everyMinute = timer(60e3, 60e3);
