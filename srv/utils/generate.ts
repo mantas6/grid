@@ -45,6 +45,10 @@ export class ChunkGenerator {
                 chance: 1/40,
             },
             {
+                item: { name: 'acid', level: 50  * this.level },
+                chance: 1/80,
+            },
+            {
                 item: { name: 'energyMax', level: 5  * this.level },
                 chance: 1/40,
             },
