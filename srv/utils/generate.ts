@@ -11,7 +11,7 @@ export class ChunkGenerator {
     fill(cell: Cell) {
         const scenarios: CellScenario[] = [
             {
-                content: { dirt: random(750, 1000) },
+                content: { dirt: random(1100, 3000) },
                 chance: 1/10,
             },
             {
