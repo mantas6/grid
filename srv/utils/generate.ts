@@ -22,11 +22,11 @@ export class ChunkGenerator {
             },
             {
                 content: { acid: random(1, 3) * this.level },
-                chance: 1/25,
+                chance: 1/20,
             },
             {
                 content: { energy: random(1, 3) * this.level },
-                chance: 1/25,
+                chance: 1/20,
             },
             {
                 content: { energyMax: random(1, 3) * this.level },
