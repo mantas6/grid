@@ -49,15 +49,15 @@ export class ChunkGenerator {
                 chance: 1/80,
             },
             {
-                item: { name: 'energyMax', level: 5  * this.level },
+                item: { name: 'energyMax', level: 1  * this.level },
                 chance: 1/40,
             },
             {
-                item: { name: 'absorbStrength', level: 5  * this.level },
+                item: { name: 'absorbStrength', level: 1  * this.level },
                 chance: 1/40,
             },
             {
-                item: { name: 'processSpeed', level: 5  * this.level },
+                item: { name: 'processSpeed', level: 1  * this.level },
                 chance: 1/40,
             },
         ];
