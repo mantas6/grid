@@ -16,6 +16,11 @@ export class ChunkGenerator {
                 chance: 1/10,
             },
             {
+                content: { dirt: random(100, 300) },
+                density: random(100, 500),
+                chance: 1/2,
+            },
+            {
                 content: { acid: random(100, 300) },
                 density: random(10, 50),
                 chance: 1/25,

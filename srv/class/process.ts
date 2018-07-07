@@ -94,7 +94,7 @@ export class Process {
 
         for (const [ name, { amount } ] of entries(this.content)) {
             if (amount) {
-                const amountToProcess = processSpeed * acidEff * Math.log(Math.max(amountOfAcid, 1));
+                const amountToProcess = processSpeed * acidEff * Math.max(Math.log(amountOfAcid), 1);
 
                 switch(name) {
                     case 'energy':

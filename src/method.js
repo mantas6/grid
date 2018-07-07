@@ -18,7 +18,10 @@ export function colorByContent(content, density) {
     let color = nameToColor(colorName);
 
     color = color.darken(blackAmount / 100);
-    color = color.brighten(clamp(density / (blackAmount + colorAmount), 0, 2));
+
+    const maxAmount = colorAmount || blackAmount;
+
+    color = color.brighten(clamp(1 - Math.min(density, maxAmount) / maxAmount, 0, 2));
 
     return { 'background-color': color.css() };
 }
