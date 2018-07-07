@@ -1,6 +1,7 @@
 import { entries, clamp } from 'lodash';
 import chroma from 'chroma-js';
 
+// TODO: remove
 export function colorByContent(content, density) {
     let blackAmount = content.dirt || 0;
     let colorName = 'white';
@@ -30,10 +31,6 @@ export function colorByContent(content, density) {
     color = color.brighten(brightenBy * (colorName == 'dirt' ? 6 : 2));
 
     return { 'background-color': color.css() };
-}
-
-export function colorByContent2(name) {
-
 }
 
 export function colorByName(name) {
