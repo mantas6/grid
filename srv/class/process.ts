@@ -69,7 +69,7 @@ export class Process {
         const contentTotalAmount = sum(values(cell.content));
 
         for (const [ name, amount ] of entries(cell.content)) {
-            const affectDiff = this.player.get().getStat('absorbStrength').current / cell.density * 10000; // TOdo
+            const affectDiff = this.player.get().getStat('absorbStrength').current * 50; // TOdo
 
             if (cell.affectContent(name, -affectDiff)) {
                 this.affect(name, +affectDiff);

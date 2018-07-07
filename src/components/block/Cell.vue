@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-button :variant="buttonVariant" :disabled="disabled" @click="selectCell" :style="cell.content ? colorByContent(cell.content, cell.density) : ''">
+        <b-button :variant="buttonVariant" :disabled="disabled" @click="selectCell" :style="style">
             <small v-if="buttonText">{{ buttonText }}</small>
             <b-badge v-else-if="cell.content" variant="light">
                 <small>{{ contentSize | formatShort }}</small>
@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import { values, sum } from 'lodash';
-import { colorByContent } from '@/method'
+import { keys, sum, head, values } from 'lodash';
+import { colorByContent, colorByName } from '@/method'
 
 import { mapState } from 'vuex';
 
@@ -60,10 +60,18 @@ export default {
             
             return sum(amounts);
         },
+
+        style() {
+            if (this.cell.content) {
+                const name = head(keys(this.cell.content));
+                console.log(name)
+                return colorByName(name)
+            }
+        }
     },
 
     methods: {
-        colorByContent,
+        colorByContent, colorByName,
 
         selectCell() {
             this.$emit('selectCell');

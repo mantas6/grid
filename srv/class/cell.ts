@@ -13,7 +13,6 @@ export class Cell {
     y: number;
 
     content: CellContent;
-    density: number;
 
     item: InventoryItem;
 
@@ -48,7 +47,6 @@ export class Cell {
 
     clearContent() {
         this.content = undefined;
-        this.density = undefined;
         this.update();
     }
 
@@ -109,7 +107,6 @@ export class Cell {
             x: this.x,
             y: this.y,
             content: this.content,
-            density: this.density,
             item: this.item,
             isOccupiable: this.isOccupiable() || undefined,
             isAbsorbable: this.isAbsorbable() || undefined,
@@ -134,7 +131,6 @@ export interface CellUpdate {
     isAbsorbable?: boolean;
     playerId?: number;
     item?: InventoryItem;
-    density?: number;
 }
 
 export interface CellContent {
