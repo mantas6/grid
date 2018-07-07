@@ -1,5 +1,7 @@
 import { spawn, ChildProcess } from 'child_process';
-import { request } from 'https';
+import { defaults } from 'request';
+
+const request = defaults({ jar: true })
 
 let handle: ChildProcess; 
 
@@ -26,10 +28,48 @@ function message(msg: string) {
                 .split(' => ');
 
             console.log(`[${namespace}] => ${level} => ${message}`)
+            //saveLog(namespace, level, message);
         } else {
-            // Unexpected/Error/Warning/Crash logs
+            console.log(msg)
+            //saveLog('global', 'critical', message);
         }
     }
 }
+/*
+function saveLog(namespace, level, message) {
+    const params = {
+        method: 'post',
+        headers: { 'User-Agent' : 'Server' },
+        json: {
+            site: 'Grid',
+            events: [
+                {
+                    name: 'log',
+                    tags: [ level ],
+                    attachments: {
+                        message: message,
+                    },
+                }
+            ],
+        },
+    };
 
-// request()
+    request('http://logging.back/a_sites/collect', params, (err, res) => {
+        
+    });
+}
+
+setInterval(() => {
+    const params = {
+        method: 'post',
+        headers: { 'User-Agent' : 'Server' },
+        json: {
+            site: 'Grid',
+        },
+    };
+
+    request('http://logging.back/a_sites/collect', params, (err, res) => {
+        
+    });
+}, 5e3)
+*/

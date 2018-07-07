@@ -38,10 +38,8 @@ export class Process {
         if (!this.canBeModified(name, diff)) {
             return false;
         }
-
-        const scale = clamp(diff / Math.max(this.amountOf(name), 1), -1, 1);
         
-        this.content[name].amount += scale * diff;
+        this.content[name].amount += diff;
 
         this.update();
     }

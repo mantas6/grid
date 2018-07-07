@@ -11,7 +11,7 @@
 
 <script>
 import { keys, sum, head, values } from 'lodash';
-import { colorByContent, colorByName } from '@/method'
+import { colorByName, nameToColor } from '@/method'
 
 import { mapState } from 'vuex';
 
@@ -66,13 +66,13 @@ export default {
                 const name = head(keys(this.cell.content));
                 console.log(name)
                 return colorByName(name)
+            } else if (this.cell.item) {
+                return { color: nameToColor(this.cell.item.name).css() }
             }
         }
     },
 
     methods: {
-        colorByContent, colorByName,
-
         selectCell() {
             this.$emit('selectCell');
         },
