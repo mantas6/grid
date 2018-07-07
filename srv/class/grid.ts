@@ -16,9 +16,11 @@ export class Grid {
     map: Map = {};
 
     chunkSize: number;
+    isProcedural: boolean =false;
 
-    constructor(chunkSize: number) {
+    constructor(chunkSize: number, isProcedural: boolean = false) {
         this.chunkSize = chunkSize;
+        this.isProcedural = isProcedural;
         this.generateChunk(0, 0);
     }
 
@@ -54,14 +56,16 @@ export class Grid {
     }
 
     probeChunk(x: number, y: number) {
-        const startChunkX = Math.floor(x / this.chunkSize);
-        const startChunkY = Math.floor(y / this.chunkSize);
-
-        for (const chunkX of range(startChunkX - 1, startChunkX + 2)) {
-            for (const chunkY of range(startChunkY - 1, startChunkY + 2)) {
-                if (!this.isChunkGenerated(chunkX, chunkY)) {
-                    this.generateChunk(chunkX, chunkY);
-                    log.complete(`Generated chunk of X=${chunkX} Y=${chunkY}`);
+        if (this.isProcedural) {
+            const startChunkX = Math.floor(x / this.chunkSize);
+            const startChunkY = Math.floor(y / this.chunkSize);
+    
+            for (const chunkX of range(startChunkX - 1, startChunkX + 2)) {
+                for (const chunkY of range(startChunkY - 1, startChunkY + 2)) {
+                    if (!this.isChunkGenerated(chunkX, chunkY)) {
+                        this.generateChunk(chunkX, chunkY);
+                        log.complete(`Generated chunk of X=${chunkX} Y=${chunkY}`);
+                    }
                 }
             }
         }

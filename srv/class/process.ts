@@ -33,16 +33,15 @@ export class Process {
 
     affect(name: string, diff: number) {
         if (!this.content[name])
-            this.content[name] = { amount: 0, time: 0 };
+            this.content[name] = { amount: 0 };
         
         if (!this.canBeModified(name, diff)) {
             return false;
         }
 
-        const scale = clamp(diff / Math.max(this.amountOf(name), 1), 0, 1);
+        const scale = clamp(diff / Math.max(this.amountOf(name), 1), -1, 1);
         
         this.content[name].amount += scale * diff;
-        this.content[name].time += scale * 10;
 
         this.update();
     }
@@ -95,31 +94,28 @@ export class Process {
         const energyStat = this.player.get().getStat('energy');
 
         for (const [ name, { amount } ] of entries(this.content)) {
-            if (amount) {
-                const amountToProcess = processSpeed * acidEff * Math.max(Math.log(amountOfAcid), 1);
+            if (name == 'acid')
+                continue;
 
-                switch(name) {
-                    case 'energy':
-                        if (!energyStat.isFull() && amountToProcess) {
-                            energyStat.affectByDiff(amountToProcess, true);
-                        }
-                        break;
+            if (amount >= 1 && amountOfAcid >= 1) {
+                const amountToProcess = processSpeed * acidEff; //Math.log(amountOfAcid);
+
+                console.log(name, amountToProcess)
+
+                this.affect(name, -1 * amountToProcess)
+
+                if (amountOfAcid > amountToProcess) {
+                    this.affect('acid', -1 * amountToProcess);
+    
+                    switch(name) {
+                        case 'energy':
+                            if (!energyStat.isFull() && amountToProcess) {
+                                energyStat.affectByDiff(amountToProcess, true);
+                            }
+                            break;
+                    }
                 }
             }
-
-            this.decrementTime(name);
-        }
-    }
-
-    decrementTime(name: string) {
-        if (this.content[name]) {
-            this.content[name].time--;
-    
-            if (this.content[name].time < 1) {
-                delete this.content[name];
-            }
-
-            this.update();
         }
     }
 
@@ -153,5 +149,5 @@ export interface ProcessUpdate {
 }
 
 interface ProcessContent {
-    [ name: string ]: { amount: number, time: number };
+    [ name: string ]: { amount: number };
 }

@@ -1,6 +1,6 @@
 import { Subject, Subscription, from, Observable, interval } from 'rxjs';
 import { bufferTime, bufferCount, filter, map } from 'rxjs/operators';
-import { find, entries, values, sum, last } from 'lodash';
+import { find, entries, values, sum, last, keys } from 'lodash';
 import { Socket } from 'socket.io';
 import { Type, Exclude, Expose } from 'class-transformer';
 
@@ -213,7 +213,11 @@ export class Player {
     }
 
     absorbCellWithPlayer(cell: Cell): boolean {
-        cell.player.getStat('health').affectByDiff(-1, true);
+        for (const processName of keys(this.process.content)) {
+            const affectBy = 1;
+            this.process.affect(processName, -affectBy);
+            cell.player.process.affect(processName, +affectBy);
+        }
 
         return true;
     }
