@@ -42,6 +42,9 @@ export class Inventory {
                 case 'energy':
                     this.player.get().process.affect('energy', item.level);
                     break;
+                case 'acid':
+                    this.player.get().process.affect('acid', item.level);
+                    break;
             }
 
             this.removeItem(index);

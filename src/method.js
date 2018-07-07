@@ -2,18 +2,20 @@ import { entries, clamp } from 'lodash';
 import chroma from 'chroma-js';
 
 export function colorByContent(content, density) {
-    let blackAmount = content.black || 0;
-    let colorName = 0;
+    let blackAmount = content.dirt || 0;
+    let colorName = 'white';
     let colorAmount = 0;
 
     for (const [ name, amount ] of entries(content)) {
-        if (name == 'black')
-            continue;
+        //if (name == 'dirt')
+        //    continue;
         
         colorName = name;
         colorAmount = amount;
         break;
     }
+
+    //console.log(colorName)
 
     let color = nameToColor(colorName);
 
@@ -21,9 +23,17 @@ export function colorByContent(content, density) {
 
     const maxAmount = colorAmount || blackAmount;
 
-    color = color.brighten(clamp(1 - Math.min(density, maxAmount) / maxAmount, 0, 2));
+    const brightenBy = clamp(1 - Math.min(density, maxAmount) / maxAmount, 0, 5);
+
+    // console.log({ blackAmount, colorName, colorAmount, density, maxAmount, brightenBy })
+
+    color = color.brighten(brightenBy * (colorName == 'dirt' ? 6 : 2));
 
     return { 'background-color': color.css() };
+}
+
+export function colorByContent2(name) {
+
 }
 
 export function colorByName(name) {

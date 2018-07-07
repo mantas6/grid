@@ -97,4 +97,8 @@ export default {
             height: 30px;
         }
     }
+
+    .btn.disabled, .btn:disabled {
+        opacity: 1;
+    }
 </style>

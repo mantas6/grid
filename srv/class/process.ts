@@ -125,15 +125,11 @@ export class Process {
         const player = this.player.get();
 
         // Stamina regen
-        const enStat = player.getStat('health');
-        const hpStat = player.getStat('energy');
-
-        if (enStat.isEmpty()) {
-            hpStat.affectByDiff(-1, true);
-        }
+        const energyStat = player.getStat('energy');
+        const healthStat = player.getStat('health');
 
         // Death handler
-        if (hpStat.isEmpty()) {
+        if (healthStat.isEmpty()) {
             this.player.get().initialize();
             this.player.get().assignCell(grid.findCellOccupiable());
             this.player.get().updateAll();

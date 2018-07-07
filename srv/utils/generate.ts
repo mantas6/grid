@@ -34,6 +34,10 @@ export class ChunkGenerator {
                 item: { name: 'energy', level: 20 },
                 chance: 1/20,
             },
+            {
+                item: { name: 'acid', level: 20 },
+                chance: 1/20,
+            },
         ];
 
         const shuffledScenarios = shuffle(scenarios);
