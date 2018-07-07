@@ -35,6 +35,6 @@ export class Log {
     }
 
     push(level: string, messages: string[]) {
-        console.log(`[${this.namespace}] => ${level} => ${messages.concat('')}`);
+        console.log(`<#> [${this.namespace}] => ${level} => ${messages.concat('')}`);
     }
 }

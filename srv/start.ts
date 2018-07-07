@@ -1,4 +1,5 @@
 import { spawn, ChildProcess } from 'child_process';
+import { request } from 'https';
 
 let handle: ChildProcess; 
 
@@ -15,5 +16,20 @@ function start() {
 }
 
 function message(msg: string) {
-    console.log(msg.replace("\n", ""));
+    const splitByNewLines = msg.split('\n');
+    
+    for (const line of splitByNewLines) {
+        if (line.includes('<#> ')) {
+            const [ namespace, level, message ] = line.split('<#> ').join('')
+                .split('[').join('')
+                .split(']').join('')
+                .split(' => ');
+
+            console.log(`[${namespace}] => ${level} => ${message}`)
+        } else {
+            // Unexpected/Error/Warning/Crash logs
+        }
+    }
 }
+
+// request()
