@@ -35,8 +35,9 @@ export function colorByContent(content, density) {
 
 export function colorByName(name) {
     const color = nameToColor(name);
+    const brightenedColor = color.brighten(1.5);
 
-    return { 'background-color': color.css() };
+    return { 'background-color': brightenedColor.css() };
 }
 
 export function nameToColor(name) {

@@ -38,9 +38,11 @@ export class Process {
         if (!this.canBeModified(name, diff)) {
             return false;
         }
+
+        const scale = clamp(diff / Math.max(this.amountOf(name), 1), 0, 1);
         
-        this.content[name].amount += diff;
-        this.content[name].time += Math.log(diff);
+        this.content[name].amount += scale * diff;
+        this.content[name].time += scale * 10;
 
         this.update();
     }
@@ -69,7 +71,7 @@ export class Process {
         const contentTotalAmount = sum(values(cell.content));
 
         for (const [ name, amount ] of entries(cell.content)) {
-            const affectDiff = this.player.get().getStat('absorbStrength').current * 50; // TOdo
+            const affectDiff = this.player.get().getStat('absorbStrength').current; // TOdo
 
             if (cell.affectContent(name, -affectDiff)) {
                 this.affect(name, +affectDiff);

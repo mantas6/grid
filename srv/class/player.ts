@@ -174,7 +174,7 @@ export class Player {
             return 0;
         }
 
-        return 1;
+        return this.getStat('absorbStrength').current;
     }
 
     assignCell(cell: Cell): boolean {

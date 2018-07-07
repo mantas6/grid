@@ -50,6 +50,12 @@ export class Cell {
         this.update();
     }
 
+    contentTotalAmount() {
+        const amounts = values(this.content);
+
+        return sum(amounts);
+    }
+
     // Automatically will "fill"
     affectContent(name: string, diff: number): boolean {
         if (this.content) {

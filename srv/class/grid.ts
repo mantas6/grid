@@ -26,7 +26,7 @@ export class Grid {
         const sizeX = chunkX * this.chunkSize;
         const sizeY = chunkY * this.chunkSize;
 
-        const generator = new ChunkGenerator();
+        const generator = new ChunkGenerator(chunkX, chunkY);
     
         for (const x of range(sizeX, sizeX + this.chunkSize)) {
             for (const y of range(sizeY, sizeY + this.chunkSize)) {
