@@ -1,5 +1,5 @@
 import { Type, Exclude, Expose } from 'class-transformer';
-import { values, sum, entries, clamp, round, ceil } from 'lodash';
+import { values, sum, entries, clamp, round, ceil, sumBy } from 'lodash';
 import { Player } from './player';
 import { Cell, CellContent } from './cell';
 import { PlayerRef } from '../utils/ref';
@@ -20,8 +20,12 @@ export class Process {
     }
 
     canBeModified(name: string, diff: number) {
-        if (this.usage() + diff <= this.size && this.content[name] + diff >= 0) {
-            return true;
+        if (this.usage() + diff <= this.size) {
+            if (this.content[name] && this.content[name].amount + diff >= 0) {
+                return true;
+            } else if(diff >= 0) {
+                return true;
+            }
         }
 
         return false;
@@ -29,13 +33,14 @@ export class Process {
 
     affect(name: string, diff: number) {
         if (!this.content[name])
-            this.content[name] = 0;
+            this.content[name] = { amount: 0, time: 0 };
         
         if (!this.canBeModified(name, diff)) {
             return false;
         }
         
-        this.content[name] += diff;
+        this.content[name].amount += diff;
+        this.content[name].time += diff;
 
         this.update();
     }
@@ -43,7 +48,14 @@ export class Process {
     usage() {
         const amounts = values(this.content);
 
-        return sum(amounts);
+        return sumBy(amounts, 'value') || 0;
+    }
+
+    amountOf(name: string) {
+        if (!this.content[name])
+            return 0;
+        
+        return this.content[name].amount;
     }
 
     processContentOfCell(cell: Cell): boolean {
@@ -71,19 +83,17 @@ export class Process {
         const player = this.player.get();
         const amountTotal = this.usage();
         // Acid is what make the processing of the content possible and it's entirely dependant on this
-        const amountOfAcid = this.content.acid || 0;
-        const amountToProcessTotal = amountTotal - amountOfAcid;
+        // const amountOfAcid = this.content.acid.amount || 0;
+        // const amountToProcessTotal = amountTotal - amountOfAcid;
         const processSpeed = player.getStat('processSpeed').current;
         const acidEff = player.getStat('acidEff').current;
 
         const healthStat = this.player.get().getStat('health');
         const energyStat = this.player.get().getStat('energy');
 
-        for (const [ name, amount ] of entries(this.content)) {
-            if (amount && amountOfAcid > 1) {
-                const amountToProcess = processSpeed * acidEff * Math.min(amountOfAcid, 1);
-                
-                this.affect(name, -amountToProcess);
+        for (const [ name, { amount } ] of entries(this.content)) {
+            if (amount) {
+                const amountToProcess = processSpeed * acidEff;
 
                 switch(name) {
                     case 'energy':
@@ -93,6 +103,20 @@ export class Process {
                         break;
                 }
             }
+
+            this.decrementTime(name);
+        }
+    }
+
+    decrementTime(name: string) {
+        if (this.content[name]) {
+            this.content[name].time--;
+    
+            if (this.content[name].time < 1) {
+                delete this.content[name];
+            }
+
+            this.update();
         }
     }
 
@@ -129,6 +153,6 @@ export interface ProcessUpdate {
     size: number;
 }
 
-interface ProcessContent extends CellContent {
-
+interface ProcessContent {
+    [ name: string ]: { amount: number, time: number };
 }

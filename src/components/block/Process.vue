@@ -3,20 +3,21 @@
         <div class="d-flex flex-column flex-sm-row justify-content-between">
             <div class="small text-secondary">{{ used | formatShort }} / {{ size | formatShort }} ({{ size - used | formatShort }} free)</div>
             <div class="d-flex">
-                <div v-for="(amount, name) in content" :key="name" class="mr-1" v-show="amount">
+                <div v-for="({ amount, time }, name) in content" :key="name" class="mr-1" v-show="amount">
                     <b-badge :style="name | colorByName">+</b-badge>
                     <small>{{ amount | formatShort }}</small>
+                    <small class="text-secondary">for {{ time | formatShort }}s</small>
                 </div>
             </div>
         </div>
         <b-progress :max="size">
-            <b-progress-bar v-for="(amount, name) in content" :key="name" :value="amount" :style="name | colorByName"></b-progress-bar>
+            <b-progress-bar v-for="({ amount, time }, name) in content" :key="name" :value="amount" :style="name | colorByName"></b-progress-bar>
         </b-progress>
     </div>
 </template>
 
 <script>
-import { values, sum } from 'lodash';
+import { values, sumBy } from 'lodash';
 
 export default {
     props: {
@@ -26,9 +27,9 @@ export default {
 
     computed: {
         used() {
-            const amounts = values(this.content);
+            const contents = values(this.content);
 
-            return sum(amounts);
+            return sumBy(contents, 'amount') || 0;
         },
     },
 }
