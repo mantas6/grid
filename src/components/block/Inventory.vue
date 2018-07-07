@@ -10,7 +10,7 @@
                     <small>You have no items</small>
                 </div>
                 <div v-for="({ name, level }, index) in items" :key="index" class="mr-1">
-                    <b-button :variant="dropMode ? 'outline-danger' : 'outline-secondary'" @click="dropMode ? dropItem(index) : useItem(index)">
+                    <b-button :variant="dropMode ? 'outline-danger' : 'outline-secondary'" @click="dropMode ? dropItem(index) : useItem(index)" :style="name | colorByName">
                         <span>{{ name }}</span>
                         <span>{{ level | formatShort }}</span>
                     </b-button>
@@ -22,6 +22,7 @@
 
 <script>
 import Singleton from '@/singleton'
+import { colorByName, nameToColor } from '@/method'
 
 export default {
     props: [ 'items', 'size' ],

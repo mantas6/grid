@@ -45,8 +45,15 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+    @import 'src/scss/mixin';
+
     .game {
         max-width: 500px;
+
+        @include media-breakpoint-down(xs) {
+            max-width: auto;
+            width: 100%;
+        }
     }
 </style>

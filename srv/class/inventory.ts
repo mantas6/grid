@@ -39,11 +39,8 @@ export class Inventory {
 
         if (item) {
             switch (item.name) {
-                case 'energy':
-                    this.player.get().process.affect('energy', item.level);
-                    break;
-                case 'acid':
-                    this.player.get().process.affect('acid', item.level);
+                default:
+                    this.player.get().process.affect(item.name, item.level);
                     break;
             }
 

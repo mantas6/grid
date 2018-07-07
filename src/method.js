@@ -13,6 +13,10 @@ export function nameToColor(name) {
         dirt: 'black',
         energy: 'green',
         acid: 'cyan',
+        energyMax: 'dodgerBlue',
+        absorbStrength: 'chocolate',
+        processSpeed: 'darkGoldenRod',
+        health: 'crimson',
     };
 
     return chroma(map[name]);

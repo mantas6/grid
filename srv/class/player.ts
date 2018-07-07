@@ -80,11 +80,8 @@ export class Player {
         }
 
         const modifierStats = [
-            'energyRegainSpeed',
             'processSpeed',
-            'healthRegain',
             'absorbStrength',
-            'acidEff',
         ];
 
         for (const statName of modifierStats) {

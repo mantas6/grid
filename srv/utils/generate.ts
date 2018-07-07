@@ -13,8 +13,8 @@ export class ChunkGenerator {
     fill(cell: Cell) {
         const scenarios: CellScenario[] = [
             {
-                content: { dirt: random(11, 30) * this.level },
-                chance: 1/10,
+                content: { dirt: random(11, 30) * (this.level * 2) },
+                chance: 1/8,
             },
             {
                 content: { dirt: random(1, 3) * this.level },
@@ -29,12 +29,32 @@ export class ChunkGenerator {
                 chance: 1/25,
             },
             {
-                item: { name: 'energy', level: 20  * this.level },
-                chance: 1/20,
+                content: { energyMax: random(1, 3) * this.level },
+                chance: 1/30,
             },
             {
-                item: { name: 'acid', level: 20  * this.level },
-                chance: 1/20,
+                content: { health: random(1, 3) * this.level },
+                chance: 1/40,
+            },
+            {
+                item: { name: 'energy', level: 5  * this.level },
+                chance: 1/40,
+            },
+            {
+                item: { name: 'acid', level: 5  * this.level },
+                chance: 1/40,
+            },
+            {
+                item: { name: 'energyMax', level: 5  * this.level },
+                chance: 1/40,
+            },
+            {
+                item: { name: 'absorbStrength', level: 5  * this.level },
+                chance: 1/40,
+            },
+            {
+                item: { name: 'processSpeed', level: 5  * this.level },
+                chance: 1/40,
             },
         ];
 

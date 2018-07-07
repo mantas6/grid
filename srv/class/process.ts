@@ -85,24 +85,26 @@ export class Process {
         // const amountOfAcid = this.content.acid.amount || 0;
         // const amountToProcessTotal = amountTotal - amountOfAcid;
         const processSpeed = player.getStat('processSpeed').current;
-        const acidEff = player.getStat('acidEff').current;
-        const amountOfAcid = this.amountOf('acid');
 
-        const healthStat = this.player.get().getStat('health');
-        const energyStat = this.player.get().getStat('energy');
+        const healthStat = player.getStat('health');
+        const energyStat = player.getStat('energy');
+        const absorbStrengthStat = player.getStat('absorbStrength');
+        const processSpeedStat = player.getStat('processSpeed');
 
         for (const [ name, { amount } ] of entries(this.content)) {
             if (name == 'acid')
                 continue;
 
+            const amountOfAcid = this.amountOf('acid');
+
             if (amount >= 1 && amountOfAcid >= 1) {
-                const amountToProcess = processSpeed * acidEff; //Math.log(amountOfAcid);
+                const amountToProcess = Math.min(processSpeed, amountOfAcid); //Math.log(amountOfAcid);
 
-                console.log(name, amountToProcess)
+                // console.log({processSpeed, amountOfAcid})
+                
+                if (amountToProcess) {
+                    this.affect(name, -1 * amountToProcess)
 
-                this.affect(name, -1 * amountToProcess)
-
-                if (amountOfAcid > amountToProcess) {
                     this.affect('acid', -1 * amountToProcess);
     
                     switch(name) {
@@ -110,6 +112,18 @@ export class Process {
                             if (!energyStat.isFull() && amountToProcess) {
                                 energyStat.affectByDiff(amountToProcess, true);
                             }
+                            break;
+                        case 'energyMax':
+                            energyStat.affectMax(amountToProcess);
+                            break;
+                        case 'absorbStrength':
+                            absorbStrengthStat.affectByDiff(amountToProcess);
+                            break;
+                        case 'processSpeed':
+                            processSpeedStat.affectByDiff(amountToProcess);
+                            break;
+                        case 'health':
+                            healthStat.affectByDiff(amountToProcess);
                             break;
                     }
                 }
