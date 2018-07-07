@@ -9,28 +9,53 @@ export class ChunkGenerator {
     }
 
     fill(cell: Cell) {
-        const chance = random(0, 100);
+        const scenarios: CellScenario[] = [
+            {
+                content: { dirt: random(750, 1000) },
+                density: random(1200, 2000),
+                chance: 1/10,
+            },
+            {
+                content: { acid: random(100, 300) },
+                density: random(10, 50),
+                chance: 1/25,
+            },
+            {
+                content: { energy: random(100, 300) },
+                density: random(10, 50),
+                chance: 1/25,
+            },
+            {
+                item: { name: 'energy', level: 20 },
+                chance: 1/20,
+            },
+        ];
 
-        if (chance > 95) {
-            cell.content = {
-                dirt: random(750, 1000),
-            };
-            cell.density = random(1200, 2000);
-        } else if (chance > 91) {
-            cell.content = {
-                acid: random(75, 100),
-            };
-            cell.density = random(200, 400);
-        } else if (chance > 90) {
-            cell.content = {
-                energy: random(75, 100),
-            };
-            cell.density = random(200, 400);
-        } else if (chance > 80) {
-            cell.content = {
-                dirt: random(75, 100),
-            };
-            cell.density = random(200, 400);
+        const shuffledScenarios = shuffle(scenarios);
+
+        const randomNumber = Math.random();
+
+        for (const scenario of shuffledScenarios) {
+            if (scenario.chance > randomNumber) {
+                const { content, density, item } = scenario;
+
+                if (content)
+                    cell.content = content;
+                
+                if (density)
+                    cell.density = density;
+                
+                if (item)
+                    cell.item = item;
+                break;
+            }
         }
     }
+}
+
+interface CellScenario {
+    content?: CellContent;
+    density?: number;
+    item?: InventoryItem;
+    chance: number;
 }

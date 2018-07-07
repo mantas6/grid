@@ -40,7 +40,7 @@ export class Process {
         }
         
         this.content[name].amount += diff;
-        this.content[name].time += diff;
+        this.content[name].time += Math.log(diff);
 
         this.update();
     }
@@ -69,7 +69,7 @@ export class Process {
         const contentTotalAmount = sum(values(cell.content));
 
         for (const [ name, amount ] of entries(cell.content)) {
-            const affectDiff = this.player.get().getStat('absorbStrength').current / cell.density * 1000; // TOdo
+            const affectDiff = this.player.get().getStat('absorbStrength').current / cell.density * 10000; // TOdo
 
             if (cell.affectContent(name, -affectDiff)) {
                 this.affect(name, +affectDiff);
@@ -87,13 +87,14 @@ export class Process {
         // const amountToProcessTotal = amountTotal - amountOfAcid;
         const processSpeed = player.getStat('processSpeed').current;
         const acidEff = player.getStat('acidEff').current;
+        const amountOfAcid = this.amountOf('acid');
 
         const healthStat = this.player.get().getStat('health');
         const energyStat = this.player.get().getStat('energy');
 
         for (const [ name, { amount } ] of entries(this.content)) {
             if (amount) {
-                const amountToProcess = processSpeed * acidEff;
+                const amountToProcess = processSpeed * acidEff * Math.log(Math.max(amountOfAcid, 1));
 
                 switch(name) {
                     case 'energy':

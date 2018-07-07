@@ -169,6 +169,14 @@ export class Player {
         this.cell.get().unassignPlayer();
     }
 
+    getActionCost(cell: Cell) {
+        if (cell.item) {
+            return 0;
+        }
+
+        return 1;
+    }
+
     assignCell(cell: Cell): boolean {
         log.debug(`Assigning player to cell ${cell.toString()}`);
 
@@ -205,7 +213,7 @@ export class Player {
     }
 
     absorbCellWithPlayer(cell: Cell): boolean {
-        cell.player.getStat('hp').affectByDiff(-1, true);
+        cell.player.getStat('health').affectByDiff(-1, true);
 
         return true;
     }

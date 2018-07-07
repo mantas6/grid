@@ -28,18 +28,6 @@ export class Cell {
         this.y = y;
     }
 
-    getInteractionCost() {
-        if (this.item) {
-            return 0;
-        }
-
-        if (this.content) {
-            return sum(values(this.content)) / 100; // Todo
-        }
-
-        return 1;
-    }
-
     isOccupiable(): boolean {
         return !this.player && !this.content && !this.item;
     }
