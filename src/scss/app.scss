@@ -1,2 +1,7 @@
 @import "~bootstrap/scss/bootstrap.scss";
 @import '~bootstrap-vue/dist/bootstrap-vue.css';
+
+body.night-mode {
+    background-color: #292929;
+    color: white;
+}

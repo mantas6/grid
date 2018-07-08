@@ -13,7 +13,7 @@ export class ChunkGenerator {
     fill(cell: Cell) {
         const scenarios: CellScenario[] = [
             {
-                content: { dirt: random(11, 30) * (this.level * 2) },
+                content: { dirt: random(11, 300) * (this.level * 2) },
                 chance: 1/8,
             },
             {
@@ -21,12 +21,12 @@ export class ChunkGenerator {
                 chance: 1/2,
             },
             {
-                content: { acid: random(1, 3) * this.level },
+                content: { acid: random(1, 6) * this.level },
                 chance: 1/25,
             },
             {
-                content: { energy: random(1, 3) * this.level },
-                chance: 1/20,
+                content: { energy: random(1, 20) * this.level },
+                chance: 1/15,
             },
             {
                 content: { energyMax: random(1, 3) * this.level },
@@ -37,31 +37,31 @@ export class ChunkGenerator {
                 chance: 1/40,
             },
             {
-                item: { name: 'energy', level: 5  * this.level },
+                item: { name: 'energy', level: random(10, 20)  * this.level },
                 chance: 1/40,
             },
             {
-                item: { name: 'acid', level: 20  * this.level },
+                item: { name: 'acid', level: random(10, 20)  * this.level },
                 chance: 1/30,
             },
             {
-                item: { name: 'acid', level: 50  * this.level },
+                item: { name: 'acid', level: random(10, 20)  * this.level },
                 chance: 1/80,
             },
             {
-                item: { name: 'energyMax', level: 1  * this.level },
+                item: { name: 'energyMax', level: random(1, 2)  * this.level },
                 chance: 1/40,
             },
             {
-                item: { name: 'absorbStrength', level: 1  * this.level },
+                item: { name: 'absorbStrength', level: random(1, 2)  * this.level },
                 chance: 1/40,
             },
             {
-                item: { name: 'absorbEff', level: 1  * this.level },
+                item: { name: 'absorbEff', level: random(1, 2)  * this.level },
                 chance: 1/40,
             },
             {
-                item: { name: 'processSpeed', level: 1  * this.level },
+                item: { name: 'processSpeed', level: random(1, 2)  * this.level },
                 chance: 1/40,
             },
         ];

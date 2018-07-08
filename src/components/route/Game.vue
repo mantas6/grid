@@ -15,6 +15,7 @@
             </div>
             <h5 v-else>Teleporting to alt. reality...</h5>
             <div class="text-right">Online: {{ onlineCount }}</div>
+            <b-form-checkbox v-model="nightMode">Night mode</b-form-checkbox>
         </div>
     </div>
 </template>
@@ -35,12 +36,28 @@ import Singleton from '@/singleton'
 export default {
     components: { Grid, StatBar, Process, Message, Inventory, StatValue },
 
+    data() {
+        return {
+            nightMode: true,
+        };
+    },
+
     computed: {
         ...mapState(['map', 'stats', 'onlineCount', 'processContent', 'processSize', 'inventory', 'inventorySize']),
 
         orderedStats() {
             return orderBy(this.stats, 'name');
         }
+    },
+
+    watch: {
+        nightMode(isEnabled) {
+            if (isEnabled) {
+                document.body.classList.add('night-mode');
+            } else {
+                document.body.classList.remove('night-mode');
+            }
+        },
     },
 };
 </script>

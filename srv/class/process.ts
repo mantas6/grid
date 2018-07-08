@@ -19,27 +19,13 @@ export class Process {
         this.player = new PlayerRef().setRef(player);
     }
 
-    canBeModified(name: string, diff: number) {
-        if (this.usage() + diff <= this.size) {
-            if (this.content[name] && this.content[name].amount + diff >= 0) {
-                return true;
-            } else if(diff >= 0) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     affect(name: string, diff: number) {
         if (!this.content[name])
             this.content[name] = { amount: 0 };
+
+        const currentAmount = this.content[name].amount;
         
-        if (!this.canBeModified(name, diff)) {
-            return false;
-        }
-        
-        this.content[name].amount += diff;
+        this.content[name].amount = clamp(currentAmount + diff, 0, this.size);
 
         this.update();
     }
@@ -68,7 +54,7 @@ export class Process {
         const contentTotalAmount = sum(values(cell.content));
 
         for (const [ name, amount ] of entries(cell.content)) {
-            const affectDiff = this.player.get().getStat('absorbStrength').current * this.player.get().getStat('absorbEff').current;
+            const affectDiff = this.player.get().getStat('absorbStrength').current;
 
             if (cell.affectContent(name, -affectDiff)) {
                 this.affect(name, +affectDiff);
@@ -89,6 +75,7 @@ export class Process {
         const healthStat = player.getStat('health');
         const energyStat = player.getStat('energy');
         const absorbStrengthStat = player.getStat('absorbStrength');
+        const absorbEffStat = player.getStat('absorbEff');
         const processSpeedStat = player.getStat('processSpeed');
 
         for (const [ name, { amount } ] of entries(this.content)) {
@@ -103,7 +90,7 @@ export class Process {
                 // console.log({processSpeed, amountOfAcid})
                 
                 if (amountToProcess) {
-                    this.affect(name, -1 * amountToProcess)
+                    this.affect(name, -1 * amountToProcess);
 
                     this.affect('acid', -1 * amountToProcess);
     
@@ -118,6 +105,9 @@ export class Process {
                             break;
                         case 'absorbStrength':
                             absorbStrengthStat.affectByDiff(amountToProcess);
+                            break;
+                        case 'absorbEff':
+                            absorbEffStat.affectByDiff(amountToProcess);
                             break;
                         case 'processSpeed':
                             processSpeedStat.affectByDiff(amountToProcess);

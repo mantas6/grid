@@ -87,7 +87,7 @@ export class Player {
 
         for (const statName of modifierStats) {
             const stat = new Stat(this, statName);
-            stat.current = 1;
+            stat.current = 2;
 
             this.stats.push(stat);
         }
@@ -173,7 +173,7 @@ export class Player {
         }
 
         if (cell.content) {
-            return Math.min(this.getStat('absorbStrength').current, cell.contentTotalAmount());
+            return Math.min(this.getStat('absorbStrength').current / this.getStat('absorbEff').current, cell.contentTotalAmount());
         }
 
         return 1;
