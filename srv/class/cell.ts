@@ -69,6 +69,9 @@ export class Cell {
         // Only init if acid or etc
         this.processTimer = interval(1000).subscribe(_ => {
             this.process.processContent();
+            if (!this.process.usage()) {
+                this.clearContent();
+            }
         });
     }
 
@@ -81,17 +84,17 @@ export class Cell {
     }
 
     // Automatically will "fill"
-    affectContent(name: string, diff: number): boolean {
+    affectContent(name: string, diff: number): number {
         if (this.player) {
-            this.player.process.affect(name, diff);
-            return true;
+            const affected = this.player.process.affect(name, diff);
+            return affected;
         }
         
         if (!this.process) {
             this.initializeContent();
         }
 
-        this.process.affect(name, diff);
+        const affected = this.process.affect(name, diff);
 
         if (this.process.usage() <= 0) {
             this.clearContent();
@@ -99,7 +102,7 @@ export class Cell {
 
         this.update();
 
-        return true;
+        return affected;
     }
 
     pickupItem(): InventoryItem {

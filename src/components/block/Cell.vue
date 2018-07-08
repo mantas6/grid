@@ -20,7 +20,7 @@ export default {
     props: [ 'cell', 'own', 'enabled', 'mark' ],
 
     computed: {
-        ...mapState(['playerId']),
+        ...mapState(['playerId', 'throwItemIndex']),
 
         buttonText() {
             if (this.cell.void) {
@@ -53,6 +53,14 @@ export default {
                 return 'danger';
             }
 
+            if (this.enabled && this.throwItemIndex !== undefined) {
+                return 'outline-warning';
+            }
+
+            if (this.enabled) {
+                return 'outline-primary';
+            }
+
             return 'outline-secondary';
         },
 
@@ -68,9 +76,13 @@ export default {
 
         style() {
             if (this.cell.process) {
-                const name = head(keys(this.cell.process.content));
-                console.log(name)
-                return colorByName(name)
+                const names = keys(this.cell.process.content);
+
+                if (names.length) {
+                    const name = head(names);
+                    console.log(name)
+                    return colorByName(name)
+                }
             } else if (this.cell.item) {
                 return { color: nameToColor(this.cell.item.name).css() }
             }

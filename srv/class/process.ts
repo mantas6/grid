@@ -1,5 +1,5 @@
 import { Type, Exclude, Expose } from 'class-transformer';
-import { values, sum, entries, clamp, round, ceil, sumBy, find } from 'lodash';
+import { values, sum, entries, clamp, round, ceil, sumBy, find, shuffle } from 'lodash';
 import { Player } from './player';
 import { Cell } from './cell';
 import { PlayerRef, CellRef } from '../utils/ref';
@@ -100,11 +100,14 @@ export class Process {
 
                 const contentsToSpread = entries(this.content);
 
-                for (const closeCell of closeCells) {
+                for (const closeCell of shuffle(closeCells)) {
                     for (const [ name, content ] of contentsToSpread) {
-                        cell.affectContent(name, -amountToProcess);
-                        closeCell.affectContent(name, +amountToProcess);
+                        const affected = cell.affectContent(name, -1 * amountToProcess);
+                        if (affected) {
+                            closeCell.affectContent(name, Math.min(amountToProcess, +affected));
+                        }
                     }
+                    break;
                 }
                 break;
         }
@@ -119,14 +122,22 @@ export class Process {
         }
     }
 
-    affect(name: string, diff: number) {
+    affect(name: string, diff: number): number {
         this.createContentItem(name);
 
         const currentAmount = this.content[name].amount;
+
+        const affected = clamp(currentAmount + diff, 0, this.size);
         
-        this.content[name].amount = clamp(currentAmount + diff, 0, this.size);
+        this.content[name].amount = affected;
+
+        if (this.content[name].amount < 1) {
+            delete this.content[name];
+        }
 
         this.update();
+
+        return affected;
     }
 
     usage() {
