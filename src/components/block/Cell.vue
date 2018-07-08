@@ -5,7 +5,7 @@
             <b-badge v-else-if="cell.content" variant="light">
                 <small>{{ contentSize | formatShort }}</small>
             </b-badge>
-            <div class="marker" v-show="mark">x</div>
+            <div class="marker" v-show="mark">*</div>
         </b-button>
     </div>
 </template>

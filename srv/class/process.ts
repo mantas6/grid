@@ -8,6 +8,14 @@ import { grid } from '../state';
 
 const log = new Log('process');
 
+const processableNames = [
+    'energy',
+    'energyMax',
+    'health',
+    'dirt',
+    'acid',
+];
+
 export class Process {
     size: number = 10000;
     content: ProcessContent = {};
@@ -19,9 +27,17 @@ export class Process {
         this.player = new PlayerRef().setRef(player);
     }
 
+    createContentItem(name: string) {
+        if (!this.content[name]) {
+            this.content[name] = {
+                amount: 0,
+                active: processableNames.indexOf(name) != -1,
+            };
+        }
+    }
+
     affect(name: string, diff: number) {
-        if (!this.content[name])
-            this.content[name] = { amount: 0 };
+        this.createContentItem(name);
 
         const currentAmount = this.content[name].amount;
         
@@ -75,15 +91,10 @@ export class Process {
         const healthStat = player.getStat('health');
         const energyStat = player.getStat('energy');
 
-        const processableNames = [
-            'energy',
-            'energyMax',
-            'health',
-            'dirt',
-        ];
+        
 
-        for (const [ name, { amount } ] of entries(this.content)) {
-            if (processableNames.indexOf(name) == -1)
+        for (const [ name, { amount, active } ] of entries(this.content)) {
+            if (!active || name == 'acid')
                 continue;
 
             const amountOfAcid = this.amountOf('acid');
@@ -146,5 +157,5 @@ export interface ProcessUpdate {
 }
 
 interface ProcessContent {
-    [ name: string ]: { amount: number };
+    [ name: string ]: { amount: number, active: boolean };
 }
