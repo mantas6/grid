@@ -69,7 +69,7 @@ io.on('connection', client => {
     log.note('Client connected');
 
     const generalValidation = [
-        throttle(() => timer(250)),
+        // throttle(() => timer(250)),
         filter(_ => !!clientPlayer),
         filter(req => !!req),
     ];
