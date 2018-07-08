@@ -95,6 +95,14 @@ export default {
             }
         },
     },
+
+    watch: {
+        items(to) {
+            if (!to.length) {
+                this.modeIndex = 0;
+            }
+        },
+    },
 }
 </script>
 

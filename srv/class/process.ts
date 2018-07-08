@@ -1,5 +1,5 @@
 import { Type, Exclude, Expose } from 'class-transformer';
-import { values, sum, entries, clamp, round, ceil, sumBy } from 'lodash';
+import { values, sum, entries, clamp, round, ceil, sumBy, find } from 'lodash';
 import { Player } from './player';
 import { Cell, CellContent } from './cell';
 import { PlayerRef } from '../utils/ref';
@@ -54,7 +54,7 @@ export class Process {
         const contentTotalAmount = sum(values(cell.content));
 
         for (const [ name, amount ] of entries(cell.content)) {
-            const affectDiff = this.player.get().getStat('absorbStrength').current;
+            const affectDiff = this.amountOf('absorbStrength') + 1;
 
             if (cell.affectContent(name, -affectDiff)) {
                 this.affect(name, +affectDiff);
@@ -70,16 +70,19 @@ export class Process {
         // Acid is what make the processing of the content possible and it's entirely dependant on this
         // const amountOfAcid = this.content.acid.amount || 0;
         // const amountToProcessTotal = amountTotal - amountOfAcid;
-        const processSpeed = player.getStat('processSpeed').current;
+        const processSpeed = this.amountOf('processSpeed') + 1;
 
         const healthStat = player.getStat('health');
         const energyStat = player.getStat('energy');
-        const absorbStrengthStat = player.getStat('absorbStrength');
-        const absorbEffStat = player.getStat('absorbEff');
-        const processSpeedStat = player.getStat('processSpeed');
+
+        const processableNames = [
+            'energy',
+            'energyMax',
+            'health',
+        ];
 
         for (const [ name, { amount } ] of entries(this.content)) {
-            if (name == 'acid')
+            if (!find(processableNames, name))
                 continue;
 
             const amountOfAcid = this.amountOf('acid');
@@ -102,15 +105,6 @@ export class Process {
                             break;
                         case 'energyMax':
                             energyStat.affectMax(amountToProcess);
-                            break;
-                        case 'absorbStrength':
-                            absorbStrengthStat.affectByDiff(amountToProcess);
-                            break;
-                        case 'absorbEff':
-                            absorbEffStat.affectByDiff(amountToProcess);
-                            break;
-                        case 'processSpeed':
-                            processSpeedStat.affectByDiff(amountToProcess);
                             break;
                         case 'health':
                             healthStat.affectByDiff(amountToProcess);

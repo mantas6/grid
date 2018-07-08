@@ -78,19 +78,6 @@ export class Player {
 
             this.stats.push(stat);
         }
-
-        const modifierStats = [
-            'processSpeed',
-            'absorbStrength',
-            'absorbEff',
-        ];
-
-        for (const statName of modifierStats) {
-            const stat = new Stat(this, statName);
-            stat.current = 2;
-
-            this.stats.push(stat);
-        }
     }
 
     logOn(client: Socket) {
@@ -173,7 +160,7 @@ export class Player {
         }
 
         if (cell.content) {
-            return Math.min(this.getStat('absorbStrength').current / this.getStat('absorbEff').current, cell.contentTotalAmount());
+            return Math.min(this.process.amountOf('absorbStrength') + 1 / this.process.amountOf('absorbEff') + 1, cell.contentTotalAmount());
         }
 
         return 1;
