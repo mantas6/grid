@@ -160,7 +160,7 @@ export class Player {
         }
 
         if (cell.content) {
-            return Math.min(this.process.amountOf('absorbStrength') + 1 / this.process.amountOf('absorbEff') + 1, cell.contentTotalAmount());
+            return Math.min((this.process.amountOf('absorbStrength') + 1) / (this.process.amountOf('absorbEff') + 1), cell.contentTotalAmount());
         }
 
         return 1;

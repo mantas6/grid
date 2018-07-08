@@ -79,10 +79,11 @@ export class Process {
             'energy',
             'energyMax',
             'health',
+            'dirt',
         ];
 
         for (const [ name, { amount } ] of entries(this.content)) {
-            if (!find(processableNames, name))
+            if (processableNames.indexOf(name) == -1)
                 continue;
 
             const amountOfAcid = this.amountOf('acid');
