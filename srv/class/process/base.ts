@@ -54,7 +54,7 @@ export class Process {
     usage() {
         const amounts = values(this.content);
 
-        return sumBy(amounts, 'value') || 0;
+        return sumBy(amounts, 'amount') || 0;
     }
 
     amountOf(name: string) {
