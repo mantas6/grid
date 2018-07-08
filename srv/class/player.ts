@@ -82,6 +82,7 @@ export class Player {
         const modifierStats = [
             'processSpeed',
             'absorbStrength',
+            'absorbEff',
         ];
 
         for (const statName of modifierStats) {
@@ -171,7 +172,11 @@ export class Player {
             return 0;
         }
 
-        return this.getStat('absorbStrength').current;
+        if (cell.content) {
+            return Math.min(this.getStat('absorbStrength').current, cell.contentTotalAmount());
+        }
+
+        return 1;
     }
 
     assignCell(cell: Cell): boolean {

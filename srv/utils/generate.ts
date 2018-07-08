@@ -26,7 +26,7 @@ export class ChunkGenerator {
             },
             {
                 content: { energy: random(1, 3) * this.level },
-                chance: 1/25,
+                chance: 1/20,
             },
             {
                 content: { energyMax: random(1, 3) * this.level },
@@ -54,6 +54,10 @@ export class ChunkGenerator {
             },
             {
                 item: { name: 'absorbStrength', level: 1  * this.level },
+                chance: 1/40,
+            },
+            {
+                item: { name: 'absorbEff', level: 1  * this.level },
                 chance: 1/40,
             },
             {
