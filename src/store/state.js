@@ -13,5 +13,7 @@ export const state = {
    processContent: {},
    processSize: 0,
 
+   throwItemIndex: undefined,
+
    message: undefined,
 };

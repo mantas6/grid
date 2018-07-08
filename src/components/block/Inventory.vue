@@ -2,7 +2,7 @@
     <div>
         <div class="d-flex justify-content-between mb-1">
             <small class="text-secondary">{{ items.length }} / {{ size }}</small>
-            <b-button v-show="items.length" size="sm" :variant="dropMode ? 'danger' : 'success'" @click="toggleMode">{{ dropMode ? 'Drop' : 'Use' }}</b-button>
+            <b-button v-show="items.length" size="sm" :variant="modeVariant" @click="toggleMode">{{ mode }}</b-button>
         </div>
         <div class="holder">
             <div class="d-flex">
@@ -10,7 +10,8 @@
                     <small>You have no items</small>
                 </div>
                 <div v-for="({ name, level }, index) in items" :key="index" class="mr-1">
-                    <b-button :variant="dropMode ? 'outline-danger' : 'outline-secondary'" @click="dropMode ? dropItem(index) : useItem(index)" :style="name | colorByName">
+                    <b-button :variant="modeVariant" @click="itemSelect(index)" :disabled="index == throwItemIndex">
+                        <b-badge :style="name | colorByName">+</b-badge>
                         <span>{{ name }}</span>
                         <span>{{ level | formatShort }}</span>
                     </b-button>
@@ -23,17 +24,53 @@
 <script>
 import Singleton from '@/singleton'
 import { colorByName, nameToColor } from '@/method'
+import { mapMutations, mapState } from 'vuex'
 
 export default {
     props: [ 'items', 'size' ],
 
     data() {
         return {
-            dropMode: false,
+            modeIndex: 0,
+            modes: ['use', 'throw', 'drop'],
         };
     },
 
+    computed: {
+        ...mapState(['throwItemIndex']),
+
+        modeVariant() {
+            const variants = {
+                use: 'success',
+                throw: 'warning',
+                drop: 'danger',
+            };
+
+            return variants[this.mode];
+        },
+
+        mode() {
+            return this.modes[this.modeIndex];
+        },
+    },
+
     methods: {
+        ...mapMutations(['setThrowItem']),
+
+        itemSelect(index) {
+            switch (this.mode) {
+                case 'use':
+                    this.useItem(index);
+                    break;
+                case 'drop':
+                    this.dropItem(index);
+                    break;
+                case 'throw':
+                    this.throwItem(index);
+                    break;
+            }
+        },
+
         useItem(index) {
             Singleton.socket.emit('useItem', { index });
         },
@@ -42,8 +79,20 @@ export default {
             Singleton.socket.emit('dropItem', { index });
         },
 
+        throwItem(index) {
+            this.setThrowItem(index);
+        },
+
         toggleMode() {
-            this.dropMode = !this.dropMode;
+            this.modeIndex++;
+
+            if (this.modeIndex >= this.modes.length) {
+                this.modeIndex = 0;
+            }
+
+            if (this.mode != 'throw') {
+                this.setThrowItem(undefined);
+            }
         },
     },
 }

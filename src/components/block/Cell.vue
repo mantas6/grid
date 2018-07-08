@@ -1,10 +1,11 @@
 <template>
     <div>
-        <b-button :variant="buttonVariant" :disabled="disabled" @click="selectCell" :style="style">
+        <b-button :variant="buttonVariant" :disabled="!enabled" @click="selectCell" :style="style">
             <small v-if="buttonText">{{ buttonText }}</small>
             <b-badge v-else-if="cell.content" variant="light">
                 <small>{{ contentSize | formatShort }}</small>
             </b-badge>
+            <div class="marker" v-show="mark">x</div>
         </b-button>
     </div>
 </template>
@@ -16,7 +17,7 @@ import { colorByName, nameToColor } from '@/method'
 import { mapState } from 'vuex';
 
 export default {
-    props: { cell: Object, own: Boolean, disabled: Boolean },
+    props: [ 'cell', 'own', 'enabled', 'mark' ],
 
     computed: {
         ...mapState(['playerId']),
@@ -100,6 +101,8 @@ export default {
         width: 50px;
         height: 50px;
 
+        position: relative;
+
         @include media-breakpoint-down(xs) {
             width: 30px;
             height: 30px;
@@ -108,5 +111,11 @@ export default {
 
     .btn.disabled, .btn:disabled {
         opacity: 1;
+    }
+
+    .marker {
+        position: absolute;
+        top: 0;
+        left: 0;
     }
 </style>

@@ -4,7 +4,8 @@
             <div v-for="(cell, relY) in lineX" :key="relY" class="mb-1 mr-1">
                 <cell :cell="cell"
                     @selectCell="changePosition(cell.x, cell.y)"
-                    :disabled="isPlayerAt(cell.x, cell.y) || (!isCellReachable(cell.x, cell.y) || !cell.isAbsorbable && !cell.isOccupiable)"
+                    :enabled="!isPlayerAt(cell.x, cell.y) && ((isCellReachable(cell.x, cell.y) && (cell.isAbsorbable || cell.isOccupiable)) || isThrowableTo(cell.x, cell.y))"
+                    :mark="isCellReachable(cell.x, cell.y) || isThrowableTo(cell.x, cell.y)"
                     :own="isPlayerAt(cell.x, cell.y)">
                 </cell>
             </div>
@@ -29,7 +30,7 @@ export default {
 
     computed: {
         ...mapGetters(['playerX', 'playerY']),
-        ...mapState(['playerId', 'playerLocation']),
+        ...mapState(['playerId', 'playerLocation', 'throwItemIndex']),
 
         grid() {
             const ordered = orderBy(this.map, ['x', 'y']);
@@ -59,7 +60,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(['moveDirection']),
+        ...mapActions(['moveDirection', 'setThrowItem']),
 
         isPlayerAt(x, y) {
             return this.playerX == x && this.playerY == y;
@@ -73,9 +74,19 @@ export default {
             return false;
         },
 
+        isThrowableTo(x, y) {
+            const distance = this.measureDistance(this.playerLocation, { x, y });
+
+            return this.throwItemIndex !== undefined && (distance == 1 || distance == 2);
+        },
+
         changePosition(x, y) {
-            console.log('changePosition', { x, y });
-            Singleton.socket.emit('changePosition', { x, y });
+            console.log('changePosition', { x, y, throwItemIndex: this.throwItemIndex });
+            if (this.throwItemIndex) {
+                Singleton.socket.emit('throwPosition', { x, y, throwItemIndex: this.throwItemIndex });
+            } else {
+                Singleton.socket.emit('changePosition', { x, y });
+            }
         },
 
         moveBySwipe({ direction }) {

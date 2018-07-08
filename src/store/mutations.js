@@ -80,4 +80,8 @@ export const mutations = {
     clearMessage(state) {
         state.message = undefined;
     },
+
+    setThrowItem(state, index) {
+        state.throwItemIndex = index;
+    },
 };
