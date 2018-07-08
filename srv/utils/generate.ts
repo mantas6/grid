@@ -1,9 +1,8 @@
 import { range, entries, sample, shuffle, random } from 'lodash';
 
 import { Cell } from "../class/cell";
-import { ProcessContent, Process } from "../class/process/base";
+import { ProcessContent, Process } from "../class/process";
 import { InventoryItem } from "../class/inventory";
-import { ProcessCell } from '../class/process/cell';
 
 export class ChunkGenerator {
     level: number;

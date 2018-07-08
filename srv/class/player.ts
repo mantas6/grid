@@ -10,8 +10,7 @@ import { grid, players } from '../state';
 import { Log } from '../utils/log';
 
 import { CellRef } from '../utils/ref';
-import { ProcessPlayer } from './process/player';
-import { ProcessUpdate } from './process/base';
+import { Process, ProcessUpdate } from './process';
 import { Inventory, InventoryUpdate } from './inventory';
 
 const log = new Log('player');
@@ -32,9 +31,9 @@ export class Player {
     @Expose()
     stats: Stat[] = [];
 
-    @Type(() => ProcessPlayer)
+    @Type(() => Process)
     @Expose()
-    process: ProcessPlayer;
+    process: Process;
 
     @Type(() => Inventory)
     @Expose()
@@ -67,7 +66,7 @@ export class Player {
     }
 
     initialize() {
-        this.process = new ProcessPlayer(this);
+        this.process = new Process(this);
         this.inventory = new Inventory(this);
 
         this.stats = [];

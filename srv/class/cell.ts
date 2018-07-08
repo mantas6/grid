@@ -6,16 +6,15 @@ import { Player } from './player';
 import { InventoryItem } from './inventory';
 import { grid } from '../state';
 
-import { ProcessCell } from './process/cell';
+import { Process, ProcessContent, ProcessUpdate } from './process';
 
 import { measureDistance } from '../utils/method';
-import { ProcessUpdate, ProcessContent } from './process/base';
 
 export class Cell {
     x: number;
     y: number;
 
-    process: ProcessCell;
+    process: Process;
 
     @Exclude()
     processTimer: Subscription;
@@ -61,7 +60,7 @@ export class Cell {
     }
 
     initializeContent(content?: ProcessContent) {
-        this.process = new ProcessCell(this);
+        this.process = new Process(this);
 
         if (content) {
             this.process.content = content;
