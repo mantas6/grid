@@ -6,13 +6,16 @@ import { Player } from './player';
 import { InventoryItem } from './inventory';
 import { grid } from '../state';
 
+import { ProcessCell } from './process/cell';
+
 import { measureDistance } from '../utils/method';
+import { ProcessUpdate } from './process/base';
 
 export class Cell {
     x: number;
     y: number;
 
-    content: CellContent;
+    process: ProcessCell;
 
     item: InventoryItem;
 
@@ -28,11 +31,11 @@ export class Cell {
     }
 
     isOccupiable(): boolean {
-        return !this.player && !this.content && !this.item;
+        return !this.player && !this.process && !this.item;
     }
 
     isAbsorbable(): boolean {
-        return !!this.player || !!this.content || !!this.item;
+        return !!this.player || !!this.process || !!this.item;
     }
 
     assignPlayer(player: Player) {
@@ -46,28 +49,28 @@ export class Cell {
     }
 
     clearContent() {
-        this.content = undefined;
+        this.process = undefined;
         this.update();
     }
 
     contentTotalAmount() {
-        const amounts = values(this.content);
+        if (this.process) {
+            return this.process.usage();
+        }
 
-        return sum(amounts);
+        return 0;
     }
 
     // Automatically will "fill"
     affectContent(name: string, diff: number): boolean {
-        if (this.content) {
-            if (this.content[name]) {
-                this.content[name] += Math.min(diff, this.content[name]);
+        if (this.process) {
+            this.process.affect(name, diff);
 
-                if (sum(values(this.content)) <= 0) {
-                    this.clearContent();
-                }
-
-                this.update();
+            if (this.process.usage() <= 0) {
+                this.clearContent();
             }
+
+            this.update();
         }
         return true;
     }
@@ -112,7 +115,7 @@ export class Cell {
         return {
             x: this.x,
             y: this.y,
-            content: this.content,
+            process: this.process && this.process.getUpdate() || undefined,
             item: this.item,
             isOccupiable: this.isOccupiable() || undefined,
             isAbsorbable: this.isAbsorbable() || undefined,
@@ -132,14 +135,9 @@ export class Cell {
 export interface CellUpdate {
     x: number;
     y: number;
-    content?: CellContent;
+    process?: ProcessUpdate;
     isOccupiable?: boolean;
     isAbsorbable?: boolean;
     playerId?: number;
     item?: InventoryItem;
-}
-
-export interface CellContent {
-    [name: string]: number;
-    
 }

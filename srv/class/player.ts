@@ -165,7 +165,7 @@ export class Player {
             return 0;
         }
 
-        if (cell.content) {
+        if (cell.process) {
             return Math.min((this.process.amountOf('absorbStrength') + 1) / (this.process.amountOf('absorbEff') + 1), cell.contentTotalAmount());
         }
 
@@ -195,7 +195,7 @@ export class Player {
     }
 
     absorbCellWithContent(cell: Cell): boolean {
-        if (!cell.isAbsorbable() || !cell.content) {
+        if (!cell.isAbsorbable() || !cell.process) {
             log.debug(`Not absorbable`);
             return false;
         }

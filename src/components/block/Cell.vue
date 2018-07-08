@@ -2,7 +2,7 @@
     <div>
         <b-button :variant="buttonVariant" :disabled="!enabled" @click="selectCell" :style="style">
             <small v-if="buttonText">{{ buttonText }}</small>
-            <b-badge v-else-if="cell.content" variant="light">
+            <b-badge v-else-if="cell.process" variant="light">
                 <small>{{ contentSize | formatShort }}</small>
             </b-badge>
             <div class="marker" v-show="mark">*</div>
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { keys, sum, head, values } from 'lodash';
+import { keys, sumBy, head, values } from 'lodash';
 import { colorByName, nameToColor } from '@/method'
 
 import { mapState } from 'vuex';
@@ -57,14 +57,18 @@ export default {
         },
 
         contentSize() {
-            const amounts = values(this.cell.content);
-            
-            return sum(amounts);
+            if (this.cell.process) {
+                const items = values(this.cell.process.content);
+                
+                return sumBy(items, 'amount');
+            }
+
+            return 0;
         },
 
         style() {
-            if (this.cell.content) {
-                const name = head(keys(this.cell.content));
+            if (this.cell.process) {
+                const name = head(keys(this.cell.process.content));
                 console.log(name)
                 return colorByName(name)
             } else if (this.cell.item) {

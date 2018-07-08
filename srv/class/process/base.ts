@@ -1,7 +1,7 @@
 import { Type, Exclude, Expose } from 'class-transformer';
 import { values, sum, entries, clamp, round, ceil, sumBy, find } from 'lodash';
 import { Player } from '../player';
-import { Cell, CellContent } from '../cell';
+import { Cell } from '../cell';
 import { PlayerRef, CellRef } from '../../utils/ref';
 import { Log } from '../../utils/log';
 import { grid } from '../../state';
@@ -20,11 +20,23 @@ export class Process {
     size: number = 10000;
     content: ProcessContent = {};
 
+    static isActiveContent(name: string) {
+        const processableNames = [
+            'energy',
+            'energyMax',
+            'health',
+            'dirt',
+            'acid',
+        ];
+
+        return processableNames.indexOf(name) != -1;
+    }
+
     createContentItem(name: string) {
         if (!this.content[name]) {
             this.content[name] = {
                 amount: 0,
-                active: processableNames.indexOf(name) != -1,
+                active: Process.isActiveContent(name),
             };
         }
     }
@@ -53,16 +65,12 @@ export class Process {
     }
 
     processContentOfCell(cell: Cell): boolean {
-        const content = cell.content;
-
-        if (this.usage() + content.size > this.size) {
+        if (this.usage() + cell.process.usage() > this.size) {
             log.debug(`canNotBeAdded`);
             return false;
         }
 
-        const contentTotalAmount = sum(values(cell.content));
-
-        for (const [ name, amount ] of entries(cell.content)) {
+        for (const [ name, amount ] of entries(cell.process.content)) {
             const affectDiff = this.amountOf('absorbStrength') + 1;
 
             if (cell.affectContent(name, -affectDiff)) {
@@ -87,6 +95,6 @@ export interface ProcessUpdate {
     size: number;
 }
 
-interface ProcessContent {
-    [ name: string ]: { amount: number, active: boolean };
+export interface ProcessContent {
+    [ name: string ]: { amount: number, active?: boolean };
 }

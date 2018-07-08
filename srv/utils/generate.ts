@@ -1,7 +1,9 @@
 import { range, entries, sample, shuffle, random } from 'lodash';
 
-import { Cell, CellContent } from "../class/cell";
+import { Cell } from "../class/cell";
+import { ProcessContent, Process } from "../class/process/base";
 import { InventoryItem } from "../class/inventory";
+import { ProcessCell } from '../class/process/cell';
 
 export class ChunkGenerator {
     level: number;
@@ -74,8 +76,20 @@ export class ChunkGenerator {
             if (scenario.chance > randomNumber) {
                 const { content, item } = scenario;
 
-                if (content)
-                    cell.content = content;
+                if (content) {
+                    cell.process = new ProcessCell(cell);
+
+                    const processContent: ProcessContent = {};
+
+                    for (const [ name, amount ] of entries(content)) {
+                        processContent[name] = {
+                            amount,
+                            active: Process.isActiveContent(name),
+                        };
+                    }
+                    
+                    cell.process.content = processContent;
+                }
                 
                 if (item)
                     cell.item = item;
@@ -86,7 +100,7 @@ export class ChunkGenerator {
 }
 
 interface CellScenario {
-    content?: CellContent;
+    content?: { [ name: string ]: number };
     item?: InventoryItem;
     chance: number;
 }

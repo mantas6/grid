@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { Cell, CellContent } from './cell';
+import { Cell } from './cell';
 import { Type, Exclude, Expose, Transform } from 'class-transformer';
 
 import { range, entries, sample, shuffle, random } from 'lodash';
