@@ -15,6 +15,7 @@ export function nameToColor(name) {
         acid: 'cyan',
         energyMax: 'dodgerBlue',
         absorbStrength: 'chocolate',
+        absorbEff: 'burlyWood',
         processSpeed: 'darkGoldenRod',
         health: 'crimson',
     };
