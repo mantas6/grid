@@ -18,6 +18,7 @@ export function nameToColor(name) {
         absorbEff: 'burlyWood',
         processSpeed: 'darkGoldenRod',
         health: 'crimson',
+        spread: 'magenta',
     };
 
     return chroma(map[name]);

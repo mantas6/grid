@@ -15,7 +15,7 @@
 
 <script>
 import Cell from '@/components/block/Cell';
-import { mapState, mapActions, mapGetters } from 'vuex';
+import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
 import { timer } from 'rxjs';
 import { entries, orderBy } from 'lodash';
 
@@ -60,7 +60,8 @@ export default {
     },
 
     methods: {
-        ...mapActions(['moveDirection', 'setThrowItem']),
+        ...mapActions(['moveDirection']),
+        ...mapMutations(['setThrowItem']),
 
         isPlayerAt(x, y) {
             return this.playerX == x && this.playerY == y;
@@ -82,8 +83,10 @@ export default {
 
         changePosition(x, y) {
             console.log('changePosition', { x, y, throwItemIndex: this.throwItemIndex });
-            if (this.throwItemIndex) {
+            if (this.throwItemIndex !== undefined) {
+                console.log('Throwing')
                 Singleton.socket.emit('throwPosition', { x, y, throwItemIndex: this.throwItemIndex });
+                this.setThrowItem(undefined);
             } else {
                 Singleton.socket.emit('changePosition', { x, y });
             }

@@ -83,15 +83,23 @@ export class Cell {
 
     // Automatically will "fill"
     affectContent(name: string, diff: number): boolean {
-        if (this.process) {
-            this.process.affect(name, diff);
-
-            if (this.process.usage() <= 0) {
-                this.clearContent();
-            }
-
-            this.update();
+        if (this.player) {
+            this.player.process.affect(name, diff);
+            return true;
         }
+        
+        if (!this.process) {
+            this.initializeContent();
+        }
+
+        this.process.affect(name, diff);
+
+        if (this.process.usage() <= 0) {
+            this.clearContent();
+        }
+
+        this.update();
+
         return true;
     }
 
@@ -115,11 +123,11 @@ export class Cell {
         }
     }
 
-    neighbors(): Cell[] {
+    neighbors(distance: number = 4): Cell[] {
         const neighbors: Cell[] = [];
 
-        for (const x of range(this.x - 4, this.x + 5)) {
-            for (const y of range(this.y - 4, this.y + 5)) {
+        for (const x of range(this.x - distance, this.x + distance + 1)) {
+            for (const y of range(this.y - distance, this.y + distance + 1)) {
                 const cell = grid.getCell(x, y);
 
                 if (cell) {

@@ -20,7 +20,37 @@ export class ProcessCell extends Process {
     }
 
     processContent() {
-        
+        const processSpeed = this.amountOf('processSpeed') + 1;
+
+        for (const [ name, { amount, active } ] of entries(this.content)) {
+            if (!active || name == 'acid')
+                continue;
+
+            const amountOfAcid = this.amountOf('acid');
+            const cell = this.cell.get();
+
+            if (amount >= 1 && amountOfAcid >= 1) {
+                const amountToProcess = Math.min(processSpeed, amountOfAcid); //Math.log(amountOfAcid);
+
+                this.affect(name, -1 * amountToProcess);
+                this.affect('acid', -1 * amountToProcess);
+
+                switch(name) {
+                    case 'spread':
+                        const closeCells = cell.neighbors(1);
+
+                        const contentsToSpread = entries(this.content);
+
+                        for (const closeCell of closeCells) {
+                            for (const [ name, content ] of contentsToSpread) {
+                                cell.affectContent(name, -amountToProcess);
+                                closeCell.affectContent(name, +amountToProcess);
+                            }
+                        }
+                        break;
+                }
+            }
+        }
     }
     
     update() {

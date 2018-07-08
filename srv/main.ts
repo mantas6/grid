@@ -156,6 +156,28 @@ io.on('connection', client => {
             })
         )
         .subscribe();
+
+    fromEvent(client, 'throwPosition')
+        .pipe(
+            ...generalValidation,
+            filter(({ x, y, throwItemIndex }) => !isNaN(x) && !isNaN(y) && !isNaN(throwItemIndex)),
+            map(req => ({ ...req, cell: grid.getCell(req.x, req.y) })),
+            filter(({ cell }) => !!cell),
+            filter(({ throwItemIndex }) => clientPlayer.inventory.hasItem(throwItemIndex)),
+            filter(({ cell }) => (<Cell>cell).isOccupiable() || (<Cell>cell).isAbsorbable()),
+            map(bundle => ({ ...bundle, distance: measureDistance(clientPlayer.cell.get(), bundle.cell) })),
+            filter(({ distance }) => distance == 1 || distance == 2),
+            filter(({ cell }) => clientPlayer.getStat('energy').affectByDiff(-1 * clientPlayer.getActionCost(cell)) || clientPlayer.getStat('health').affectByDiff(-1 * clientPlayer.getActionCost(cell))),
+            tap(bundle => log.debug(`Position throw request ${bundle.x} ${bundle.y}`)),
+            tap(({ cell, throwItemIndex }) => {
+                const targetCell = cell as Cell;
+
+                const item = clientPlayer.inventory.removeItem(throwItemIndex);
+
+                targetCell.affectContent(item.name, item.level);
+            })
+        )
+        .subscribe();
     
     fromEvent(client, 'useItem')
         .pipe(

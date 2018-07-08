@@ -39,12 +39,16 @@ export class ChunkGenerator {
                 chance: 1/40,
             },
             {
+                item: { name: 'spread', level: random(10, 20)  * this.level },
+                chance: 1/15,
+            },
+            {
                 item: { name: 'energy', level: random(10, 20)  * this.level },
                 chance: 1/40,
             },
             {
                 item: { name: 'acid', level: random(10, 20)  * this.level },
-                chance: 1/30,
+                chance: 1/15,
             },
             {
                 item: { name: 'acid', level: random(10, 20)  * this.level },
