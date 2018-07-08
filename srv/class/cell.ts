@@ -1,4 +1,4 @@
-import { Subject } from 'rxjs';
+import { Subject, Subscription, interval } from 'rxjs';
 import { range, toPairs, entries, sum, values, chain } from 'lodash';
 import { Type, Exclude, Expose, Transform } from 'class-transformer';
 
@@ -9,13 +9,16 @@ import { grid } from '../state';
 import { ProcessCell } from './process/cell';
 
 import { measureDistance } from '../utils/method';
-import { ProcessUpdate } from './process/base';
+import { ProcessUpdate, ProcessContent } from './process/base';
 
 export class Cell {
     x: number;
     y: number;
 
     process: ProcessCell;
+
+    @Exclude()
+    processTimer: Subscription;
 
     item: InventoryItem;
 
@@ -50,7 +53,23 @@ export class Cell {
 
     clearContent() {
         this.process = undefined;
+
+        if (this.processTimer) {
+            this.processTimer.unsubscribe();
+        }
         this.update();
+    }
+
+    initializeContent(content?: ProcessContent) {
+        this.process = new ProcessCell(this);
+
+        if (content) {
+            this.process.content = content;
+        }
+
+        this.processTimer = interval(1000).subscribe(_ => {
+            this.process.processContent();
+        });
     }
 
     contentTotalAmount() {

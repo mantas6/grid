@@ -183,6 +183,8 @@ export class Player {
             this.cell.get().unassignPlayer();
         }
 
+        grid.probeChunk(cell.x, cell.y);
+
         this.cell.setRef(cell);
 
         this.cell.get().assignPlayer(this);

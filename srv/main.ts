@@ -5,7 +5,7 @@ import { createServer as createHttpsServer } from 'https';
 import * as createSocket from 'socket.io';
 
 import { fromEvent, timer, interval,  } from 'rxjs';
-import { filter, throttleTime, map, tap, mergeMap, switchMap, throttle, startWith, bufferTime } from 'rxjs/operators';
+import { filter, throttleTime, map, tap, mergeMap, switchMap, throttle, startWith, bufferTime, debounce } from 'rxjs/operators';
 import { randomBytes } from 'crypto';
 import { promisify } from 'util';
 import { readFileSync } from 'fs';
@@ -68,6 +68,12 @@ io.on('connection', client => {
     
     log.note('Client connected');
 
+    const generalValidation = [
+        throttle(() => timer(250)),
+        filter(_ => !!clientPlayer),
+        filter(req => !!req),
+    ];
+
     fromEvent(client, 'login', (req, ack) => ({ req, ack }))
         .pipe(
             filter(({ req, ack }) => req && ack),
@@ -124,9 +130,7 @@ io.on('connection', client => {
 
     fromEvent(client, 'changePosition')
         .pipe(
-            //throttleTime(1000),
-            filter(_ => !!clientPlayer),
-            filter(req => !!req),
+            ...generalValidation,
             filter(({ x, y }) => !isNaN(x) && !isNaN(y)),
             map(req => ({ ...req, cell: grid.getCell(req.x, req.y) })),
             filter(({ cell }) => !!cell),
@@ -134,7 +138,6 @@ io.on('connection', client => {
             map(bundle => ({ ...bundle, distance: measureDistance(clientPlayer.cell.get(), bundle.cell) })),
             filter(({ distance }) => distance == 1),
             filter(({ cell }) => clientPlayer.getStat('energy').affectByDiff(-1 * clientPlayer.getActionCost(cell)) || clientPlayer.getStat('health').affectByDiff(-1 * clientPlayer.getActionCost(cell))),
-            tap(({ cell }) => grid.probeChunk(cell.x, cell.y)),
             tap(bundle => log.debug(`Position change request ${bundle.x} ${bundle.y}`)),
             tap(({ cell }) => {
                 const targetCell = cell as Cell;
@@ -156,8 +159,7 @@ io.on('connection', client => {
     
     fromEvent(client, 'useItem')
         .pipe(
-            filter(_ => !!clientPlayer),
-            filter(req => !!req),
+            ...generalValidation,
             filter(({ index }) => !isNaN(index)),
             filter(({ index }) => clientPlayer.inventory.hasItem(index)),
             tap(({ index }) => clientPlayer.inventory.useItem(index))
@@ -166,8 +168,7 @@ io.on('connection', client => {
 
     fromEvent(client, 'dropItem')
         .pipe(
-            filter(_ => !!clientPlayer),
-            filter(req => !!req),
+            ...generalValidation,
             filter(({ index }) => !isNaN(index)),
             filter(({ index }) => clientPlayer.inventory.hasItem(index)),
             tap(({ index }) => clientPlayer.inventory.dropItem(index))

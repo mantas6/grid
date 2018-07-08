@@ -77,8 +77,6 @@ export class ChunkGenerator {
                 const { content, item } = scenario;
 
                 if (content) {
-                    cell.process = new ProcessCell(cell);
-
                     const processContent: ProcessContent = {};
 
                     for (const [ name, amount ] of entries(content)) {
@@ -88,7 +86,7 @@ export class ChunkGenerator {
                         };
                     }
                     
-                    cell.process.content = processContent;
+                    cell.initializeContent(processContent);
                 }
                 
                 if (item)
