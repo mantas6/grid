@@ -10,7 +10,8 @@ import { grid, players } from '../state';
 import { Log } from '../utils/log';
 
 import { CellRef } from '../utils/ref';
-import { Process, ProcessUpdate } from './process';
+import { ProcessPlayer } from './process/player';
+import { ProcessUpdate } from './process/base';
 import { Inventory, InventoryUpdate } from './inventory';
 
 const log = new Log('player');
@@ -31,9 +32,9 @@ export class Player {
     @Expose()
     stats: Stat[] = [];
 
-    @Type(() => Process)
+    @Type(() => ProcessPlayer)
     @Expose()
-    process: Process;
+    process: ProcessPlayer;
 
     @Type(() => Inventory)
     @Expose()
@@ -66,7 +67,7 @@ export class Player {
     }
 
     initialize() {
-        this.process = new Process(this);
+        this.process = new ProcessPlayer(this);
         this.inventory = new Inventory(this);
 
         this.stats = [];
@@ -128,9 +129,14 @@ export class Player {
         });
 
         this.processTimer = interval(1000).subscribe(_ => {
-            // log.debug(`processContent()`);
             this.process.processContent();
-            this.process.transmuteStats();
+
+            // Death handler
+            if (this.getStat('health').isEmpty()) {
+                this.initialize();
+                this.assignCell(grid.findCellOccupiable());
+                this.updateAll();
+            }
         });
 
         this.updateAll();
