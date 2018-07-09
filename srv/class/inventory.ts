@@ -1,9 +1,10 @@
 import { Type, Exclude, Expose } from 'class-transformer';
-import { head } from 'lodash';
+import { head, entries } from 'lodash';
 import { Player } from './player';
 import { PlayerRef } from '../utils/ref';
 import { Log } from '../utils/log';
 import { Cell } from './cell';
+import { ProcessContent } from './process';
 
 const log = new Log('inventory');
 
@@ -38,10 +39,12 @@ export class Inventory {
         const item = this.items[index];
 
         if (item) {
-            switch (item.name) {
-                default:
-                    this.player.get().process.affect(item.name, item.level);
-                    break;
+            for (const [ name, content ] of entries(item)) {
+                switch (name) {
+                    default:
+                        this.player.get().process.affect(name, content.amount);
+                        break;
+                }
             }
 
             this.removeItem(index);
@@ -80,7 +83,6 @@ export interface InventoryUpdate {
     size: number;
 }
 
-export interface InventoryItem {
-    name: string;
-    level: number;
+export interface InventoryItem extends ProcessContent {
+    
 }

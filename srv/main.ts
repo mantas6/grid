@@ -17,6 +17,7 @@ import { grid, players, playersOnlineIds } from './state';
 import { Log } from './utils/log';
 import { saveState, loadState } from './utils/persist';
 import { measureDistance } from './utils/method';
+import { entries } from 'lodash';
 
 const randomBytesPromise = promisify(randomBytes);
 
@@ -174,7 +175,10 @@ io.on('connection', client => {
 
                 const item = clientPlayer.inventory.removeItem(throwItemIndex);
 
-                targetCell.affectContent(item.name, item.level);
+                for (const [ name, { amount } ] of entries(item)) {
+                    targetCell.affectContent(name, amount);
+                }
+
             })
         )
         .subscribe();

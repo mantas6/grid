@@ -9,11 +9,12 @@
                 <div v-show="!items.length">
                     <small>You have no items</small>
                 </div>
-                <div v-for="({ name, level }, index) in items" :key="index" class="mr-1">
+                <div v-for="(item, index) in items" :key="index" class="mr-1">
                     <b-button :variant="modeVariant" @click="itemSelect(index)" :disabled="index == throwItemIndex">
-                        <b-badge :style="name | colorByName">+</b-badge>
-                        <span>{{ name }}</span>
-                        <span>{{ level | formatShort }}</span>
+                        <b-badge v-for="({ amount }, name) in item" :key="name" :style="name | colorByName">
+                            <span class="text-dark">{{ amount | formatShort }}</span>
+                        </b-badge>
+                        <span>{{ largestContentName(item) }}</span>
                     </b-button>
                 </div>
             </div>
@@ -25,6 +26,7 @@
 import Singleton from '@/singleton'
 import { colorByName, nameToColor } from '@/method'
 import { mapMutations, mapState } from 'vuex'
+import { entries } from 'lodash'
 
 export default {
     props: [ 'items', 'size' ],
@@ -93,6 +95,20 @@ export default {
             if (this.mode != 'throw') {
                 this.setThrowItem(undefined);
             }
+        },
+
+        largestContentName(item) {
+            let largestAmount = 0;
+                let largestName;
+
+                for (const [ name, { amount } ] of entries(item)) {
+                    if (amount > largestAmount) {
+                        largestAmount = amount;
+                        largestName = name;
+                    }
+                }
+
+                return largestName;
         },
     },
 
