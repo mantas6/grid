@@ -5,10 +5,12 @@ import { Type, Exclude, Expose, Transform } from 'class-transformer';
 import { Player } from './player';
 import { InventoryItem } from './inventory';
 import { grid } from '../state';
+import { Log } from '../utils/log';
 
 import { Process, ProcessContent, ProcessUpdate } from './process';
 
 import { measureDistance } from '../utils/method';
+const log = new Log('cell');
 
 export class Cell {
     x: number;
@@ -52,10 +54,8 @@ export class Cell {
 
     clearContent() {
         this.process = undefined;
+        this.touchContentTimer();
 
-        if (this.processTimer) {
-            this.processTimer.unsubscribe();
-        }
         this.update();
     }
 
@@ -66,13 +66,24 @@ export class Cell {
             this.process.content = content;
         }
 
-        // Only init if acid or etc
-        this.processTimer = interval(1000).subscribe(_ => {
-            this.process.processContent();
-            if (!this.process || !this.process.usage()) {
-                this.clearContent();
-            }
-        });
+        this.touchContentTimer();
+    }
+
+    touchContentTimer() {
+        if (this.process && !this.processTimer && this.process.amountOf('acid') > 0 && this.process.usage() > this.process.amountOf('acid')) {
+            log.debug(`Setting content timer for cell ${this.toString()}`);
+            this.processTimer = interval(1000).subscribe(_ => {
+                this.process.processContent();
+                if (!this.process || !this.process.usage()) {
+                    this.clearContent();
+                }
+                this.touchContentTimer();
+            });
+        } else if (this.processTimer) {
+            this.processTimer.unsubscribe();
+            this.processTimer = undefined;
+            log.debug(`Clearing content timer for cell ${this.toString()}`);
+        }
     }
 
     contentTotalAmount() {
@@ -98,6 +109,8 @@ export class Cell {
 
         if (this.process.usage() <= 0) {
             this.clearContent();
+        } else {
+            this.touchContentTimer();
         }
 
         this.update();
