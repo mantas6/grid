@@ -12,7 +12,43 @@ export class ChunkGenerator {
     }
 
     fill(cell: Cell) {
-        const scenarios: CellScenario[] = [
+        const scenarios = this.genericScenarios();
+
+        const shuffledScenarios = shuffle(scenarios);
+
+        const randomNumber = Math.random();
+
+        for (const scenario of shuffledScenarios) {
+            if (scenario.chance > randomNumber) {
+                const { content, item } = scenario;
+
+                if (content) {
+                    const processContent: ProcessContent = {};
+
+                    for (const [ name, amount ] of entries(content)) {
+                        processContent[name] = { amount };
+                    }
+                    
+                    cell.initializeContent(processContent);
+                    cell.process.size = sum(values(content)) * random(1, 10);
+                }
+                
+                if (item) {
+                    const processContent: ProcessContent = {};
+
+                    for (const [ name, amount ] of entries(item)) {
+                        processContent[name] = { amount };
+                    }
+
+                    cell.item = processContent;
+                }
+                break;
+            }
+        }
+    }
+
+    private genericScenarios(): CellScenario[] {
+        return [
             {
                 content: { dirt: random(11, 300) * (this.level * 2) },
                 chance: 1/8,
@@ -94,38 +130,6 @@ export class ChunkGenerator {
                 chance: 1/40,
             },
         ];
-
-        const shuffledScenarios = shuffle(scenarios);
-
-        const randomNumber = Math.random();
-
-        for (const scenario of shuffledScenarios) {
-            if (scenario.chance > randomNumber) {
-                const { content, item } = scenario;
-
-                if (content) {
-                    const processContent: ProcessContent = {};
-
-                    for (const [ name, amount ] of entries(content)) {
-                        processContent[name] = { amount };
-                    }
-                    
-                    cell.initializeContent(processContent);
-                    cell.process.size = sum(values(content)) * random(1, 10);
-                }
-                
-                if (item) {
-                    const processContent: ProcessContent = {};
-
-                    for (const [ name, amount ] of entries(item)) {
-                        processContent[name] = { amount };
-                    }
-
-                    cell.item = processContent;
-                }
-                break;
-            }
-        }
     }
 }
 
