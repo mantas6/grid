@@ -34,8 +34,20 @@ export class ChunkGenerator {
                 chance: 1/40,
             },
             {
-                content: { health: random(1, 3) * this.level },
+                content: { health: random(1, 20) * this.level },
                 chance: 1/40,
+            },
+            {
+                item: { crystalize: random(10, 20)  * this.level },
+                chance: 1/10,
+            },
+            {
+                item: { damage: random(10, 20)  * this.level },
+                chance: 1/10,
+            },
+            {
+                item: { weaken: random(10, 20)  * this.level },
+                chance: 1/10,
             },
             {
                 item: { spread: random(10, 20)  * this.level },

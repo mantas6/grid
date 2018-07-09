@@ -33,6 +33,7 @@ export class Process {
             'health',
             'dirt',
             'spread',
+            'crystalize',
         ];
 
         return processableNames.indexOf(name) != -1;
@@ -88,6 +89,12 @@ export class Process {
             case 'health':
                 healthStat.affectByDiff(amountToProcess);
                 break;
+            case 'damage':
+                healthStat.affectByDiff(-amountToProcess);
+                break;
+            case 'weaken':
+                energyStat.affectByDiff(-amountToProcess);
+                break;
         }
     }
 
@@ -107,6 +114,14 @@ export class Process {
                         }
                     }
                     break;
+                }
+                break;
+            case 'crystalize':
+                const amountOfAffector = this.amountOf('crystalize');
+                if (amountOfAffector >= this.usage() - amountOfAffector) {
+                    this.affect('crystalize', -amountOfAffector);
+                    cell.clearContent();
+                    cell.addItem(this.content);
                 }
                 break;
         }

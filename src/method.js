@@ -24,6 +24,9 @@ export function nameToColor(name) {
         processSpeed: 'darkGoldenRod',
         health: 'crimson',
         spread: 'magenta',
+        crystalize: 'midnightBlue',
+        damage: 'red',
+        weaken: 'yellow',
     };
 
     return chroma(map[name]);
