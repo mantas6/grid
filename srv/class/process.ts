@@ -34,6 +34,8 @@ export class Process {
             'dirt',
             'spread',
             'crystalize',
+            'weaken',
+            'damage',
         ];
 
         return processableNames.indexOf(name) != -1;
