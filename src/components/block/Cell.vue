@@ -1,17 +1,19 @@
 <template>
     <div>
         <b-button :variant="buttonVariant" :disabled="!enabled" @click="selectCell" :style="style">
+            <div class="marker">
+                <span v-for="name in additionalContentNames" :key="name" :style="name | colorByName">+</span>
+            </div>
             <small v-if="buttonText">{{ buttonText }}</small>
             <b-badge v-else-if="cell.process" variant="light">
                 <small>{{ contentSize | formatShort }}</small>
             </b-badge>
-            <div class="marker" v-show="mark">*</div>
         </b-button>
     </div>
 </template>
 
 <script>
-import { keys, sumBy, head, values } from 'lodash';
+import { keys, sumBy, head, values, entries } from 'lodash';
 import { colorByName, nameToColor } from '@/method'
 
 import { mapState } from 'vuex';
@@ -76,17 +78,42 @@ export default {
 
         style() {
             if (this.cell.process) {
-                const names = keys(this.cell.process.content);
+                const largestName = this.largestContentName;
 
-                if (names.length) {
-                    const name = head(names);
-                    console.log(name)
-                    return colorByName(name)
+                if (largestName) {
+                    return colorByName(largestName)
+
                 }
             } else if (this.cell.item) {
                 return { color: nameToColor(this.cell.item.name).css() }
             }
-        }
+        },
+
+        largestContentName() {
+            if (this.cell.process) {
+                let largestAmount = 0;
+                let largestName;
+
+                for (const [ name, { amount } ] of entries(this.cell.process.content)) {
+                    if (amount > largestAmount) {
+                        largestAmount = amount;
+                        largestName = name;
+                    }
+                }
+
+                return largestName;
+            }
+        },
+
+        additionalContentNames() {
+            if (this.cell.process) {
+                const names = keys(this.cell.process.content);
+
+                return names.filter(name => name != this.largestContentName);
+            }
+
+            return [];
+        },
     },
 
     methods: {
