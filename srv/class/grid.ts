@@ -22,11 +22,11 @@ export class Grid {
     constructor(chunkSize: number, isProcedural: boolean = false) {
         this.chunkSize = chunkSize;
         this.isProcedural = isProcedural;
-
-        setTimeout(() => {
+        
+        process.nextTick(() => {
             this.generateChunk(0, 0);
             globalStatus.ready = true;
-        }, 100)
+        });
     }
 
     generateChunk(chunkX: number, chunkY: number) {
