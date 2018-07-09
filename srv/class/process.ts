@@ -134,7 +134,7 @@ export class Process {
                 for (const name of keys(this.content)) {
                     if (name == 'acid' || name == 'grow') continue;
 
-                    this.affect(name, amountToProcess * 2);
+                    this.affect(name, amountToProcess);
                 }
                 return true;
         }

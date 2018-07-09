@@ -3,7 +3,8 @@
         <div class="game">
             <message></message>
             <div v-if="map.length">
-                <grid class="grid" :map="map"></grid>
+                <grid class="grid" :map="map" @swipe="hasSwiped = true"></grid>
+                <b-alert class="d-md-none" variant="primary" :show="!hasSwiped">Swipe on the grid to move</b-alert>
                 <process :content="processContent" :size="processSize"></process>
                 <b-row>
                     <stat-bar v-for="stat in orderedStats" v-if="stat.max" :stat="stat" :key="stat.name"></stat-bar>
@@ -35,6 +36,7 @@ export default {
     data() {
         return {
             nightMode: true,
+            hasSwiped: false,
         };
     },
 

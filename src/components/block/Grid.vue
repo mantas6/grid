@@ -104,6 +104,8 @@ export default {
         moveBySwipe({ direction }) {
             const coords = { 16: 'up', 8: 'down', 4: 'left', 2: 'right' };
 
+            this.$emit('swipe');
+
             if (coords[direction]) {
                 this.moveDirection(coords[direction]);
             }
