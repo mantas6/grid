@@ -32,7 +32,6 @@ export class Process {
             'energyMax',
             'health',
             'dirt',
-            'acid',
             'spread',
         ];
 
@@ -46,8 +45,8 @@ export class Process {
         // const amountToProcessTotal = amountTotal - amountOfAcid;
         const processSpeed = this.amountOf('processSpeed') + 1;
 
-        for (const [ name, { amount, active } ] of entries(this.content)) {
-            if (!active || name == 'acid')
+        for (const [ name, { amount } ] of entries(this.content)) {
+            if (!Process.isActiveContent(name))
                 continue;
 
             const amountOfAcid = this.amountOf('acid');
@@ -115,10 +114,7 @@ export class Process {
  
     createContentItem(name: string) {
         if (!this.content[name]) {
-            this.content[name] = {
-                amount: 0,
-                active: Process.isActiveContent(name),
-            };
+            this.content[name] = { amount: 0 };
         }
     }
 
@@ -189,5 +185,5 @@ export interface ProcessUpdate {
 }
 
 export interface ProcessContent {
-    [ name: string ]: { amount: number, active?: boolean };
+    [ name: string ]: { amount: number };
 }

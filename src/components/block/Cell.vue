@@ -67,8 +67,8 @@ export default {
         },
 
         contentSize() {
-            if (this.cell.process) {
-                const items = values(this.cell.process.content);
+            if (this.content) {
+                const items = values(this.content);
                 
                 return sumBy(items, 'amount');
             }
@@ -77,24 +77,25 @@ export default {
         },
 
         style() {
-            if (this.cell.process) {
+            if (this.content) {
                 const largestName = this.largestContentName;
 
                 if (largestName) {
-                    return colorByName(largestName)
-
+                    if (this.cell.item) {
+                        return colorByName(largestName, true)
+                    } else {
+                        return colorByName(largestName)
+                    }
                 }
-            } else if (this.cell.item) {
-                return { color: nameToColor(this.cell.item.name).css() }
-            }
+            } 
         },
 
         largestContentName() {
-            if (this.cell.process) {
+            if (this.content) {
                 let largestAmount = 0;
                 let largestName;
 
-                for (const [ name, { amount } ] of entries(this.cell.process.content)) {
+                for (const [ name, { amount } ] of entries(this.content)) {
                     if (amount > largestAmount) {
                         largestAmount = amount;
                         largestName = name;
@@ -106,32 +107,27 @@ export default {
         },
 
         additionalContentNames() {
-            if (this.cell.process) {
-                const names = keys(this.cell.process.content);
+            if (this.content) {
+                const names = keys(this.content);
 
                 return names.filter(name => name != this.largestContentName);
             }
 
             return [];
         },
+
+        content() {
+            if (this.cell.process) {
+                return this.cell.process.content;
+            } else if(this.cell.item) {
+                return this.cell.item;
+            }
+        }
     },
 
     methods: {
         selectCell() {
             this.$emit('selectCell');
-        },
-
-        cmykToRgb(c, m, y, k) {
-            c = (255 * c || 0) / 100;
-            m = (255 * m || 0) / 100;
-            y = (255 * y || 0) / 100;
-            k = (255 * k || 0) / 100;
-            
-            const r = Math.round(((255 - c)* (255 - k)) / 255);
-            const g = Math.round((255 - m) * (255 - k) / 255);
-            const b = Math.round((255 - y) * (255 - k) / 255);
-
-            return { r, g, b };
         },
     },
 }

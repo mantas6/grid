@@ -38,35 +38,35 @@ export class ChunkGenerator {
                 chance: 1/40,
             },
             {
-                item: { name: 'spread', level: random(10, 20)  * this.level },
+                item: { spread: random(10, 20)  * this.level },
                 chance: 1/10,
             },
             {
-                item: { name: 'energy', level: random(10, 20)  * this.level },
+                item: { energy: random(10, 20)  * this.level },
                 chance: 1/40,
             },
             {
-                item: { name: 'acid', level: random(10, 20)  * this.level },
+                item: { acid: random(10, 20)  * this.level },
                 chance: 1/10,
             },
             {
-                item: { name: 'acid', level: random(10, 20)  * this.level },
+                item: { acid: random(10, 20)  * this.level },
                 chance: 1/80,
             },
             {
-                item: { name: 'energyMax', level: random(1, 2)  * this.level },
+                item: { energyMax: random(1, 2)  * this.level },
                 chance: 1/40,
             },
             {
-                item: { name: 'absorbStrength', level: random(1, 2)  * this.level },
+                item: { absorbStrength: random(1, 2)  * this.level },
                 chance: 1/40,
             },
             {
-                item: { name: 'absorbEff', level: random(1, 2)  * this.level },
+                item: { absorbEff: random(1, 2)  * this.level },
                 chance: 1/40,
             },
             {
-                item: { name: 'processSpeed', level: random(1, 2)  * this.level },
+                item: { processSpeed: random(1, 2)  * this.level },
                 chance: 1/40,
             },
         ];
@@ -83,17 +83,21 @@ export class ChunkGenerator {
                     const processContent: ProcessContent = {};
 
                     for (const [ name, amount ] of entries(content)) {
-                        processContent[name] = {
-                            amount,
-                            active: Process.isActiveContent(name),
-                        };
+                        processContent[name] = { amount };
                     }
                     
                     cell.initializeContent(processContent);
                 }
                 
-                if (item)
-                    cell.item = item;
+                if (item) {
+                    const processContent: ProcessContent = {};
+
+                    for (const [ name, amount ] of entries(item)) {
+                        processContent[name] = { amount };
+                    }
+
+                    cell.item = processContent;
+                }
                 break;
             }
         }
@@ -102,6 +106,6 @@ export class ChunkGenerator {
 
 interface CellScenario {
     content?: { [ name: string ]: number };
-    item?: InventoryItem;
+    item?: { [ name: string ]: number };
     chance: number;
 }
