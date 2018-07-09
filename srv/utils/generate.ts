@@ -42,6 +42,10 @@ export class ChunkGenerator {
                 chance: 1/15,
             },
             {
+                item: { grow: random(10, 20)  * this.level },
+                chance: 1/15,
+            },
+            {
                 item: { damage: random(10, 20)  * this.level },
                 chance: 1/15,
             },

@@ -1,5 +1,5 @@
 import { Type, Exclude, Expose } from 'class-transformer';
-import { values, sum, entries, clamp, round, ceil, sumBy, find, shuffle } from 'lodash';
+import { values, sum, entries, clamp, round, ceil, sumBy, find, shuffle, keys } from 'lodash';
 import { Player } from './player';
 import { Cell } from './cell';
 import { PlayerRef, CellRef } from '../utils/ref';
@@ -36,6 +36,7 @@ export class Process {
             'crystalize',
             'weaken',
             'damage',
+            'grow',
         ];
 
         return processableNames.indexOf(name) != -1;
@@ -124,6 +125,11 @@ export class Process {
                     this.affect('crystalize', -amountOfAffector);
                     cell.clearContent();
                     cell.addItem(this.content);
+                }
+                break;
+            case 'grow':
+                for (const name of keys(this.content)) {
+                    this.affect(name, +amountToProcess);
                 }
                 break;
         }

@@ -27,6 +27,7 @@ export function nameToColor(name) {
         crystalize: 'midnightBlue',
         damage: 'red',
         weaken: 'yellow',
+        grow: 'olive',
     };
 
     return chroma(map[name]);
