@@ -74,12 +74,12 @@ export class Cell {
             log.debug(`Setting content timer for cell ${this.toString()}`);
             this.processTimer = interval(1000).subscribe(_ => {
                 this.process.processContent();
-                if (!this.process || !this.process.usage()) {
+                if (!this.process.usage()) {
                     this.clearContent();
                 }
                 this.touchContentTimer();
             });
-        } else if (this.processTimer) {
+        } else if (this.processTimer && (this.process.amountOf('acid') < 1 || this.process.usage() <= this.process.amountOf('acid'))) {
             this.processTimer.unsubscribe();
             this.processTimer = undefined;
             log.debug(`Clearing content timer for cell ${this.toString()}`);
