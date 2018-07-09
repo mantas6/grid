@@ -61,21 +61,24 @@ export class Process {
                 // console.log({processSpeed, amountOfAcid})
                 
                 if (amountToProcess) {
-                    this.affect(name, -1 * amountToProcess);
-
-                    this.affect('acid', -1 * amountToProcess);
+                    let affected = false;
 
                     if (this.player) {
-                        this.processPlayerEffect(name, amountToProcess);
+                        affected = this.processPlayerEffect(name, amountToProcess);
                     } else if(this.cell) {
-                        this.processCellEffect(name, amountToProcess);
+                        affected = this.processCellEffect(name, amountToProcess);
+                    }
+
+                    if (affected) {
+                        this.affect(name, -1 * amountToProcess);
+                        this.affect('acid', -1 * amountToProcess);
                     }
                 }
             }
         }
     }
 
-    private processPlayerEffect(name: string, amountToProcess: number) {
+    private processPlayerEffect(name: string, amountToProcess: number): boolean {
         const player = this.player.get();
         const healthStat = player.getStat('health');
         const energyStat = player.getStat('energy');
@@ -85,23 +88,23 @@ export class Process {
                 if (!energyStat.isFull() && amountToProcess) {
                     energyStat.affectByDiff(amountToProcess, true);
                 }
-                break;
+                return true;
             case 'energyMax':
                 energyStat.affectMax(amountToProcess);
-                break;
+                return true;
             case 'health':
                 healthStat.affectByDiff(amountToProcess);
-                break;
+                return true;
             case 'damage':
                 healthStat.affectByDiff(-amountToProcess);
-                break;
+                return true;
             case 'weaken':
                 energyStat.affectByDiff(-amountToProcess);
-                break;
+                return true;
         }
     }
 
-    private processCellEffect(name: string, amountToProcess: number) {
+    private processCellEffect(name: string, amountToProcess: number): boolean {
         const cell = this.cell.get();
         switch(name) {
             case 'spread':
@@ -118,7 +121,7 @@ export class Process {
                     }
                     break;
                 }
-                break;
+                return true;
             case 'crystalize':
                 const amountOfAffector = this.amountOf('crystalize');
                 if (amountOfAffector >= this.usage() - amountOfAffector) {
@@ -126,14 +129,14 @@ export class Process {
                     cell.clearContent();
                     cell.addItem(this.content);
                 }
-                break;
+                return true;
             case 'grow':
                 for (const name of keys(this.content)) {
-                    if (name == 'acid') continue;
-                    
-                    this.affect(name, +amountToProcess);
+                    if (name == 'acid' || name == 'grow') continue;
+
+                    this.affect(name, amountToProcess * 2);
                 }
-                break;
+                return true;
         }
     }
  
