@@ -129,6 +129,8 @@ export class Process {
                 break;
             case 'grow':
                 for (const name of keys(this.content)) {
+                    if (name == 'acid') continue;
+                    
                     this.affect(name, +amountToProcess);
                 }
                 break;
