@@ -69,7 +69,7 @@ export class Cell {
         // Only init if acid or etc
         this.processTimer = interval(1000).subscribe(_ => {
             this.process.processContent();
-            if (!this.process.usage()) {
+            if (!this.process || !this.process.usage()) {
                 this.clearContent();
             }
         });

@@ -35,8 +35,10 @@ function message(msg: string) {
         }
     }
 }
-/*
+
 function saveLog(namespace, level, message) {
+    if (!namespace || !level || !message) return;
+    
     const params = {
         method: 'post',
         headers: { 'User-Agent' : 'Server' },
@@ -46,9 +48,8 @@ function saveLog(namespace, level, message) {
                 {
                     name: 'log',
                     tags: [ level ],
-                    attachments: {
-                        message: message,
-                    },
+                    titles: { namespace },
+                    attachments: { message },
                 }
             ],
         },
@@ -71,5 +72,4 @@ setInterval(() => {
     request('http://logging.back/a_sites/collect', params, (err, res) => {
         
     });
-}, 5e3)
-*/
+}, 10e3)
