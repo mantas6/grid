@@ -26,8 +26,8 @@ export class ChunkGenerator {
                 chance: 1/25,
             },
             {
-                content: { energy: random(1, 20) * this.level },
-                chance: 1/15,
+                content: { energy: random(1, 50) * this.level },
+                chance: 1/10,
             },
             {
                 content: { energyMax: random(1, 3) * this.level },
@@ -39,19 +39,19 @@ export class ChunkGenerator {
             },
             {
                 item: { crystalize: random(10, 20)  * this.level },
-                chance: 1/10,
+                chance: 1/15,
             },
             {
                 item: { damage: random(10, 20)  * this.level },
-                chance: 1/10,
+                chance: 1/15,
             },
             {
                 item: { weaken: random(10, 20)  * this.level },
-                chance: 1/10,
+                chance: 1/15,
             },
             {
                 item: { spread: random(10, 20)  * this.level },
-                chance: 1/10,
+                chance: 1/15,
             },
             {
                 item: { energy: random(10, 20)  * this.level },
@@ -68,6 +68,10 @@ export class ChunkGenerator {
             {
                 item: { energyMax: random(1, 2)  * this.level },
                 chance: 1/40,
+            },
+            {
+                item: { energy: random(1, 20)  * this.level },
+                chance: 1/20,
             },
             {
                 item: { absorbStrength: random(1, 2)  * this.level },
