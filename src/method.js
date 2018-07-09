@@ -28,6 +28,7 @@ export function nameToColor(name) {
         damage: 'red',
         weaken: 'yellow',
         grow: 'olive',
+        capacity: 'lime',
     };
 
     return chroma(map[name]);

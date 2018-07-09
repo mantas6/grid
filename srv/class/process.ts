@@ -9,7 +9,7 @@ import { grid } from '../state';
 const log = new Log('process');
 
 export class Process {
-    size: number = 10000;
+    size: number = 100;
     content: ProcessContent = {};
 
     @Type(() => PlayerRef)
@@ -37,6 +37,7 @@ export class Process {
             'weaken',
             'damage',
             'grow',
+            'capacity',
         ];
 
         return processableNames.indexOf(name) != -1;
@@ -67,6 +68,10 @@ export class Process {
                         affected = this.processPlayerEffect(name, amountToProcess);
                     } else if(this.cell) {
                         affected = this.processCellEffect(name, amountToProcess);
+                    }
+
+                    if (!affected) {
+                        affected = this.processCellGeneric(name, amountToProcess);
                     }
 
                     if (affected) {
@@ -100,6 +105,10 @@ export class Process {
                 return true;
             case 'weaken':
                 energyStat.affectByDiff(-amountToProcess);
+                return true;
+            case 'capacity':
+                this.size += amountToProcess;
+                this.update();
                 return true;
         }
     }
@@ -136,6 +145,17 @@ export class Process {
 
                     this.affect(name, amountToProcess);
                 }
+                return true;
+        }
+    }
+
+    private processCellGeneric(name: string, amountToProcess: number): boolean {
+        switch(name) {
+            case 'capacity':
+                this.size += amountToProcess;
+                this.update();
+                return true;
+            case 'dirt':
                 return true;
         }
     }

@@ -1,4 +1,4 @@
-import { range, entries, sample, shuffle, random } from 'lodash';
+import { range, entries, sample, shuffle, random, sum, values } from 'lodash';
 
 import { Cell } from "../class/cell";
 import { ProcessContent, Process } from "../class/process";
@@ -39,6 +39,10 @@ export class ChunkGenerator {
             },
             {
                 item: { crystalize: random(10, 20)  * this.level },
+                chance: 1/15,
+            },
+            {
+                item: { capacity: random(10, 20)  * this.level },
                 chance: 1/15,
             },
             {
@@ -107,6 +111,7 @@ export class ChunkGenerator {
                     }
                     
                     cell.initializeContent(processContent);
+                    cell.process.size = sum(values(content)) * random(1, 10);
                 }
                 
                 if (item) {
