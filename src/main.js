@@ -7,6 +7,7 @@ import App from './App'
 import { connect } from "socket.io-client";
 import { fromEvent } from "rxjs";
 import { VueHammer } from 'vue2-hammer'
+import VueHotkey from 'v-hotkey'
 import { head, last } from 'lodash';
 
 import { router } from './router'
@@ -22,6 +23,7 @@ const numberformat = require('swarm-numberformat');
 Vue.use(BootstrapVue);
 
 Vue.use(VueHammer);
+Vue.use(VueHotkey);
 Vue.filter('formatShort', numberformat.formatShort);
 Vue.filter('colorByName', colorByName);
 Vue.filter('head', head);

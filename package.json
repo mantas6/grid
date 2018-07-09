@@ -37,6 +37,7 @@
     "swarm-numberformat": "^0.4.0",
     "ts-node": "^6.1.2",
     "typescript": "^2.9.2",
+    "v-hotkey": "^0.2.3",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue2-hammer": "^1.0.6",

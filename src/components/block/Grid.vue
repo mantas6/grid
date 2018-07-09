@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex justify-content-center" v-hammer:swipe="moveBySwipe">
+    <div class="d-flex justify-content-center" v-hammer:swipe="moveBySwipe" v-hotkey="keymap">
         <div v-for="(lineX, relX) in grid" :key="relX">
             <div v-for="(cell, relY) in lineX" :key="relY" class="mb-1 mr-1">
                 <cell :cell="cell"
@@ -57,6 +57,15 @@ export default {
 
             return grid;
         },
+
+        keymap() {
+            return {
+                w: this.moveUp,
+                s: this.moveDown,
+                a: this.moveLeft,
+                d: this.moveRight,
+            };
+        },
     },
 
     methods: {
@@ -98,6 +107,22 @@ export default {
             if (coords[direction]) {
                 this.moveDirection(coords[direction]);
             }
+        },
+
+        moveUp() {
+            this.moveDirection('up');
+        },
+
+        moveDown() {
+            this.moveDirection('down');
+        },
+
+        moveLeft() {
+            this.moveDirection('left');
+        },
+
+        moveRight() {
+            this.moveDirection('right');
         },
 
         measureDistance(a, b) {
