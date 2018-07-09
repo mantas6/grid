@@ -135,6 +135,10 @@ export class Player {
                 this.initialize();
                 this.assignCell(grid.findCellOccupiable());
                 this.updateAll();
+
+                if (this.client) {
+                    this.client.emit('death');
+                }
             }
         });
 
