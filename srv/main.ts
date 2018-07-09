@@ -13,7 +13,7 @@ import { readFileSync } from 'fs';
 import { Player } from './class/player';
 import { Cell } from './class/cell';
 
-import { grid, players, playersOnlineIds } from './state';
+import { grid, players, playersOnlineIds, globalStatus } from './state';
 import { Log } from './utils/log';
 import { saveState, loadState } from './utils/persist';
 import { measureDistance } from './utils/method';
@@ -79,6 +79,7 @@ io.on('connection', client => {
         .pipe(
             filter(({ req, ack }) => req && ack),
             filter(_ => !clientPlayer),
+            filter(_ => globalStatus.ready),
             // Also check for token ==
             filter(({ req }) => (!playersOnlineIds.has(req.id) || players.get(req.id).token != req.token) || (client.emit('duplicateSession') && false)),
             tap(({ req }) => log.debug(`Received login ${req.id} with token ${req.token}`)),

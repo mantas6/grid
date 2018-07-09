@@ -8,6 +8,7 @@ import { Log } from '../utils/log';
 import { ChunkGenerator } from '../utils/generate';
 import { measureDistance } from '../utils/method';
 import { InventoryItem } from './inventory';
+import { globalStatus } from '../state';
 
 const log = new Log('grid');
 
@@ -21,9 +22,10 @@ export class Grid {
     constructor(chunkSize: number, isProcedural: boolean = false) {
         this.chunkSize = chunkSize;
         this.isProcedural = isProcedural;
+
         setTimeout(() => {
             this.generateChunk(0, 0);
-
+            globalStatus.ready = true;
         }, 100)
     }
 
