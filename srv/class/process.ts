@@ -212,7 +212,7 @@ export class Process {
 
         const currentAmount = this.content[name].amount;
 
-        const affected = clamp(currentAmount + diff, 0, this.size - this.usage());
+        const affected = clamp(currentAmount + diff, 0, this.size - (this.usage() - this.amountOf(name)));
         
         this.content[name].amount = affected;
 
