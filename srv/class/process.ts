@@ -8,6 +8,21 @@ import { grid } from '../state';
 
 const log = new Log('process');
 
+export const processableNames = [
+    'energy',
+    'energyMax',
+    'healthMax',
+    'health',
+    'dirt',
+    'spread',
+    'crystalize',
+    'weaken',
+    'damage',
+    'grow',
+    'capacity',
+    'acid',
+];
+
 export class Process {
     size: number = 100;
     content: ProcessContent = {};
@@ -29,19 +44,6 @@ export class Process {
     }
 
     static isActiveContent(name: string) {
-        const processableNames = [
-            'energy',
-            'energyMax',
-            'health',
-            'dirt',
-            'spread',
-            'crystalize',
-            'weaken',
-            'damage',
-            'grow',
-            'capacity',
-        ];
-
         return processableNames.indexOf(name) != -1;
     }
 
@@ -108,6 +110,9 @@ export class Process {
             case 'energyMax':
                 energyStat.affectMax(amountToProcess);
                 return true;
+            case 'healthMax':
+                healthStat.affectMax(amountToProcess);
+                return true;
             case 'health':
                 healthStat.affectByDiff(amountToProcess);
                 return true;
@@ -153,7 +158,7 @@ export class Process {
                 return false;
             case 'grow':
                 for (const name of keys(this.content)) {
-                    if (name == 'acid' || name == 'grow') continue;
+                    if (name == 'grow') continue;
 
                     this.affect(name, amountToProcess);
                 }
@@ -167,9 +172,13 @@ export class Process {
                 this.size += amountToProcess;
                 this.update();
                 return true;
-            case 'dirt':
-                if (this.affect('acid', -1 * amountToProcess)) {
-                    return true;
+            case 'acid':
+                for (const name of shuffle(keys(this.content))) {
+                    if (!Process.isActiveContent(name) || name == 'acid') continue;
+
+                    if (this.affect(name, -amountToProcess)) {
+                        return true;
+                    }
                 }
                 return false;
         }

@@ -12,6 +12,7 @@ import { readFileSync } from 'fs';
 
 import { Player } from './class/player';
 import { Cell } from './class/cell';
+import { processableNames } from './class/process';
 
 import { grid, players, playersOnlineIds, globalStatus } from './state';
 import { Log } from './utils/log';
@@ -68,6 +69,8 @@ io.on('connection', client => {
     let clientPlayer: Player;
     
     log.note('Client connected');
+
+    client.emit('processableNames', processableNames);
 
     const generalValidation = [
         // throttle(() => timer(250)),

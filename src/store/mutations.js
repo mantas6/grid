@@ -73,15 +73,11 @@ export const mutations = {
         state.inventorySize = update.size;
     },
 
-    addMessage(state, message) {
-        state.message = message;
-    },
-
-    clearMessage(state) {
-        state.message = undefined;
-    },
-
     setThrowItem(state, index) {
         state.throwItemIndex = index;
+    },
+    
+    updateProcessableNames(state, names) {
+        state.processableNames = names;
     },
 };

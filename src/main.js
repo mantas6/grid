@@ -102,6 +102,6 @@ fromEvent(socket, 'onlineCount').subscribe(({ count }) => {
     commit('updateOnlineCount', count)
 });
 
-fromEvent(socket, 'message').subscribe(message => {
-    commit('addMessage', message)
+fromEvent(socket, 'processableNames').subscribe(names => {
+    commit('updateProcessableNames', names)
 });

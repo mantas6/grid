@@ -70,6 +70,10 @@ export class ChunkGenerator {
                 chance: 1/40,
             },
             {
+                content: { healthMax: random(1, 3) * this.level },
+                chance: 1/40,
+            },
+            {
                 content: { health: random(1, 20) * this.level },
                 chance: 1/40,
             },
@@ -111,6 +115,10 @@ export class ChunkGenerator {
             },
             {
                 item: { energyMax: random(1, 2)  * this.level },
+                chance: 1/40,
+            },
+            {
+                item: { healthMax: random(1, 2)  * this.level },
                 chance: 1/40,
             },
             {

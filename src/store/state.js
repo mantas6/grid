@@ -15,5 +15,5 @@ export const state = {
 
    throwItemIndex: undefined,
 
-   message: undefined,
+   processableNames: [],
 };
