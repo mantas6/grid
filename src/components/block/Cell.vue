@@ -1,14 +1,22 @@
 <template>
     <div>
-        <b-button :variant="buttonVariant" :disabled="!enabled" @click="selectCell" :style="style" :class="{ empty: !buttonText && !mark }">
-            <div class="marker">
-                <span v-for="name in additionalContentNames" :key="name" :style="name | colorByName">+</span>
+        <div :id="`cell-${cell.x}-${cell.y}`">
+            <b-button :variant="buttonVariant" :disabled="!enabled" @click="selectCell" :style="style" :class="{ empty: !buttonText && !mark }">
+                <div class="marker">
+                    <span v-for="name in additionalContentNames" :key="name" :style="name | colorByName">+</span>
+                </div>
+                <small v-if="buttonText">{{ buttonText }}</small>
+                <b-badge v-else-if="cell.process" variant="light">
+                    <small>{{ contentSize | formatShort }}</small>
+                </b-badge>
+            </b-button>
+        </div>
+        <b-popover triggers="hover" :target="`cell-${cell.x}-${cell.y}`">
+            <div v-for="({ amount }, name) in content" :key="name">
+                <b-badge :style="name | colorByName">{{ amount | formatShort }}</b-badge>
+                <span>{{ name }}</span>
             </div>
-            <small v-if="buttonText">{{ buttonText }}</small>
-            <b-badge v-else-if="cell.process" variant="light">
-                <small>{{ contentSize | formatShort }}</small>
-            </b-badge>
-        </b-button>
+        </b-popover>
     </div>
 </template>
 

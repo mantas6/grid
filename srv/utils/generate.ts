@@ -8,11 +8,11 @@ export class ChunkGenerator {
     level: number;
 
     constructor(chunkX: number, chunkY: number) {
-        this.level = Math.max(Math.abs(chunkX) + Math.abs(chunkY), 1);
+        this.level = Math.max(Math.abs(chunkY), 1);
     }
 
     fill(cell: Cell) {
-        const scenarios = this.genericScenarios();
+        const scenarios = this.getScenario('generic');
 
         const shuffledScenarios = shuffle(scenarios);
 
@@ -47,101 +47,101 @@ export class ChunkGenerator {
         }
     }
 
-    private genericScenarios(): CellScenario[] {
-        return [
-            {
-                content: { dirt: random(11, 300) * (this.level * 2) },
-                chance: 1/8,
-            },
-            {
-                content: { dirt: random(1, 3) * this.level },
-                chance: 1/2,
-            },
-            {
-                content: { acid: random(1, 6) * this.level },
-                chance: 1/25,
-            },
-            {
-                content: { energy: random(1, 50) * this.level },
-                chance: 1/10,
-            },
-            {
-                content: { energyMax: random(1, 3) * this.level },
-                chance: 1/40,
-            },
-            {
-                content: { healthMax: random(1, 3) * this.level },
-                chance: 1/40,
-            },
-            {
-                content: { health: random(1, 20) * this.level },
-                chance: 1/40,
-            },
-            {
-                item: { crystalize: random(10, 20)  * this.level },
-                chance: 1/15,
-            },
-            {
-                item: { sentry: random(10, 20)  * this.level },
-                chance: 1/30,
-            },
-            {
-                item: { capacity: random(10, 20)  * this.level },
-                chance: 1/15,
-            },
-            {
-                item: { grow: random(10, 20)  * this.level },
-                chance: 1/15,
-            },
-            {
-                item: { damage: random(10, 20)  * this.level },
-                chance: 1/15,
-            },
-            {
-                item: { weaken: random(10, 20)  * this.level },
-                chance: 1/15,
-            },
-            {
-                item: { spread: random(10, 20)  * this.level },
-                chance: 1/15,
-            },
-            {
-                item: { energy: random(10, 20)  * this.level },
-                chance: 1/40,
-            },
-            {
-                item: { acid: random(10, 20)  * this.level },
-                chance: 1/10,
-            },
-            {
-                item: { acid: random(10, 20)  * this.level },
-                chance: 1/80,
-            },
-            {
-                item: { energyMax: random(1, 2)  * this.level },
-                chance: 1/40,
-            },
-            {
-                item: { healthMax: random(1, 2)  * this.level },
-                chance: 1/40,
-            },
-            {
-                item: { energy: random(1, 20)  * this.level },
-                chance: 1/20,
-            },
-            {
-                item: { absorbStrength: random(1, 2)  * this.level },
-                chance: 1/40,
-            },
-            {
-                item: { absorbEff: random(1, 2)  * this.level },
-                chance: 1/40,
-            },
-            {
-                item: { processSpeed: random(1, 2)  * this.level },
-                chance: 1/40,
-            },
-        ];
+    private getScenario(name: string): CellScenario[] {
+        const scenarios = {
+            generic: [
+                {
+                    content: { dirt: Math.pow(random(5, 10), this.level) },
+                    chance: 1/8,
+                },
+                {
+                    content: { dirt: Math.pow(random(2, 3), this.level) },
+                    chance: 1/2,
+                },
+                {
+                    content: { acid: Math.pow(random(2, 4), this.level) },
+                    chance: 1/25,
+                },
+                {
+                    content: { energy: Math.pow(random(2, 4), this.level) },
+                    chance: 1/10,
+                },
+                {
+                    content: { energyMax: Math.pow(random(2, 3), this.level) },
+                    chance: 1/40,
+                },
+                {
+                    content: { healthMax: Math.pow(random(2, 3), this.level) },
+                    chance: 1/40,
+                },
+                {
+                    content: { health: Math.pow(random(2, 4), this.level) },
+                    chance: 1/40,
+                },
+                {
+                    item: { crystalize: Math.pow(random(3, 4) , this.level) },
+                    chance: 1/15,
+                },
+                {
+                    item: { sentry: Math.pow(random(3, 4) , this.level) },
+                    chance: 1/30,
+                },
+                {
+                    item: { capacity: Math.pow(random(3, 4) , this.level) },
+                    chance: 1/15,
+                },
+                {
+                    item: { grow: Math.pow(random(3, 4) , this.level) },
+                    chance: 1/15,
+                },
+                {
+                    item: { damage: Math.pow(random(3, 4) , this.level) },
+                    chance: 1/20,
+                },
+                {
+                    item: { weaken: Math.pow(random(3, 4) , this.level) },
+                    chance: 1/20,
+                },
+                {
+                    item: { spread: Math.pow(random(3, 4) , this.level) },
+                    chance: 1/20,
+                },
+                {
+                    item: { energy: Math.pow(random(3, 4) , this.level) },
+                    chance: 1/40,
+                },
+                {
+                    item: { acid: Math.pow(random(3, 4) , this.level) },
+                    chance: 1/20,
+                },
+                {
+                    item: { energyMax: Math.pow(random(2, 3) , this.level) },
+                    chance: 1/40,
+                },
+                {
+                    item: { healthMax: Math.pow(random(2, 3) , this.level) },
+                    chance: 1/40,
+                },
+                {
+                    item: { energy: Math.pow(random(2, 3) , this.level) },
+                    chance: 1/20,
+                },
+                {
+                    item: { absorbStrength: Math.pow(random(2, 3) , this.level) },
+                    chance: 1/40,
+                },
+                {
+                    item: { absorbEff: Math.pow(random(2, 3) , this.level) },
+                    chance: 1/40,
+                },
+                {
+                    item: { processSpeed: Math.pow(random(2, 3) , this.level) },
+                    chance: 1/40,
+                },
+            ],
+        };
+
+        return scenarios[name];
     }
 }
 

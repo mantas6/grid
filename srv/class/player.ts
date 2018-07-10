@@ -169,10 +169,11 @@ export class Player {
         }
 
         if (cell.process) {
-            return Math.min((this.process.amountOf('absorbStrength') + 1) / (this.process.amountOf('absorbEff') + 1), cell.contentTotalAmount());
+            const initialCost = Math.min((this.process.amountOf('absorbStrength') + 1) / (this.process.amountOf('absorbEff') + 1), cell.contentTotalAmount());
+            return Math.ceil(Math.pow(initialCost, (this.process.size / 100)));
         }
 
-        return 1;
+        return Math.ceil(Math.pow(2, (this.process.size / 100)) - 1);
     }
 
     assignCell(cell: Cell): boolean {

@@ -2,7 +2,7 @@ import { Subject } from 'rxjs';
 import { Cell } from './cell';
 import { Type, Exclude, Expose, Transform } from 'class-transformer';
 
-import { range, entries, sample, shuffle, random } from 'lodash';
+import { range, entries, sample, shuffle, random, values } from 'lodash';
 
 import { Log } from '../utils/log';
 import { ChunkGenerator } from '../utils/generate';
@@ -93,7 +93,7 @@ export class Grid {
 
     findCellOccupiable(): Cell {
         for (const lineX of shuffle(this.map)) {
-            for (const cell of shuffle(lineX)) {
+            for (const cell of shuffle(values(lineX).filter(line => line.y > 0 && line.y < this.chunkSize))) {
                 if (cell.isOccupiable()) {
                     return cell;
                 }
