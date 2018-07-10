@@ -157,13 +157,6 @@ export class Process {
                     return true;
                 }
                 return false;
-            case 'grow':
-                for (const name of keys(this.content)) {
-                    if (name == 'grow') continue;
-
-                    this.affect(name, amountToProcess);
-                }
-                return true;
             case 'sentry':
                 for (const closeCell of shuffle(cell.neighbors())) {
                     if (closeCell.player) {
@@ -198,6 +191,13 @@ export class Process {
                     }
                 }
                 return false;
+            case 'grow':
+                for (const name of keys(this.content)) {
+                    if (name == 'grow') continue;
+
+                    this.affect(name, amountToProcess);
+                }
+                return true;
         }
     }
  
