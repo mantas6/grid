@@ -192,7 +192,7 @@ export class Process {
                 }
                 return false;
             case 'grow':
-                for (const name of keys(this.content)) {
+                for (const name of shuffle(keys(this.content))) {
                     if (name == 'grow') continue;
 
                     this.affect(name, amountToProcess);
