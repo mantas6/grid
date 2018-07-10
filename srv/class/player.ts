@@ -169,7 +169,7 @@ export class Player {
         }
 
         if (cell.process) {
-            const initialCost = Math.min((this.process.amountOf('absorbStrength') + 1) / (this.process.amountOf('absorbEff') + 1), cell.contentTotalAmount());
+            const initialCost = Math.min((this.process.amountOf('absorbStrength') + 1) / (this.process.amountOf('absorbEff') + 2), cell.contentTotalAmount());
             return Math.ceil(Math.pow(initialCost, (this.process.size / 100)));
         }
 
