@@ -106,7 +106,7 @@ export class ChunkGenerator {
                     },
                     {
                         item: { sentry: Math.pow(random(3, 4) , this.level) },
-                        chance: 1/5,
+                        chance: 1/20,
                     },
                     {
                         item: { capacity: Math.pow(random(3, 4) , this.level) },
