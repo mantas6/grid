@@ -190,6 +190,16 @@ export class ChunkGenerator {
                     },
                 ],
             },
+            desert: {
+                chance: 1/10,
+                minLevel: 4,
+                scenarios: [
+                    {
+                        content: { dirt: Math.pow(random(2, 3), this.level) },
+                        chance: 1/10,
+                    },
+                ],
+            },
         };
     }
 }
