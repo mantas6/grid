@@ -205,7 +205,7 @@ export class Process {
 
         this.update();
 
-        return affected;
+        return -1 * (currentAmount - affected);
     }
 
     usage() {
