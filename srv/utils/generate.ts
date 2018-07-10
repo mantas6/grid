@@ -32,7 +32,7 @@ export class ChunkGenerator {
                     }
                     
                     cell.initializeContent(processContent);
-                    cell.process.size = sum(values(content)) * random(1, 10);
+                    cell.process.size = sum(values(content)) * random(10, 30);
                 }
                 
                 if (item) {
@@ -106,7 +106,7 @@ export class ChunkGenerator {
                     },
                     {
                         item: { sentry: Math.pow(random(3, 4) , this.level) },
-                        chance: 1/30,
+                        chance: 1/5,
                     },
                     {
                         item: { capacity: Math.pow(random(3, 4) , this.level) },
