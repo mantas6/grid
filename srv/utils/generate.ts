@@ -134,7 +134,7 @@ export class ChunkGenerator {
                     },
                     {
                         item: { acid: Math.pow(random(3, 4) , this.level) },
-                        chance: 1/20,
+                        chance: 1/15,
                     },
                     {
                         item: { energyMax: Math.pow(random(2, 3) , this.level) },
