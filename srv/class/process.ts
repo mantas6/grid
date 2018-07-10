@@ -136,18 +136,17 @@ export class Process {
             case 'spread':
                 const closeCells = cell.neighbors(1);
 
-                const contentsToSpread = entries(this.content);
+                const contentsToSpread = keys(this.content);
 
                 for (const closeCell of shuffle(closeCells)) {
-                    for (const [ name, content ] of contentsToSpread) {
+                    for (const name of contentsToSpread) {
                         const affected = cell.affectContent(name, -1 * amountToProcess);
                         if (affected) {
                             closeCell.affectContent(name, Math.min(amountToProcess, +affected));
                         }
                     }
-                    break;
+                    return true;
                 }
-                return true;
             case 'crystalize':
                 const amountOfAffector = this.amountOf('crystalize');
                 if (amountOfAffector >= this.usage() - amountOfAffector) {
@@ -196,8 +195,9 @@ export class Process {
                     if (name == 'grow') continue;
 
                     this.affect(name, amountToProcess);
+
+                    return true;
                 }
-                return true;
         }
     }
  
