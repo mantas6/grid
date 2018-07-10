@@ -18,6 +18,8 @@ export class Process {
     @Type(() => CellRef)
     cell: CellRef;
 
+    active: boolean = false;
+
     constructor(parent: Player | Cell) {
         if (parent instanceof Player) {
             this.player = new PlayerRef().setRef(parent);
@@ -50,14 +52,16 @@ export class Process {
         // const amountToProcessTotal = amountTotal - amountOfAcid;
         const processSpeed = this.amountOf('processSpeed') + 1;
 
+        let countAffected = 0;
+
         for (const [ name, { amount } ] of entries(this.content)) {
             if (!Process.isActiveContent(name))
                 continue;
 
             const amountOfAcid = this.amountOf('acid');
 
-            if (amount >= 1 && amountOfAcid >= 1) {
-                const amountToProcess = Math.min(processSpeed, amountOfAcid); //Math.log(amountOfAcid);
+            if (amount >= 1) {
+                const amountToProcess = processSpeed;
 
                 // console.log({processSpeed, amountOfAcid})
                 
@@ -76,10 +80,17 @@ export class Process {
 
                     if (affected) {
                         this.affect(name, -1 * amountToProcess);
-                        this.affect('acid', -1 * amountToProcess);
+                        countAffected++;
                     }
                 }
             }
+
+        }
+
+        if (countAffected > 0) {
+            this.active = true;
+        } else {
+            this.active = false;
         }
     }
 
@@ -137,8 +148,9 @@ export class Process {
                     this.affect('crystalize', -amountOfAffector);
                     cell.clearContent();
                     cell.addItem(this.content);
+                    return true;
                 }
-                return true;
+                return false;
             case 'grow':
                 for (const name of keys(this.content)) {
                     if (name == 'acid' || name == 'grow') continue;
@@ -156,7 +168,10 @@ export class Process {
                 this.update();
                 return true;
             case 'dirt':
-                return true;
+                if (this.affect('acid', -1 * amountToProcess)) {
+                    return true;
+                }
+                return false;
         }
     }
  
@@ -171,7 +186,7 @@ export class Process {
 
         const currentAmount = this.content[name].amount;
 
-        const affected = clamp(currentAmount + diff, 0, this.size);
+        const affected = clamp(currentAmount + diff, 0, this.size - this.usage());
         
         this.content[name].amount = affected;
 

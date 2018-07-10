@@ -70,16 +70,13 @@ export class Cell {
     }
 
     touchContentTimer() {
-        if (this.process && !this.processTimer && this.process.amountOf('acid') > 0 && this.process.usage() > this.process.amountOf('acid')) {
+        if (this.process && !this.processTimer && this.process.active) {
             log.debug(`Setting content timer for cell ${this.toString()}`);
             this.processTimer = interval(1000).subscribe(_ => {
                 this.process.processContent();
-                if (!this.process.usage()) {
-                    this.clearContent();
-                }
                 this.touchContentTimer();
             });
-        } else if (this.processTimer && (this.process.amountOf('acid') < 1 || this.process.usage() <= this.process.amountOf('acid'))) {
+        } else if (this.processTimer && (!this.process || !this.process.active)) {
             this.processTimer.unsubscribe();
             this.processTimer = undefined;
             log.debug(`Clearing content timer for cell ${this.toString()}`);
@@ -110,6 +107,7 @@ export class Cell {
         if (this.process.usage() <= 0) {
             this.clearContent();
         } else {
+            this.process.active = true;
             this.touchContentTimer();
         }
 

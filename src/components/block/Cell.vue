@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-button :variant="buttonVariant" :disabled="!enabled" @click="selectCell" :style="style">
+        <b-button :variant="buttonVariant" :disabled="!enabled" @click="selectCell" :style="style" :class="{ empty: !buttonText && !mark }">
             <div class="marker">
                 <span v-for="name in additionalContentNames" :key="name" :style="name | colorByName">+</span>
             </div>
@@ -25,10 +25,6 @@ export default {
         ...mapState(['playerId', 'throwItemIndex']),
 
         buttonText() {
-            if (this.cell.void) {
-                return '-';
-            }
-
             if (this.own) {
                 return '+';
             }
@@ -156,5 +152,9 @@ export default {
         position: absolute;
         top: 0;
         left: 0;
+    }
+
+    .btn.empty {
+        border: none;
     }
 </style>
