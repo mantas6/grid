@@ -104,7 +104,7 @@ export class Process {
 
         switch(name) {
             case 'energy':
-                if (!energyStat.isFull() && amountToProcess) {
+                if (!energyStat.isFull()) {
                     energyStat.affectByDiff(amountToProcess, true);
                 }
                 return true;
@@ -115,14 +115,18 @@ export class Process {
                 healthStat.affectMax(amountToProcess);
                 return true;
             case 'health':
-                healthStat.affectByDiff(amountToProcess);
-                return true;
+                if (!healthStat.isFull() && healthStat.affectByDiff(amountToProcess)) {
+                    return true;
+                }
+                return false;
             case 'damage':
                 healthStat.affectByDiff(-amountToProcess);
                 return true;
             case 'weaken':
-                energyStat.affectByDiff(-amountToProcess);
-                return true;
+                if (energyStat.affectByDiff(-amountToProcess)) {
+                    return true;
+                }
+                return false;
             case 'capacity':
                 this.size += amountToProcess;
                 this.update();
@@ -147,6 +151,7 @@ export class Process {
                     }
                     return true;
                 }
+                return false;
             case 'crystalize':
                 const amountOfAffector = this.amountOf('crystalize');
                 if (amountOfAffector >= this.usage() - amountOfAffector) {
@@ -172,6 +177,7 @@ export class Process {
                         return true;
                     }
                 }
+                return false;
         }
     }
 
