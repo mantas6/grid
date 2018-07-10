@@ -30,6 +30,7 @@ export function nameToColor(name) {
         weaken: 'yellow',
         grow: 'olive',
         capacity: 'lime',
+        sentry: 'hotPink',
     };
 
     return chroma(map[name]);

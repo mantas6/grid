@@ -82,6 +82,10 @@ export class ChunkGenerator {
                 chance: 1/15,
             },
             {
+                item: { sentry: random(10, 20)  * this.level },
+                chance: 1/5,
+            },
+            {
                 item: { capacity: random(10, 20)  * this.level },
                 chance: 1/15,
             },

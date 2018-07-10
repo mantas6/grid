@@ -21,6 +21,7 @@ export const processableNames = [
     'grow',
     'capacity',
     'acid',
+    'sentry',
 ];
 
 export class Process {
@@ -163,6 +164,22 @@ export class Process {
                     this.affect(name, amountToProcess);
                 }
                 return true;
+            case 'sentry':
+                for (const closeCell of shuffle(cell.neighbors())) {
+                    if (closeCell.player) {
+                        const contentsToSpread = entries(this.content);
+                        for (const [ name ] of contentsToSpread) {
+                            if (name == 'sentry') continue;
+                            const affected = cell.affectContent(name, -1 * amountToProcess);
+                            if (affected) {
+                                const affectedTarget = closeCell.affectContent(name, -1 * affected);
+
+                                log.debug(`Sentry: Found player in cell ${closeCell.toString()} affected ${affectedTarget} by process ${-1 * affected}`);
+                            }
+                        }
+                        return true;
+                    }
+                }
         }
     }
 
@@ -222,14 +239,14 @@ export class Process {
     }
 
     processContentOfCell(cell: Cell): boolean {
-        if (this.usage() + cell.process.usage() > this.size) {
+        const affectDiff = this.amountOf('absorbStrength') + 1;
+
+        if (this.usage() + affectDiff > this.size) {
             log.debug(`canNotBeAdded`);
             return false;
         }
 
         for (const [ name, amount ] of entries(cell.process.content)) {
-            const affectDiff = this.amountOf('absorbStrength') + 1;
-
             if (cell.affectContent(name, -affectDiff)) {
                 this.affect(name, +affectDiff);
             }
