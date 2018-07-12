@@ -17,7 +17,8 @@
                     <b-button v-if="nearestTeleportCost"
                         class="w-100 mt-1"
                         @click="teleport"
-                        :disabled="!processContent.teleport || processContent.teleport.amount < nearestTeleportCost" variant="primary">
+                        :disabled="!processContent.teleport || processContent.teleport.amount < nearestTeleportCost"
+                        variant="danger">
                         Teleport to the nearest player <b-badge>{{ nearestTeleportCost | formatShort }}</b-badge>
                     </b-button>
                 </div>

@@ -270,6 +270,9 @@ export class Player {
     }
 
     getTeleportationPoint() {
+        let nearestCell: Cell;
+        let nearestDistance: number = Infinity;
+
         for (const playerId of playersOnlineIds) {
             const player = players.get(playerId);
 
@@ -279,11 +282,17 @@ export class Player {
             const cell = player.cell.get();
 
             if (cell) {
-                if (Math.abs(cell.y) >= Math.abs(this.cell.get().y)) {
-                    return cell;
+                const distance = measureDistance(cell, this.cell.get());
+                if (distance > 5 && Math.abs(cell.y) >= Math.abs(this.cell.get().y)) {
+                    if (distance < nearestDistance) {
+                        nearestCell = cell;
+                        nearestDistance = distance;
+                    }
                 }
             }
         }
+
+        return nearestCell;
     }
 
     getTeleportationCost(cell: Cell) {
