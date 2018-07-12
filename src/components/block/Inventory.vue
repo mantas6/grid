@@ -13,7 +13,7 @@
                     <small>You have no items</small>
                 </div>
                 <div v-for="(item, index) in items" :key="index" class="mr-1">
-                    <b-button :variant="modeVariant" @click="itemSelect(index)" :disabled="index == throwItemIndex" @mouseover="hoverName = largestContentName(item)" @mouseout="hoverName = undefined">
+                    <b-button :variant="modeVariant" @click="itemSelect(index)" :disabled="index == throwItemIndex || (!canBeUsed(largestContentName(item)) && mode == 'use')" @mouseover="hoverName = largestContentName(item)" @mouseout="hoverName = undefined">
                         <b-badge v-for="({ amount }, name) in item" :key="name" :style="name | colorByName">
                             <span class="text-dark">{{ amount | formatShort }}</span>
                         </b-badge>
@@ -117,6 +117,24 @@ export default {
                 }
 
                 return largestName;
+        },
+
+        canBeUsed(name) {
+            return [
+                'energy',
+                'energyMax',
+                'healthMax',
+                'health',
+                'dirt',
+                'grow',
+                'capacity',
+                'acid',
+                'attackStrength',
+                'teleport',
+                'absorbStrength',
+                'absorbEff',
+                'processSpeed',
+            ].includes(name);
         },
     },
 
