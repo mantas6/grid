@@ -64,7 +64,7 @@ export class Process {
             const amountOfAcid = this.amountOf('acid');
 
             if (amount >= 1) {
-                const amountToProcess = processSpeed;
+                const amountToProcess = Math.min(processSpeed, amount);
 
                 // console.log({processSpeed, amountOfAcid})
                 

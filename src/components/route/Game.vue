@@ -9,7 +9,7 @@
                     <span class="d-none d-md-block">Click on arrows or use WASD to move</span>
                 </b-alert>
                 <process :content="processContent" :size="processSize"></process>
-                <b-row>
+                <b-row class="mt-2 mb-2">
                     <stat-bar v-for="stat in orderedStats" v-if="stat.max" :stat="stat" :key="stat.name"></stat-bar>
                 </b-row>
                 <inventory :items="inventory" :size="inventorySize"></inventory>

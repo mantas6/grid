@@ -12,8 +12,8 @@
                 <div v-show="!items.length">
                     <small>You have no items</small>
                 </div>
-                <div v-for="(item, index) in items" :key="index" class="mr-1">
-                    <b-button :variant="modeVariant" @click="itemSelect(index)" :disabled="index == throwItemIndex || (!canBeUsed(largestContentName(item)) && mode == 'use')" @mouseover="hoverName = largestContentName(item)" @mouseout="hoverName = undefined">
+                <div v-for="(item, index) in items" :key="index" class="mr-1" @mouseover="hoverName = largestContentName(item)" @mouseout="hoverName = undefined">
+                    <b-button :variant="modeVariant" @click="itemSelect(index)" :disabled="index == throwItemIndex || (!canBeUsed(largestContentName(item)) && mode == 'use')">
                         <b-badge v-for="({ amount }, name) in item" :key="name" :style="name | colorByName">
                             <span class="text-dark">{{ amount | formatShort }}</span>
                         </b-badge>

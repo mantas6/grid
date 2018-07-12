@@ -82,7 +82,7 @@ export class ChunkGenerator {
                     },
                     {
                         content: { acid: Math.pow(random(2, 4), this.level) },
-                        chance: 1/25,
+                        chance: 1/15,
                     },
                     {
                         content: { energy: Math.pow(random(3, 5), this.level) },
@@ -162,11 +162,11 @@ export class ChunkGenerator {
                     },
                     {
                         item: { teleport: Math.pow(random(2, 3) , this.level) },
-                        chance: 1/5,
+                        chance: 1/20,
                     },
                     {
                         item: { attackStrength: Math.pow(random(2, 3) , this.level) },
-                        chance: 1/5,
+                        chance: 1/40,
                     },
                 ],
             },
