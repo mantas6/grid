@@ -161,6 +161,7 @@ export class Cell {
             isOccupiable: this.isOccupiable() || undefined,
             isAbsorbable: this.isAbsorbable() || undefined,
             playerId: this.player ? this.player.id : undefined,
+            playerHealth: this.player ? this.player.getStat('health').current / this.player.getStat('health').max : undefined,
         };
     }
 
@@ -180,5 +181,6 @@ export interface CellUpdate {
     isOccupiable?: boolean;
     isAbsorbable?: boolean;
     playerId?: number;
+    playerHealth?: number;
     item?: InventoryItem;
 }

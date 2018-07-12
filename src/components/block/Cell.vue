@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div :id="`cell-${relX}-${relY}`">
+        <div :id="`cell-${relX}-${relY}`" :style="cell.playerHealth ? { opacity: cell.playerHealth } : {}">
             <b-button :variant="buttonVariant" :disabled="!enabled" @click="selectCell" :style="style" :class="{ empty: !buttonText && !mark }">
                 <div class="marker">
                     <span v-for="name in additionalContentNames" :key="name" :style="name | colorByName">+</span>

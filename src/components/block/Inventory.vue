@@ -22,7 +22,7 @@
                 </div>
             </div>
         </div>
-        <div class="info text-secondary small text-center">{{ hoverName | nameToDescription }}</div>
+        <div class="info text-primary small text-center">{{ hoverName | nameToDescription }}</div>
     </div>
 </template>
 

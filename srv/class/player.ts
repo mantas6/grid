@@ -174,6 +174,10 @@ export class Player {
     }
 
     getActionCost(cell: Cell) {
+        if (cell.player) {
+            return this.process.amountOf('attackStrength') + 1;
+        }
+
         if (cell.item) {
             return 0;
         }
@@ -204,8 +208,6 @@ export class Player {
 
         this.updateCellsNearby();
 
-        if (Math.random() > 0.8) {
-        }
         this.probeTeleportPoints();
 
         this.locationSubject.next({ x: cell.x, y: cell.y });
@@ -227,15 +229,10 @@ export class Player {
     }
 
     absorbCellWithPlayer(cell: Cell): boolean {
-        for (const processName of keys(this.process.content)) {
-            const affectBy = this.process.amountOf('attackStrength') + 1;
+        const affectBy = this.process.amountOf('attackStrength') + 1;
 
-            const affected = this.getStat('energy').affectByDiff(-affectBy);
-
-            if (affected) {
-                cell.player.getStat('health').affectByDiff(-affectBy, true);
-            }
-        }
+        cell.player.getStat('health').affectByDiff(-affectBy, true);
+        cell.update();
 
         return true;
     }
