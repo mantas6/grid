@@ -57,7 +57,7 @@ export default {
 
         orderedStats() {
             return orderBy(this.stats, 'name');
-        }
+        },
     },
 
     methods: {
