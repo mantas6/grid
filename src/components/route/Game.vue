@@ -4,6 +4,7 @@
             <message></message>
             <div v-if="map.length">
                 <grid class="grid" :map="map" @move="movedCount++"></grid>
+                <hr>
                 <b-alert variant="primary" :show="movedCount < 3">
                     <span class="d-md-none">Swipe on the grid to move</span>
                     <span class="d-none d-md-block">Click on arrows or use WASD to move</span>

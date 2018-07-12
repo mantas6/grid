@@ -22,7 +22,9 @@
                 </div>
             </div>
         </div>
-        <div class="info text-primary small text-center">{{ hoverName | nameToDescription }}</div>
+        <div class="info text-primary small text-center">
+            <span v-show="hoverName && items.length">{{ hoverName | nameToDescription }}</span>
+        </div>
     </div>
 </template>
 

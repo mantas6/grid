@@ -66,7 +66,11 @@ export default {
             }
 
             if (this.cell.playerId && this.cell.playerId != this.playerId) {
-                return 'danger';
+                if (this.throwItemIndex !== undefined) {
+                    return 'warning';
+                } else {
+                    return 'danger';
+                }
             }
 
             if (this.enabled && this.throwItemIndex !== undefined) {
@@ -177,6 +181,8 @@ export default {
         height: 50px;
 
         position: relative;
+
+        padding: 0;
 
         @include media-breakpoint-down(xs) {
             width: 30px;
