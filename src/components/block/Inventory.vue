@@ -3,7 +3,7 @@
         <div class="d-flex justify-content-between mb-1">
             <small class="text-secondary">{{ items.length }} / {{ size }}</small>
             <div v-show="items.length">
-                <small class="text-secondary">Click to {{ modes.filter(m => m != mode).join(' or ') }}</small>
+                <small>Click to <b>{{ modes.filter(m => m != mode).join(' or ') }}</b></small>
                 <b-button size="sm" :variant="modeVariant" @click="toggleMode">{{ mode }}</b-button>
             </div>
         </div>
