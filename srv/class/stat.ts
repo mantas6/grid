@@ -58,6 +58,11 @@ export class Stat {
         return true;
     }
 
+    reset() {
+        this.current = this.max;
+        this.update();
+    }
+
     update() {
         this.player.get()
             .statsSubject

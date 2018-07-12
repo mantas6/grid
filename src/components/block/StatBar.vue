@@ -14,7 +14,7 @@ export default {
         variant() {
             const variants = {
                 health: 'danger',
-                energy: 'info',
+                energy: 'success',
             };
 
             return variants[this.stat.name];

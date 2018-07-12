@@ -42,7 +42,7 @@ export default {
 
         buttonText() {
             if (this.own) {
-                return `I'm`;
+                return `Me`;
             }
 
             if (this.cell.playerId && this.cell.playerId != this.playerId) {

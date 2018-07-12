@@ -80,6 +80,15 @@ export class Player {
         }
     }
 
+    initializeSoft() {
+        this.process.clearProcessables();
+        this.inventory = new Inventory(this);
+
+        for (const stat of this.stats) {
+            stat.reset();
+        }
+    }
+
     logOn(client: Socket) {
         this.statsSubject = new Subject<StatUpdate>();
         this.locationSubject = new Subject<PlayerLocationUpdate>();
@@ -132,7 +141,7 @@ export class Player {
 
             // Death handler
             if (this.getStat('health').isEmpty()) {
-                this.initialize();
+                this.initializeSoft();
                 this.assignCell(grid.findCellOccupiable());
                 this.updateAll();
 
@@ -169,11 +178,10 @@ export class Player {
         }
 
         if (cell.process) {
-            const initialCost = Math.min((this.process.amountOf('absorbStrength') + 1) / (this.process.amountOf('absorbEff') + 2), cell.contentTotalAmount());
-            return Math.ceil(Math.pow(initialCost, (this.process.size / 100)));
+            return Math.min((this.process.amountOf('absorbStrength') + 1) / (this.process.amountOf('absorbEff') + 2), cell.contentTotalAmount());
         }
 
-        return Math.ceil(Math.pow(2, (this.process.size / 100)) - 1);
+        return 1;
     }
 
     assignCell(cell: Cell): boolean {

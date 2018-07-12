@@ -146,7 +146,7 @@ export class Process {
                     for (const name of contentsToSpread) {
                         const affected = cell.affectContent(name, -1 * amountToProcess);
                         if (affected) {
-                            closeCell.affectContent(name, Math.min(amountToProcess, +affected));
+                            closeCell.affectContent(name, Math.min(amountToProcess, -1 * affected));
                         }
                     }
                     return true;
@@ -210,6 +210,15 @@ export class Process {
     createContentItem(name: string) {
         if (!this.content[name]) {
             this.content[name] = { amount: 0 };
+        }
+    }
+
+    clearProcessables() {
+        for (const name of keys(this.content)) {
+            if (Process.isActiveContent(name)) {
+                delete this.content[name];
+                this.update();
+            }
         }
     }
 

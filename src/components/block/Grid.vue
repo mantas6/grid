@@ -109,6 +109,7 @@ export default {
         },
 
         changePosition(x, y) {
+            this.$emit('move');
             console.log('changePosition', { x, y, throwItemIndex: this.throwItemIndex });
             if (this.throwItemIndex !== undefined) {
                 console.log('Throwing')
@@ -120,9 +121,8 @@ export default {
         },
 
         moveBySwipe({ direction }) {
+            this.$emit('move');
             const coords = { 16: 'up', 8: 'down', 4: 'left', 2: 'right' };
-
-            this.$emit('swipe');
 
             if (coords[direction]) {
                 this.moveDirection(coords[direction]);
@@ -131,18 +131,22 @@ export default {
 
         moveUp() {
             this.moveDirection('up');
+            this.$emit('move');
         },
 
         moveDown() {
             this.moveDirection('down');
+            this.$emit('move');
         },
 
         moveLeft() {
             this.moveDirection('left');
+            this.$emit('move');
         },
 
         moveRight() {
             this.moveDirection('right');
+            this.$emit('move');
         },
 
         measureDistance(a, b) {
