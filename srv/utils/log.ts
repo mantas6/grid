@@ -1,5 +1,7 @@
 import { of } from 'rxjs';
 
+const { PRODUCTION } = process.env;
+
 export class Log {
     namespace: string;
     constructor(namespace: string) {
@@ -35,6 +37,11 @@ export class Log {
     }
 
     push(level: string, messages: string[]) {
-        console.log(`<#> [${this.namespace}] => ${level} => ${messages.concat('')}`);
+        if (PRODUCTION) {
+            if (['error', 'warn', 'info', 'complete', 'success'].indexOf(level) == -1)
+                return;
+        }
+
+        console.log(`<#> [${this.namespace}] => ${level} => ${messages.join('')}`);
     }
 }

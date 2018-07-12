@@ -254,9 +254,9 @@ export class Process {
     }
 
     processContentOfCell(cell: Cell): boolean {
-        const affectDiff = this.amountOf('absorbStrength') + 1;
+        const affectDiff = Math.min(this.amountOf('absorbStrength') + 1, this.size - this.usage());
 
-        if (this.usage() + affectDiff > this.size) {
+        if (!affectDiff) {
             log.debug(`canNotBeAdded`);
             return false;
         }

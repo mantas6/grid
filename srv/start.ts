@@ -54,7 +54,7 @@ function saveLog(namespace, level, message) {
         },
     };
 
-    request('http://logging.back/a_sites/collect', params, (err, res) => {
+    request('http://logging.back/a_sites/entry', params, (err, res) => {
         
     });
 }
@@ -68,7 +68,7 @@ setInterval(() => {
         },
     };
 
-    request('http://logging.back/a_sites/collect', params, (err, res) => {
+    request('http://logging.back/a_sites/entry', params, (err, res) => {
         
     });
 }, 10e3)
