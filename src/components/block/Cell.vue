@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div :id="`cell-${cell.x}-${cell.y}`">
+        <div :id="`cell-${relX}-${relY}`">
             <b-button :variant="buttonVariant" :disabled="!enabled" @click="selectCell" :style="style" :class="{ empty: !buttonText && !mark }">
                 <div class="marker">
                     <span v-for="name in additionalContentNames" :key="name" :style="name | colorByName">+</span>
@@ -9,9 +9,10 @@
                 <b-badge v-else-if="cell.process" variant="light">
                     <small>{{ contentSize | formatShort }}</small>
                 </b-badge>
+                <b class="arrow" v-else-if="directionName" v-html="`&#${directionSymbol};`"></b>
             </b-button>
         </div>
-        <b-popover triggers="hover" :target="`cell-${cell.x}-${cell.y}`">
+        <b-popover triggers="hover" placement="top" :target="`cell-${relX}-${relY}`" :show.sync="showInfo">
             <div v-for="({ amount }, name) in content" :key="name">
                 <b-badge :style="name | colorByName">{{ amount | formatShort }}</b-badge>
                 <span>{{ name }}</span>
@@ -24,17 +25,24 @@
 import { keys, sumBy, head, values, entries } from 'lodash';
 import { colorByName, nameToColor } from '@/method'
 
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
-    props: [ 'cell', 'own', 'enabled', 'mark' ],
+    data() {
+        return {
+            showInfo: false,
+        };
+    },
+
+    props: [ 'cell', 'own', 'enabled', 'mark', 'directionName', 'relX' , 'relY' ],
 
     computed: {
         ...mapState(['playerId', 'throwItemIndex']),
+        ...mapGetters(['playerX', 'playerY']),
 
         buttonText() {
             if (this.own) {
-                return '+';
+                return `I'm`;
             }
 
             if (this.cell.playerId && this.cell.playerId != this.playerId) {
@@ -126,12 +134,34 @@ export default {
             } else if(this.cell.item) {
                 return this.cell.item;
             }
-        }
+        },
+
+        directionSymbol() {
+            switch (this.directionName) {
+                case 'up':
+                    return 8593;
+                case 'down':
+                    return 8595;
+                case 'left':
+                    return 8592;
+                case 'right':
+                    return 8594;
+            }
+        },
     },
 
     methods: {
         selectCell() {
             this.$emit('selectCell');
+        },
+    },
+
+    watch: {
+        playerX() {
+            this.showInfo = false;
+        },
+        playerY() {
+            this.showInfo = false;
         },
     },
 }
@@ -165,4 +195,12 @@ export default {
     .btn.empty {
         border: none;
     }
+
+    @include media-breakpoint-up(sm) {
+        .arrow {
+            font-size: 150%;
+        }
+    }
+
+    
 </style>

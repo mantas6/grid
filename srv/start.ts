@@ -11,7 +11,7 @@ handle.on('exit', () => start());
 
 handle.stdout.on('data', buffer => message(buffer.toString()));
 handle.stderr.on('data', buffer => message(buffer.toString()));
-handle.on('error', err => message(err.message))
+handle.on('error', err => message(err.message.toString()))
 
 function start() {
     handle = spawn('ts-node', ['srv/main.ts']);
@@ -29,8 +29,7 @@ function message(msg: string) {
 
             console.log(`[${namespace}] => ${level} => ${message}`)
             //saveLog(namespace, level, message);
-        } else {
-            console.log(msg)
+        } else if(typeof(message) == 'string') {
             //saveLog('global', 'critical', message);
         }
     }

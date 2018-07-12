@@ -85,7 +85,7 @@ export class ChunkGenerator {
                         chance: 1/25,
                     },
                     {
-                        content: { energy: Math.pow(random(2, 4), this.level) },
+                        content: { energy: Math.pow(random(3, 5), this.level) },
                         chance: 1/10,
                     },
                     {
@@ -130,7 +130,7 @@ export class ChunkGenerator {
                     },
                     {
                         item: { energy: Math.pow(random(3, 4) , this.level) },
-                        chance: 1/40,
+                        chance: 1/10,
                     },
                     {
                         item: { acid: Math.pow(random(3, 4) , this.level) },

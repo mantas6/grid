@@ -6,7 +6,10 @@
                     @selectCell="changePosition(cell.x, cell.y)"
                     :enabled="!isPlayerAt(cell.x, cell.y) && ((isCellReachable(cell.x, cell.y) && (cell.isAbsorbable || cell.isOccupiable)) || isThrowableTo(cell.x, cell.y))"
                     :mark="isCellReachable(cell.x, cell.y) || isThrowableTo(cell.x, cell.y)"
-                    :own="isPlayerAt(cell.x, cell.y)">
+                    :own="isPlayerAt(cell.x, cell.y)"
+                    :direction-name="directionName(cell.x, cell.y)"
+                    :rel-x="relX"
+                    :rel-y="relY">
                 </cell>
             </div>
         </div>
@@ -74,6 +77,21 @@ export default {
 
         isPlayerAt(x, y) {
             return this.playerX == x && this.playerY == y;
+        },
+
+        directionName(x, y) {
+            const coords = {
+                up: { x: this.playerX, y: this.playerY - 1 },
+                down: { x: this.playerX, y: this.playerY + 1 },
+                left: { x: this.playerX - 1, y: this.playerY },
+                right: { x: this.playerX + 1, y: this.playerY },
+            };
+
+            for (const [ name, { x: targetX, y: targetY } ] of entries(coords)) {
+                if (targetX == x && targetY == y) {
+                    return name;
+                }
+            }
         },
 
         isCellReachable(x, y) {
