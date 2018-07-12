@@ -164,6 +164,10 @@ export class ChunkGenerator {
                         item: { teleport: Math.pow(random(2, 3) , this.level) },
                         chance: 1/5,
                     },
+                    {
+                        item: { attackStrength: Math.pow(random(2, 3) , this.level) },
+                        chance: 1/5,
+                    },
                 ],
             },
             slab: {

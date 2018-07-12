@@ -228,9 +228,13 @@ export class Player {
 
     absorbCellWithPlayer(cell: Cell): boolean {
         for (const processName of keys(this.process.content)) {
-            const affectBy = 1;
-            this.process.affect(processName, -affectBy);
-            cell.player.process.affect(processName, +affectBy);
+            const affectBy = this.process.amountOf('attackStrength') + 1;
+
+            const affected = this.getStat('energy').affectByDiff(-affectBy);
+
+            if (affected) {
+                cell.player.getStat('health').affectByDiff(-affectBy, true);
+            }
         }
 
         return true;

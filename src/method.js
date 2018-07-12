@@ -32,6 +32,7 @@ export function nameToColor(name) {
         capacity: 'lime',
         sentry: 'hotPink',
         teleport: 'lightSlateGray',
+        attackStrength: 'goldenRod',
     };
 
     return chroma(map[name]);
@@ -56,6 +57,7 @@ export function nameToDescription(name) {
         capacity: 'Increases processing container capacity',
         sentry: 'Transfers content to the nearest player in the vicinity',
         teleport: 'Used to teleport to the nearest players',
+        attackStrength: 'Damage multiplier when attacking other players',
     };
 
     return map[name];
