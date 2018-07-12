@@ -15,14 +15,14 @@
         <b-popover triggers="hover" placement="top" :target="`cell-${relX}-${relY}`" :show.sync="showInfo">
             <div v-for="({ amount }, name) in content" :key="name">
                 <b-badge :style="name | colorByName">{{ amount | formatShort }}</b-badge>
-                <span>{{ name }}</span>
+                <span>{{ name | startCase }}</span>
             </div>
         </b-popover>
     </div>
 </template>
 
 <script>
-import { keys, sumBy, head, values, entries } from 'lodash';
+import { keys, sumBy, head, values, entries, startCase } from 'lodash';
 import { colorByName, nameToColor } from '@/method'
 
 import { mapState, mapGetters } from 'vuex';
@@ -35,6 +35,8 @@ export default {
     },
 
     props: [ 'cell', 'own', 'enabled', 'mark', 'directionName', 'relX' , 'relY' ],
+
+    filters: { startCase },
 
     computed: {
         ...mapState(['playerId', 'throwItemIndex']),

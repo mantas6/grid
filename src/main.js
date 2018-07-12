@@ -12,7 +12,7 @@ import { head, last } from 'lodash';
 
 import { router } from './router'
 import { store } from './store'
-import { colorByName } from './method'
+import { colorByName, nameToDescription } from './method'
 import Singleton from './singleton'
 
 const numberformat = require('swarm-numberformat');
@@ -26,6 +26,7 @@ Vue.use(VueHammer);
 Vue.use(VueHotkey);
 Vue.filter('formatShort', numberformat.formatShort);
 Vue.filter('colorByName', colorByName);
+Vue.filter('nameToDescription', nameToDescription);
 Vue.filter('head', head);
 Vue.filter('last', last);
 

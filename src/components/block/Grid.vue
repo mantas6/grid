@@ -105,7 +105,7 @@ export default {
         isThrowableTo(x, y) {
             const distance = this.measureDistance(this.playerLocation, { x, y });
 
-            return this.throwItemIndex !== undefined && (distance == 1 || distance == 2);
+            return this.throwItemIndex !== undefined && (distance == 1 || distance == 2 || distance == 3);
         },
 
         changePosition(x, y) {

@@ -171,7 +171,7 @@ io.on('connection', client => {
             filter(({ throwItemIndex }) => clientPlayer.inventory.hasItem(throwItemIndex)),
             filter(({ cell }) => (<Cell>cell).isOccupiable() || (<Cell>cell).isAbsorbable()),
             map(bundle => ({ ...bundle, distance: measureDistance(clientPlayer.cell.get(), bundle.cell) })),
-            filter(({ distance }) => distance == 1 || distance == 2),
+            filter(({ distance }) => distance == 1 || distance == 2 || distance == 3),
             filter(({ cell }) => clientPlayer.getStat('energy').affectByDiff(-1 * clientPlayer.getActionCost(cell)) || clientPlayer.getStat('health').affectByDiff(-1 * clientPlayer.getActionCost(cell)) || ((<Cell>cell).isOccupiable() && clientPlayer.getStat('health').affectByDiff(-1))),
             tap(bundle => log.debug(`Position throw request ${bundle.x} ${bundle.y}`)),
             tap(({ cell, throwItemIndex }) => {

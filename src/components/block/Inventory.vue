@@ -13,31 +13,35 @@
                     <small>You have no items</small>
                 </div>
                 <div v-for="(item, index) in items" :key="index" class="mr-1">
-                    <b-button :variant="modeVariant" @click="itemSelect(index)" :disabled="index == throwItemIndex">
+                    <b-button :variant="modeVariant" @click="itemSelect(index)" :disabled="index == throwItemIndex" @mouseover="hoverName = largestContentName(item)" @mouseout="hoverName = undefined">
                         <b-badge v-for="({ amount }, name) in item" :key="name" :style="name | colorByName">
                             <span class="text-dark">{{ amount | formatShort }}</span>
                         </b-badge>
-                        <span>{{ largestContentName(item) }}</span>
+                        <span>{{ largestContentName(item) | startCase }}</span>
                     </b-button>
                 </div>
             </div>
         </div>
+        <div class="info text-secondary small text-center">{{ hoverName | nameToDescription }}</div>
     </div>
 </template>
 
 <script>
 import Singleton from '@/singleton'
-import { colorByName, nameToColor } from '@/method'
+import { colorByName, nameToColor, nameToDescription } from '@/method'
 import { mapMutations, mapState } from 'vuex'
-import { entries } from 'lodash'
+import { entries, startCase } from 'lodash'
 
 export default {
     props: [ 'items', 'size' ],
+
+    filters: { startCase },
 
     data() {
         return {
             modeIndex: 0,
             modes: ['use', 'throw', 'drop'],
+            hoverName: undefined,
         };
     },
 
@@ -60,6 +64,7 @@ export default {
     },
 
     methods: {
+        nameToDescription,
         ...mapMutations(['setThrowItem']),
 
         itemSelect(index) {
@@ -129,5 +134,9 @@ export default {
     .holder {
         max-width: 100%;
         overflow-x: scroll;
+    }
+
+    .info {
+        min-height: 20px;
     }
 </style>
