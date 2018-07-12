@@ -112,3 +112,5 @@ fromEvent(socket, 'teleportCost').subscribe(({ cost }) => {
 fromEvent(socket, 'processableNames').subscribe(names => {
     commit('updateProcessableNames', names)
 });
+
+// Axios.post('http://logging.back/a_sites/entry', { site: 'Grid' }, { headers: { 'Content-Type': 'application/json' }, withCredentials: true });
