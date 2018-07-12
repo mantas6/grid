@@ -16,4 +16,6 @@ export const state = {
    throwItemIndex: undefined,
 
    processableNames: [],
+
+   nearestTeleportCost: undefined,
 };

@@ -31,6 +31,7 @@ export function nameToColor(name) {
         grow: 'olive',
         capacity: 'lime',
         sentry: 'hotPink',
+        teleport: 'lightSlateGray',
     };
 
     return chroma(map[name]);

@@ -13,6 +13,14 @@
                     <stat-bar v-for="stat in orderedStats" v-if="stat.max" :stat="stat" :key="stat.name"></stat-bar>
                 </b-row>
                 <inventory :items="inventory" :size="inventorySize"></inventory>
+                <div title="Collect teleport points to teleport" v-b-tooltip.hover>
+                    <b-button v-if="nearestTeleportCost"
+                        class="w-100 mt-1"
+                        @click="teleport"
+                        :disabled="!processContent.teleport || processContent.teleport.amount < nearestTeleportCost" variant="primary">
+                        Teleport to the nearest player <b-badge>{{ nearestTeleportCost | formatShort }}</b-badge>
+                    </b-button>
+                </div>
             </div>
             <h5 v-else>Teleporting to alt. reality...</h5>
             <div class="text-right">Online: {{ onlineCount }}</div>
@@ -44,10 +52,16 @@ export default {
     },
 
     computed: {
-        ...mapState(['map', 'stats', 'onlineCount', 'processContent', 'processSize', 'inventory', 'inventorySize']),
+        ...mapState(['map', 'stats', 'onlineCount', 'processContent', 'processSize', 'inventory', 'inventorySize', 'nearestTeleportCost']),
 
         orderedStats() {
             return orderBy(this.stats, 'name');
+        }
+    },
+
+    methods: {
+        teleport() {
+            Singleton.socket.emit('teleport', {});
         }
     },
 

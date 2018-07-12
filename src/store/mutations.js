@@ -80,4 +80,8 @@ export const mutations = {
     updateProcessableNames(state, names) {
         state.processableNames = names;
     },
+    
+    updateNearestTeleportCost(state, cost) {
+        state.nearestTeleportCost = cost;
+    },
 };

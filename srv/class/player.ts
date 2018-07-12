@@ -6,12 +6,13 @@ import { Type, Exclude, Expose } from 'class-transformer';
 
 import { Cell, CellUpdate } from './cell';
 import { Stat, StatUpdate } from './stat';
-import { grid, players } from '../state';
+import { grid, players, playersOnlineIds } from '../state';
 import { Log } from '../utils/log';
 
 import { CellRef } from '../utils/ref';
 import { Process, ProcessUpdate } from './process';
 import { Inventory, InventoryUpdate } from './inventory';
+import { measureDistance } from '../utils/method';
 
 const log = new Log('player');
 
@@ -203,6 +204,10 @@ export class Player {
 
         this.updateCellsNearby();
 
+        if (Math.random() > 0.8) {
+        }
+        this.probeTeleportPoints();
+
         this.locationSubject.next({ x: cell.x, y: cell.y });
 
         return true;
@@ -252,6 +257,39 @@ export class Player {
         for (const stat of this.stats) {
             stat.update();
         }
+    }
+
+    probeTeleportPoints() {
+        const teleportCell = this.getTeleportationPoint();
+
+        if (teleportCell) {
+            this.client.emit('teleportCost', { cost: this.getTeleportationCost(teleportCell) });
+        } else {
+            this.client.emit('teleportCost', 0);
+        }
+    }
+
+    getTeleportationPoint() {
+        for (const playerId of playersOnlineIds) {
+            const player = players.get(playerId);
+
+            if (player.id == this.id)
+                continue;
+
+            const cell = player.cell.get();
+
+            if (cell) {
+                if (Math.abs(cell.y) >= Math.abs(this.cell.get().y)) {
+                    return cell;
+                }
+            }
+        }
+    }
+
+    getTeleportationCost(cell: Cell) {
+        const distance = measureDistance(this.cell.get(), cell);
+
+        return Math.pow(1.1, distance);
     }
 
     private updateCellsNearby() {

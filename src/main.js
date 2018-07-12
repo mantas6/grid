@@ -102,6 +102,11 @@ fromEvent(socket, 'onlineCount').subscribe(({ count }) => {
     commit('updateOnlineCount', count)
 });
 
+fromEvent(socket, 'teleportCost').subscribe(({ cost }) => {
+    console.log('teleportCost', cost);
+    commit('updateNearestTeleportCost', cost)
+});
+
 fromEvent(socket, 'processableNames').subscribe(names => {
     commit('updateProcessableNames', names)
 });

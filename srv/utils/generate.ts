@@ -160,6 +160,10 @@ export class ChunkGenerator {
                         item: { processSpeed: Math.pow(random(2, 3) , this.level) },
                         chance: 1/40,
                     },
+                    {
+                        item: { teleport: Math.pow(random(2, 3) , this.level) },
+                        chance: 1/5,
+                    },
                 ],
             },
             slab: {

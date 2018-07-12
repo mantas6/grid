@@ -204,6 +204,29 @@ io.on('connection', client => {
             tap(({ index }) => clientPlayer.inventory.dropItem(index))
         )
         .subscribe();
+    
+    fromEvent(client, 'teleport')
+        .pipe(
+            ...generalValidation,
+            tap(_ => log.debug(`Teleport request`)),
+            map(_ => ({ cell: clientPlayer.getTeleportationPoint() })),
+            map(bundle => ({ ...bundle, cost: clientPlayer.getTeleportationCost(bundle.cell) })),
+            filter(({ cost }) => cost <= clientPlayer.process.amountOf('teleport')),
+            filter(({ cell }) => {
+                const neighbors = (<Cell>cell).neighbors();
+
+                for (const neighborCell of neighbors) {
+                    if (neighborCell.isOccupiable()) {
+                        clientPlayer.assignCell(neighborCell);
+                        return true;
+                    }
+                }
+
+                return false;
+            }),
+            tap(({  cost }) => clientPlayer.process.affect('teleport', -1 * cost)),
+        )
+        .subscribe();
 });
 
 const everyMinute = timer(60e3, 60e3);
