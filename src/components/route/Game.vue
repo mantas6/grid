@@ -4,11 +4,7 @@
             <message></message>
             <div v-if="map.length">
                 <grid class="grid" :map="map" @move="movedCount++"></grid>
-                <hr>
-                <b-alert variant="primary" :show="movedCount < 3">
-                    <span class="d-md-none">Swipe on the grid to move</span>
-                    <span class="d-none d-md-block">Click on arrows or use WASD to move</span>
-                </b-alert>
+                <tutorial :moved-count="movedCount"></tutorial>
                 <process :content="processContent" :size="processSize"></process>
                 <b-row class="mt-2 mb-2">
                     <stat-bar v-for="stat in orderedStats" v-if="stat.max" :stat="stat" :key="stat.name"></stat-bar>
@@ -24,7 +20,7 @@
                     </b-button>
                 </div>
             </div>
-            <h5 v-else>Teleporting to alt. reality...</h5>
+            <h5 v-else>Awaiting map data...</h5>
             <div class="text-right">Online: {{ onlineCount }}</div>
             <b-form-checkbox v-model="nightMode">Night mode</b-form-checkbox>
         </div>
@@ -37,6 +33,7 @@ import StatBar from '@/components/block/StatBar';
 import Process from '@/components/block/Process';
 import Message from '@/components/block/Message';
 import Inventory from '@/components/block/Inventory';
+import Tutorial from '@/components/block/Tutorial';
 import { mapState } from 'vuex';
 
 import { orderBy } from 'lodash';
@@ -44,12 +41,12 @@ import { orderBy } from 'lodash';
 import Singleton from '@/singleton'
 
 export default {
-    components: { Grid, StatBar, Process, Message, Inventory },
+    components: { Grid, StatBar, Process, Message, Inventory, Tutorial },
 
     data() {
         return {
             nightMode: true,
-            movedCount: false,
+            movedCount: 0,
         };
     },
 
