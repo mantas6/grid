@@ -1,5 +1,8 @@
 import { entries, clamp } from 'lodash';
 import chroma from 'chroma-js';
+import Axios from 'axios'
+import { Subject } from 'rxjs';
+import { throttleTime } from 'rxjs/operators';
 
 export function colorByName(name, foreground) {
     const color = nameToColor(name);
@@ -61,4 +64,25 @@ export function nameToDescription(name) {
     };
 
     return map[name];
+}
+
+
+const collectSubject = new Subject();
+
+collectSubject.pipe(throttleTime(2000)).subscribe(data => {
+    const width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    const height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+    const params = {
+        site: 'Grid Client',
+        events: data ? [{ ...data }] : undefined,
+        properties: { width, height },
+
+    };
+
+    Axios.post('http://logging.back/a_sites/entry', params, { headers: { 'Content-Type': 'application/json' }, withCredentials: true });
+})
+
+export function collect(data) {
+    collectSubject.next(data);
 }

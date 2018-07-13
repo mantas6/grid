@@ -19,6 +19,8 @@ function start() {
 
 function message(msg: string) {
     const splitByNewLines = msg.split('\n');
+
+    let hasAdded: boolean = false;
     
     for (const line of splitByNewLines) {
         if (line.includes('<#> ')) {
@@ -28,10 +30,14 @@ function message(msg: string) {
                 .split(' => ');
 
             console.log(`[${namespace}] => ${level} => ${message}`)
-            //saveLog(namespace, level, message);
-        } else if(typeof(message) == 'string') {
-            //saveLog('global', 'critical', message);
+            saveLog(namespace, level, message);
+            hasAdded = true;
         }
+    }
+
+    if (!hasAdded) {
+        console.log(msg)
+        saveLog('global', 'critical', msg);
     }
 }
 

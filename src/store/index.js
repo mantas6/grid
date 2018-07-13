@@ -9,7 +9,7 @@ import { actions } from './actions'
 
 Vue.use(Vuex);
 
-export const store = new Store({ state, mutations, getters, actions })
+export const store = new Store({ state, mutations, getters, actions, strict: process.env.NODE_ENV !== 'production' })
 
 if (module.hot) {
     module.hot.accept(['./mutations', './state', './getters'], () => {

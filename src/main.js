@@ -1,7 +1,6 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import Axios from 'axios'
 import Vuex from 'vuex'
 import BootstrapVue from "bootstrap-vue"
 import App from './App'
@@ -13,7 +12,7 @@ import { head, last } from 'lodash';
 
 import { router } from './router'
 import { store } from './store'
-import { colorByName, nameToDescription } from './method'
+import { colorByName, nameToDescription, collect } from './method'
 import Singleton from './singleton'
 
 const numberformat = require('swarm-numberformat');
@@ -30,6 +29,18 @@ Vue.filter('colorByName', colorByName);
 Vue.filter('nameToDescription', nameToDescription);
 Vue.filter('head', head);
 Vue.filter('last', last);
+
+if (process.env.NODE_ENV === 'production') {
+    Vue.config.errorHandler = function(err, vm, info) {
+        //console.error(err)
+        collect({ name: 'error', attachments: { message: err.stack.toString() } });
+    }
+
+    timer(250, 10000).subscribe(_ => {
+        collect();
+    })
+}
+
 
 /* eslint-disable no-new */
 new Vue({
@@ -112,8 +123,3 @@ fromEvent(socket, 'teleportCost').subscribe(({ cost }) => {
 fromEvent(socket, 'processableNames').subscribe(names => {
     commit('updateProcessableNames', names)
 });
-
-
-timer(250, 10000).subscribe(_ => {
-    //Axios.post('http://logging.back/a_sites/entry', { site: 'Grid Client' }, { headers: { 'Content-Type': 'application/json' }, withCredentials: true });
-})
