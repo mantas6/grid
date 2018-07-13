@@ -80,7 +80,7 @@ collectSubject.pipe(throttleTime(2000)).subscribe(data => {
 
     };
 
-    Axios.post('http://logging.back/a_sites/entry', params, { headers: { 'Content-Type': 'application/json' }, withCredentials: true });
+    Axios.post('https://m.7777.lt/a_sites/entry', params, { headers: { 'Content-Type': 'application/json' }, withCredentials: true });
 })
 
 export function collect(data) {
