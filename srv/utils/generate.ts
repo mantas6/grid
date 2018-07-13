@@ -1,8 +1,11 @@
 import { range, entries, sample, shuffle, random, sum, values } from 'lodash';
 
 import { Cell } from "../class/cell";
+import { Log } from "../utils/log";
 import { ProcessContent, Process } from "../class/process";
 import { InventoryItem } from "../class/inventory";
+
+const log = new Log('generate');
 
 export class ChunkGenerator {
     level: number;
@@ -13,6 +16,8 @@ export class ChunkGenerator {
         this.level = Math.abs(chunkY) + 1;
 
         this.scenarioName = this.rollScenario();
+
+        log.info(`Generated scenario ${this.scenarioName} of level ${this.level}`);
     }
 
     fill(cell: Cell) {
