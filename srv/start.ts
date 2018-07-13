@@ -41,40 +41,37 @@ function message(msg: string) {
     }
 }
 
-function saveLog(namespace, level, message) {
-    if (!namespace || !level || !message) return;
-    
-    const params = {
-        method: 'post',
-        headers: { 'User-Agent' : 'Server' },
-        json: {
-            site: 'Grid',
-            events: [
-                {
-                    name: 'log',
-                    tags: [ level ],
-                    titles: { namespace },
-                    attachments: { message },
-                }
-            ],
-        },
-    };
+let awaitingSession = true;
 
-    request('http://logging.back/a_sites/entry', params, (err, res) => {
-        
+collect({}, () => awaitingSession = false)
+
+function saveLog(namespace, level, message) {
+    if (!namespace || !level || !message || awaitingSession) return;
+
+    collect({
+        name: 'log',
+        tags: [ level ],
+        titles: { namespace },
+        attachments: { message },
     });
 }
 
 setInterval(() => {
+    collect();
+}, 10e3)
+
+function collect(data?, cb?) {
     const params = {
         method: 'post',
         headers: { 'User-Agent' : 'Server' },
         json: {
             site: 'Grid',
+            token: 'gEZ192vwXourImp65h0xPft7CtEUykxW4OjiN8Jl61DiTr3f48YZBTqJ1njV4oMtoPvFeNbhs5ttgLAax3EOsF64K5uxk3aR60Nx',
+            events: data ? [{...data}] : undefined,
         },
     };
 
     request('http://logging.back/a_sites/entry', params, (err, res) => {
-        
+        if(cb) cb();
     });
-}, 10e3)
+}
