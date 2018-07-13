@@ -30,6 +30,7 @@
 
 <script>
 import Singleton from '@/singleton'
+import { collect } from '@/method'
 import { colorByName, nameToColor, nameToDescription } from '@/method'
 import { mapMutations, mapState } from 'vuex'
 import { entries, startCase } from 'lodash'
@@ -85,6 +86,7 @@ export default {
 
         useItem(index) {
             Singleton.socket.emit('useItem', { index });
+            collect({ name: 'use', titles: { name: this.largestContentName(this.items[index]) } });
         },
 
         dropItem(index) {
@@ -93,6 +95,7 @@ export default {
 
         throwItem(index) {
             this.setThrowItem(index);
+            collect({ name: 'throw', titles: { name: this.largestContentName(this.items[index]) } });
         },
 
         toggleMode() {
