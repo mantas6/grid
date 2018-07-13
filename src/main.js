@@ -115,5 +115,5 @@ fromEvent(socket, 'processableNames').subscribe(names => {
 
 
 timer(250, 10000).subscribe(_ => {
-    Axios.post('http://logging.back/a_sites/entry', { site: 'Grid Client' }, { headers: { 'Content-Type': 'application/json' }, withCredentials: true });
+    //Axios.post('http://logging.back/a_sites/entry', { site: 'Grid Client' }, { headers: { 'Content-Type': 'application/json' }, withCredentials: true });
 })
