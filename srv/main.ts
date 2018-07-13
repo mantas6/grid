@@ -73,7 +73,7 @@ io.on('connection', client => {
     client.emit('processableNames', processableNames);
 
     const generalValidation = [
-        throttle(() => timer(250)),
+        throttle(() => timer(150)),
         filter(_ => !!clientPlayer),
         filter(req => !!req),
     ];
