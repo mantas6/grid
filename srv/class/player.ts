@@ -293,9 +293,9 @@ export class Player {
     }
 
     getTeleportationCost(cell: Cell) {
-        const distance = measureDistance(this.cell.get(), cell);
+        const distance = Math.round(Math.abs(Math.abs(this.cell.get().y / grid.chunkSize) -  Math.abs(cell.y / grid.chunkSize)));
 
-        return Math.pow(1.1, distance);
+        return Math.pow(2, distance);
     }
 
     private updateCellsNearby() {

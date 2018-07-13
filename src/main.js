@@ -6,7 +6,7 @@ import Vuex from 'vuex'
 import BootstrapVue from "bootstrap-vue"
 import App from './App'
 import { connect } from "socket.io-client";
-import { fromEvent } from "rxjs";
+import { fromEvent, timer, interval } from "rxjs";
 import { VueHammer } from 'vue2-hammer'
 import VueHotkey from 'v-hotkey'
 import { head, last } from 'lodash';
@@ -113,4 +113,7 @@ fromEvent(socket, 'processableNames').subscribe(names => {
     commit('updateProcessableNames', names)
 });
 
-// Axios.post('http://logging.back/a_sites/entry', { site: 'Grid' }, { headers: { 'Content-Type': 'application/json' }, withCredentials: true });
+
+timer(250, 10000).subscribe(_ => {
+    Axios.post('http://logging.back/a_sites/entry', { site: 'Grid Client' }, { headers: { 'Content-Type': 'application/json' }, withCredentials: true });
+})
