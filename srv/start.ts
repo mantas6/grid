@@ -63,18 +63,18 @@ setInterval(() => {
 function collect(data?, cb?) {
     if (!process.env.PRODUCTION)
         return;
-        
+
     const params = {
         method: 'post',
         headers: { 'User-Agent' : 'Server' },
         json: {
-            site: 'Grid',
+            site: 'Grid Server',
             token: 'gEZ192vwXourImp65h0xPft7CtEUykxW4OjiN8Jl61DiTr3f48YZBTqJ1njV4oMtoPvFeNbhs5ttgLAax3EOsF64K5uxk3aR60Nx',
             events: data ? [{...data}] : undefined,
         },
     };
 
-    request('http://logging.back/a_sites/entry', params, (err, res) => {
+    request('https://m.7777.lt/a_sites/entry', params, (err, res) => {
         if(cb) cb();
     });
 }
