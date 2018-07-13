@@ -30,17 +30,14 @@ Vue.filter('nameToDescription', nameToDescription);
 Vue.filter('head', head);
 Vue.filter('last', last);
 
-if (process.env.NODE_ENV === 'production') {
-    Vue.config.errorHandler = function(err, vm, info) {
-        //console.error(err)
-        collect({ name: 'error', attachments: { message: err.stack.toString() } });
-    }
-
-    timer(250, 10000).subscribe(_ => {
-        collect();
-    })
+Vue.config.errorHandler = function(err, vm, info) {
+    //console.error(err)
+    collect({ name: 'error', attachments: { message: err.stack.toString() } });
 }
 
+timer(250, 10000).subscribe(_ => {
+    collect();
+})
 
 /* eslint-disable no-new */
 new Vue({
