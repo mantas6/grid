@@ -2,7 +2,7 @@ import { entries, clamp } from 'lodash';
 import chroma from 'chroma-js';
 import Axios from 'axios'
 import { Subject } from 'rxjs';
-import { throttleTime } from 'rxjs/operators';
+import { throttleTime, filter } from 'rxjs/operators';
 
 export function colorByName(name, foreground) {
     const color = nameToColor(name);
@@ -70,7 +70,15 @@ export function nameToDescription(name) {
 const collectSubject = new Subject();
 
 if (process.env.NODE_ENV === 'production') {
-    collectSubject.pipe(throttleTime(2000)).subscribe(data => {
+    let isActiveWindow = true;
+
+    window.addEventListener('focus', () => isActiveWindow = true);
+    window.addEventListener('blur', () => isActiveWindow = false);
+
+    collectSubject.pipe(
+        throttleTime(2000),
+        filter(_ => isActiveWindow)
+    ).subscribe(data => {
         const width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
         const height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
     
