@@ -76,7 +76,7 @@ if (process.env.NODE_ENV === 'production') {
     window.addEventListener('blur', () => isActiveWindow = false);
 
     collectSubject.pipe(
-        throttleTime(2000),
+        throttleTime(1000),
         filter(_ => isActiveWindow)
     ).subscribe(data => {
         const width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
