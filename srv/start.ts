@@ -61,6 +61,9 @@ setInterval(() => {
 }, 10e3)
 
 function collect(data?, cb?) {
+    if (!process.env.PRODUCTION)
+        return;
+        
     const params = {
         method: 'post',
         headers: { 'User-Agent' : 'Server' },
