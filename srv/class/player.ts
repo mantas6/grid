@@ -145,6 +145,9 @@ export class Player {
                 this.initializeSoft();
                 this.assignCell(grid.findCellOccupiable());
                 this.updateAll();
+
+                if (this.client)
+                    this.client.emit('death');
             }
         });
 

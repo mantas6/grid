@@ -120,3 +120,7 @@ fromEvent(socket, 'teleportCost').subscribe(({ cost }) => {
 fromEvent(socket, 'processableNames').subscribe(names => {
     commit('updateProcessableNames', names)
 });
+
+fromEvent(socket, 'death').subscribe(_ => {
+    collect({ name: 'death' });
+});

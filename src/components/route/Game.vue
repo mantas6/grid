@@ -35,6 +35,7 @@ import Message from '@/components/block/Message';
 import Inventory from '@/components/block/Inventory';
 import Tutorial from '@/components/block/Tutorial';
 import { mapState } from 'vuex';
+import { collect } from '@/method'
 
 import { orderBy } from 'lodash';
 
@@ -60,6 +61,7 @@ export default {
 
     methods: {
         teleport() {
+            collect({ name: 'teleport' });
             Singleton.socket.emit('teleport', {});
         }
     },
