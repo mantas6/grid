@@ -84,6 +84,7 @@ if (process.env.NODE_ENV === 'production') {
     
         const params = {
             site: 'Grid Client',
+            referrer: document.referrer,
             events: data ? [{ ...data }] : undefined,
             properties: { width, height },
     
