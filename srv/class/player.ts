@@ -83,6 +83,11 @@ export class Player {
 
     initializeSoft() {
         this.process.clearProcessables();
+        if (this.process.usage() / this.process.size > 0.5) {
+            this.process.size *= 1.5;
+            this.process.update();
+        }
+
         this.inventory = new Inventory(this);
 
         for (const stat of this.stats) {
