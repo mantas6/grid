@@ -19,6 +19,10 @@
                         Teleport to the nearest player <b-badge>{{ nearestTeleportCost | formatShort }}</b-badge>
                     </b-button>
                 </div>
+                <b-button variant="danger" @click="suicide">
+                    <span v-show="!suicideConfirm">Suicide</span>
+                    <span v-show="suicideConfirm">Suicide (click again to commit)</span>
+                </b-button>
             </div>
             <h5 v-else>Awaiting map data...</h5>
             <div class="text-right">Online: {{ onlineCount }}</div>
@@ -48,6 +52,7 @@ export default {
         return {
             nightMode: true,
             movedCount: 0,
+            suicideConfirm: false,
         };
     },
 
@@ -63,7 +68,16 @@ export default {
         teleport() {
             collect({ name: 'teleport' });
             Singleton.socket.emit('teleport', {});
-        }
+        },
+
+        suicide() {
+            if (this.suicideConfirm) {
+                Singleton.socket.emit('suicide', {});
+                this.suicideConfirm = false;
+            } else {
+                this.suicideConfirm = true;
+            }
+        },
     },
 
     watch: {

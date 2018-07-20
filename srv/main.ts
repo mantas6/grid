@@ -204,6 +204,13 @@ io.on('connection', client => {
             tap(({ index }) => clientPlayer.inventory.dropItem(index))
         )
         .subscribe();
+        
+    fromEvent(client, 'suicide')
+        .pipe(
+            ...generalValidation,
+            tap(_ => clientPlayer.handleDeath())
+        )
+        .subscribe();
     
     fromEvent(client, 'teleport')
         .pipe(

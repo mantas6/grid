@@ -147,16 +147,20 @@ export class Player {
 
             // Death handler
             if (this.getStat('health').isEmpty()) {
-                this.initializeSoft();
-                this.assignCell(grid.findCellOccupiable());
-                this.updateAll();
-
-                if (this.client)
-                    this.client.emit('death');
+                this.handleDeath();
             }
         });
 
         this.updateAll();
+    }
+
+    handleDeath() {
+        this.initializeSoft();
+        this.assignCell(grid.findCellOccupiable());
+        this.updateAll();
+
+        if (this.client)
+            this.client.emit('death');
     }
 
     logOff() {
