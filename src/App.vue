@@ -15,6 +15,8 @@
 
     import Singleton from '@/singleton'
 
+    import { collect } from './method'
+
     export default {
         name: 'app',
 
@@ -29,6 +31,7 @@
                 Singleton.logout();
                 Singleton.login();
                 this.setDuplicateSession(false);
+                collect({ name: 'sessionReset' });
             }
         },
     }
