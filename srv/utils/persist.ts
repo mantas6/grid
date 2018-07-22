@@ -15,9 +15,10 @@ export function saveState() {
         playersPlain.push(classToPlain(player));
     }
 
-    const mapPlain = classToPlain(grid.map);
+    //const mapPlain = classToPlain(grid.map);
 
-    const state = { players: playersPlain, map: mapPlain };
+    //const state = { players: playersPlain, map: mapPlain };
+    const state = { players: playersPlain };
 
     putState(state);
 }
@@ -37,7 +38,7 @@ export function loadState() {
         players.set(player.id, player);
     }
 
-    grid.map = plainToClass(Cell, state.map) as any;
+    // grid.map = plainToClass(Cell, state.map) as any;
 
     log.complete('Loaded state');
 }
