@@ -19,7 +19,7 @@
                         Teleport to the nearest player <b-badge>{{ nearestTeleportCost | formatShort }}</b-badge>
                     </b-button>
                 </div>
-                <b-button variant="danger" @click="suicide">
+                <b-button variant="danger" @click="suicide" class="mt-1">
                     <span v-show="!suicideConfirm">Suicide</span>
                     <span v-show="suicideConfirm">Suicide (click again to commit)</span>
                 </b-button>

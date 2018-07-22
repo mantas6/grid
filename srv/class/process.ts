@@ -254,14 +254,23 @@ export class Process {
     }
 
     processContentOfCell(cell: Cell): boolean {
-        const affectDiff = Math.min(this.amountOf('absorbStrength') + 1, this.size - this.usage());
+        let lowestAmount: number;
+
+        for (const [ name, { amount } ] of entries(cell.process.content)) {
+            if (!lowestAmount)
+                lowestAmount = amount;
+            else if (amount < lowestAmount)
+                lowestAmount = amount;
+        }
+
+        const affectDiff = Math.min(this.amountOf('absorbStrength') + 1, this.size - this.usage(), lowestAmount);
 
         if (!affectDiff) {
             log.debug(`canNotBeAdded`);
             return false;
         }
 
-        for (const [ name, amount ] of entries(cell.process.content)) {
+        for (const [ name, content ] of entries(cell.process.content)) {
             if (cell.affectContent(name, -affectDiff)) {
                 this.affect(name, +affectDiff);
             }
