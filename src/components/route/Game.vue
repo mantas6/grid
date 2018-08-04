@@ -19,10 +19,13 @@
                         Teleport to the nearest player <b-badge>{{ nearestTeleportCost | formatShort }}</b-badge>
                     </b-button>
                 </div>
-                <b-button variant="danger" @click="suicide" class="mt-1">
-                    <span v-show="!suicideConfirm">Suicide</span>
-                    <span v-show="suicideConfirm">Suicide (click again to commit)</span>
-                </b-button>
+                <div class="d-flex mt-1">
+                    <b-button variant="danger" @click="suicide" class="mr-1">
+                        <span v-show="!suicideConfirm">Suicide</span>
+                        <span v-show="suicideConfirm">Suicide (click again to commit)</span>
+                    </b-button>
+                    <b-button variant="outline-secondary" :to="{ name: 'changelog' }">Changelog</b-button>
+                </div>
             </div>
             <h5 v-else>Awaiting map data...</h5>
             <div class="text-right">Online: {{ onlineCount }}</div>
