@@ -121,8 +121,10 @@ io.on('connection', client => {
                 const cell = clientPlayer.cell.get();
 
                 if (cell && cell.isOccupiable()) {
+                    log.debug(`Player cell found. Assigning ${cell}`)
                     clientPlayer.assignCell(cell);
                 } else {
+                    log.debug(`Player cell not found. Drawing`)
                     clientPlayer.assignCell(grid.findCellOccupiable());
                 }
             })
@@ -250,3 +252,10 @@ const everyFiveSeconds = timer(5e3, 5e3);
 if (!NO_PERSIST) {
     everyMinute.subscribe(() => saveState());
 }
+
+/*everyFiveSeconds.pipe(
+    filter(_ => playersOnlineIds.size == 0),
+    filter(_ => grid.chunkCount > 2),
+).subscribe(() => {
+    grid.clearChunks();
+});*/

@@ -17,7 +17,9 @@ export class Grid {
     map: Map = {};
 
     chunkSize: number;
-    isProcedural: boolean =false;
+    isProcedural: boolean = false;
+
+    chunkCount: number = 0;
 
     constructor(chunkSize: number, isProcedural: boolean = false) {
         this.chunkSize = chunkSize;
@@ -45,7 +47,15 @@ export class Grid {
                 cell.update();
             }
         }
-    
+
+        this.chunkCount++;
+    }
+
+    clearChunks() {
+        this.map = {};
+        this.chunkCount = 0;
+        log.complete(`Chunks cleared`);
+        this.generateChunk(0, 0);
     }
 
     isChunkGenerated(chunkX: number, chunkY: number) {
