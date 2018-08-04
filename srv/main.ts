@@ -117,7 +117,15 @@ io.on('connection', client => {
 
                 return { id, token, ack };
             }),
-            tap(_ => clientPlayer.assignCell(clientPlayer.cell.get() || grid.findCellOccupiable()))
+            tap(_ => {
+                const cell = clientPlayer.cell.get();
+
+                if (cell && cell.isOccupiable()) {
+                    clientPlayer.assignCell(cell);
+                } else {
+                    clientPlayer.assignCell(grid.findCellOccupiable());
+                }
+            })
         )
         .subscribe(({ id, token, ack }) => {
             ack({ id, token });
