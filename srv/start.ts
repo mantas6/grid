@@ -42,21 +42,21 @@ function message(msg: string) {
 
 let awaitingSession = true;
 
-collect({}, () => awaitingSession = false)
+// collect({}, () => awaitingSession = false)
 
 function saveLog(namespace, level, message) {
     if (!namespace || !level || !message || awaitingSession) return;
 
-    collect({
+    /*collect({
         name: 'log',
         tags: [ level ],
         titles: { namespace },
         attachments: { message },
-    });
+    });*/
 }
 
 setInterval(() => {
-    collect();
+    // collect();
 }, 10e3)
 
 function collect(data?, cb?) {
